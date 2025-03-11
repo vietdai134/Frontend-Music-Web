@@ -1,0 +1,15 @@
+<div>
+    <h2>Danh sách bài hát</h2>
+    <ul>
+      <li *ngFor="let song of songs">
+        {{ song.id }} - {{ song.title }}
+      </li>
+    </ul>
+  
+    <div>
+      <button (click)="prevPage()" [disabled]="currentPage === 0">Trước</button>
+      <span>Trang {{ currentPage + 1 }} / {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">Sau</button>
+    </div>
+  </div>
+  
