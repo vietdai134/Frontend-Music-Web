@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SongService } from '../../services/song.service';
+import { SongService } from '../../services/SongServices/song.service';
 import { CommonModule } from '@angular/common';
+import { Song } from '../../models/song.module';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  songs: any[] = [];
+  songs: Song[] = [];
   currentPage = 0;  
   pageSize = 5;    
   totalPages = 1;  
@@ -25,9 +26,9 @@ export class HomeComponent implements OnInit {
 
   loadSongs() {
     this.songService.getAllSongs(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
-        this.songs = data.content;  
-        this.totalPages = data.page.totalPages;  
+      next: (data) => {
+        this.songs = data.content || [];           // Access content directly
+        this.totalPages = data.page.totalPages || 1; // Access totalPages from page object
       },
       error: (err) => console.error('Lỗi khi tải bài hát:', err)
     });

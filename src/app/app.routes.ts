@@ -1,8 +1,36 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './component/login/login.component';
 import { HomeComponent } from './component/home/home.component';
+import { AdminHomeComponent } from './component/admin/admin-home/admin-home.component';
+import { SongComponent } from './component/admin/song/song.component';
+import { GenreComponent } from './component/admin/genre/genre.component';
+import { PermissionComponent } from './component/admin/permission/permission.component';
+import { RoleComponent } from './component/admin/role/role.component';
+import { RolePermissionComponent } from './component/admin/role-permission/role-permission.component';
+import { SongApprovalComponent } from './component/admin/song-approval/song-approval.component';
+import { UserComponent } from './component/admin/user/user.component';
+import { UserRoleComponent } from './component/admin/user-role/user-role.component';
+import { UserPaymentComponent } from './component/admin/user-payment/user-payment.component';
+import { DashboardComponent } from './component/admin/dashboard/dashboard.component';
+
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
-    { path: 'login', component: LoginComponent }
+    { path: 'login', component: LoginComponent },
+    { 
+        path: 'admin', component: AdminHomeComponent,
+        children: [
+            { path: '', component: DashboardComponent },
+            { path: 'song', component: SongComponent },
+            { path: 'genre', component: GenreComponent },
+            { path: 'permission', component: PermissionComponent },
+            { path: 'role', component: RoleComponent },
+            { path: 'role-permission', component: RolePermissionComponent },
+            { path: 'song-approval', component: SongApprovalComponent },
+            { path: 'user', component: UserComponent },
+            { path: 'user-role', component: UserRoleComponent },
+            { path: 'user-payment', component: UserPaymentComponent }
+        ]
+    }
+
 ];

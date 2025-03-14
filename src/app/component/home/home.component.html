@@ -1,15 +1,17 @@
-<div>
-    <h2>Danh sách bài hát</h2>
-    <ul>
-      <li *ngFor="let song of songs">
-        {{ song.id }} - {{ song.title }}
-      </li>
-    </ul>
+<div class="song-list">
+  <h2>Songs</h2>
   
-    <div>
-      <button (click)="prevPage()" [disabled]="currentPage === 0">Trước</button>
-      <span>Trang {{ currentPage + 1 }} / {{ totalPages }}</span>
-      <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">Sau</button>
-    </div>
+  <div *ngIf="songs.length === 0">No songs found</div>
+  
+  <ul>
+    <li *ngFor="let song of songs">
+      {{ song.id }} - {{ song.title }}
+    </li>
+  </ul>
+
+  <div class="pagination">
+    <button [disabled]="currentPage === 0" (click)="prevPage()">Previous</button>
+    <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+    <button [disabled]="currentPage >= totalPages - 1" (click)="nextPage()">Next</button>
   </div>
-  
+</div>
