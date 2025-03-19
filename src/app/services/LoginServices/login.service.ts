@@ -25,11 +25,6 @@ export class LoginService {
 
   private restoreSession() {
     console.log('Attempting to restore session');
-    // Nếu chưa từng đăng nhập (userSubject chưa có giá trị trước đó), không làm gì
-    // if (!this.userSubject.value) {
-    //   console.log('No previous login detected, skipping session restore');
-    //   return;
-    // }
     this.refreshToken().subscribe({
       next: (res) => {
         console.log('Refresh token successful, response:', res);
