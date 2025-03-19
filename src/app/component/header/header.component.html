@@ -1,5 +1,31 @@
 <header class="header">
-    <div class="logo">My Website</div>
-    <button class="login-btn" (click)="goToLogin()">Login</button>
-  </header>
+  <div class="logo">My Website</div>
   
+  <div class="user-info">
+    <!-- Nếu đã đăng nhập, hiển thị tên người dùng và dropdown -->
+    <ng-container *ngIf="(user$ | async) as user; else loginTemplate">
+      <div class="dropdown" 
+           (mouseenter)="showDropdownMenu()" 
+           (mouseleave)="hideDropdownWithDelay()">
+        <span class="username">
+          {{ user.userName }}
+          <span class="arrow-down"></span>
+        </span>
+
+        <!-- Dropdown menu -->
+        <ul class="dropdown-menu" *ngIf="showDropdown" 
+            (mouseenter)="cancelHideDropdown()" 
+            (mouseleave)="hideDropdownWithDelay()">
+          <li (click)="goToProfile()">Profile</li>
+          <li *ngIf="isAdmin(user)" (click)="goToAdmin()">Admin</li>
+          <li (click)="logout()">Logout</li>
+        </ul>
+      </div>
+    </ng-container>
+
+    <!-- Nếu chưa đăng nhập, hiển thị nút Login -->
+    <ng-template #loginTemplate>
+      <button class="login-btn" (click)="goToLogin()">Login</button>
+    </ng-template>
+  </div>
+</header>

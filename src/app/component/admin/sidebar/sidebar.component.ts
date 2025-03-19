@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { User } from '../../../models/user.module';
+import { LoginService } from '../../../services/LoginServices/login.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,7 +12,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit{
+  user$: Observable<User | null>;
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', link: '/admin' },
     { label: 'Song', icon: 'fas fa-users', link: '/admin/song' },
@@ -22,4 +26,26 @@ export class SidebarComponent {
     { label: 'User-Payment', icon: 'fas fa-cog', link: '/admin/user-payment' },
     { label: 'Song-Approval', icon: 'fas fa-users', link: '/admin/song-approval' }
   ];
+  constructor(private loginService: LoginService) {
+    this.user$ = this.loginService.user$; // Gán user$ từ LoginService
+}
+  ngOnInit(): void {
+    // Kiểm tra user và thêm mục Moderate nếu cần
+    this.user$.subscribe(user => {
+      if (this.hasModerateSongPermission(user)) {
+          // Kiểm tra xem mục Moderate đã tồn tại chưa để tránh trùng lặp
+          if (!this.menuItems.some(item => item.label === 'Moderate')) {
+              this.menuItems.push({
+                  label: 'Moderate',
+                  icon: 'fas fa-check-circle', // Chọn icon phù hợp
+                  link: '/admin/moderate'
+              });
+          }
+      }
+    });
+  }
+  // Kiểm tra xem user có permission MODERATE_SONG không
+  hasModerateSongPermission(user: User | null): boolean {
+    return user?.permissions?.includes('MODERATE_SONG') || false;
+  }
 }

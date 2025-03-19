@@ -3,6 +3,8 @@ import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './component/header/header.component';
 import { FooterComponent } from './component/footer/footer.component';
 import { CommonModule } from '@angular/common';
+import { LoginService } from './services/LoginServices/login.service';
+// import { LoginService } from './services/LoginServices/login.service';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +26,17 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'music-web';
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private loginService : LoginService
+  ) {}
 
   isAdminRoute(): boolean {
     return this.router.url.startsWith('/admin');
   }
+
+  ngOnInit() {
+    this.loginService.initialize(); // Khởi động khôi phục phiên
+  }
+
 }

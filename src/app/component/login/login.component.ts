@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../../services/LoginServices/login.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -13,7 +14,11 @@ export class LoginComponent {
   loginForm: FormGroup;
   isSubmitted = false;
 
-  constructor(private fb: FormBuilder, private loginService: LoginService) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder, 
+    private loginService: LoginService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(3)]]
@@ -27,6 +32,7 @@ export class LoginComponent {
         (res:any) => {
           console.log('Login Success:', res?.message);
           alert('Đăng nhập thành công!');
+          this.router.navigate(['/']);
         },
         (err) => {
           console.log('Login Error:', err);
@@ -35,4 +41,6 @@ export class LoginComponent {
       );
     }
   }
+
+
 }
