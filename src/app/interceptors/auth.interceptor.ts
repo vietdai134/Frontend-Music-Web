@@ -7,9 +7,12 @@ import { LoginService } from '../services/LoginServices/login.service';
 // Định nghĩa interceptor như một hàm
 export const authInterceptor = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
   const loginService = inject(LoginService); // Inject LoginService trong hàm
-
+  // const skipRefreshUrls = ['/user/update', '/auth/login', '/user/create'];
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
+      // if (skipRefreshUrls.some(url => req.url.includes(url))) {
+      //   return throwError(() => err);
+      // }
     if ((err.status === 401 || err.status === 403) && loginService.isLoggedIn()) {
         // Chỉ refresh nếu đã đăng nhập
         return loginService.refreshToken().pipe(

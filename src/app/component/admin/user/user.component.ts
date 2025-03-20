@@ -13,6 +13,7 @@ import { Role } from '../../../models/role.module';
 import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { UserDialogComponent } from '../../dialog/user-dialog/user-dialog.component';
 
 @Component({
   selector: 'app-user',
@@ -83,7 +84,11 @@ export class UserComponent implements OnInit, AfterViewInit {
   deleteUser(userId: number): void {
     const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
       width: '300px',
-      data: { userId } // Truyền userId vào dialog
+      data: { 
+        // userId 
+        entity:'user',
+        id:userId
+      } // Truyền userId vào dialog
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -101,9 +106,9 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
   }
 
-  editUser(userId: number): void {
-    console.log(`Edit user with ID: ${userId}`);
-  }
+  // editUser(userId: number): void {
+  //   console.log(`Edit user with ID: ${userId}`);
+  // }
 
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
@@ -133,5 +138,39 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   formatDate(dateString: string): string {
     return this.datePipe.transform(dateString, 'dd/MM/yyyy HH:mm:ss') || '';
+  }
+
+  createUser(): void {
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      width: '400px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUsers(this.currentPage, this.pageSize);
+      }
+    });
+  }
+
+  // Cập nhật method editUser
+  editUser(userId: number): void {
+    console.log(`Edit user with ID: ${userId}`);
+    this.userService.getUserById(userId).subscribe({
+      next: (user) => {
+        const dialogRef = this.dialog.open(UserDialogComponent, {
+          width: '400px',
+          disableClose: true,
+          data: { user } // Truyền dữ liệu user vào dialog
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.loadUsers(this.currentPage, this.pageSize);
+          }
+        });
+      },
+      error: (err) => console.error('Error fetching user:', err)
+    });
   }
 }

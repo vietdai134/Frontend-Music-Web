@@ -9,7 +9,15 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
   styleUrl: './confirm-delete.component.scss'
 })
 export class ConfirmDeleteComponent {
-  constructor(public dialogRef: MatDialogRef<ConfirmDeleteComponent>, @Inject(MAT_DIALOG_DATA) public data: { userId: number }) {}
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDeleteComponent>, 
+    @Inject(MAT_DIALOG_DATA) 
+    public data: { 
+      // userId: number 
+      entity: string,
+      id: number
+    }
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();
