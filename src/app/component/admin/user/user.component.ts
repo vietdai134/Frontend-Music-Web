@@ -31,9 +31,9 @@ import { UserDialogComponent } from '../../dialog/user-dialog/user-dialog.compon
   styleUrl: './user.component.scss',
   providers: [DatePipe]
 })
-export class UserComponent implements OnInit, AfterViewInit {
+export class UserComponent implements OnInit{
   displayedColumns: string[] = ['userId', 'userName', 'email', 'accountType', 'roles','createdDate', 'actions'];
-  dataSource = new MatTableDataSource<User>([]);
+  users:User[]=[];
   totalElements = 0;
   pageSize = 10;
   currentPage = 0;
@@ -51,14 +51,10 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.loadUsers(this.currentPage, this.pageSize);
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator; // Gắn paginator vào dataSource
-  }
-
   loadUsers(page: number, size: number): void {
     this.userService.getAllUsers(page, size).subscribe({
       next: (response) => {
-        this.dataSource.data = response.content;
+        this.users = response.content;
         this.totalElements = response.page.totalElements;
         this.pageSize = response.page.size;
         this.currentPage = response.page.number;
@@ -72,7 +68,12 @@ export class UserComponent implements OnInit, AfterViewInit {
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadUsers(this.currentPage, this.pageSize);
+    // this.loadUsers(this.currentPage, this.pageSize);
+    if (this.searchKeyword.trim()) {
+      this.searchUsers(this.currentPage, this.pageSize);
+    } else {
+      this.loadUsers(this.currentPage, this.pageSize);
+    }
   }
 
   getRolesDisplay(user: User): string {
@@ -106,14 +107,17 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // editUser(userId: number): void {
-  //   console.log(`Edit user with ID: ${userId}`);
-  // }
-
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchKeyword = inputElement.value;
     console.log(this,this.searchKeyword);
+    // Reset currentPage về 0 khi tìm kiếm
+    this.currentPage = 0;
+    
+    // Cập nhật paginator để hiển thị trang đầu tiên
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
     this.searchUsers(this.currentPage, this.pageSize);
     
   }
@@ -125,7 +129,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
     this.userService.searchUsers(this.searchKeyword, page, size).subscribe({
       next: (response) => { // Xác định kiểu dữ liệu
-        this.dataSource.data = response.content;
+        this.users = response.content;
         this.totalElements = response.page.totalElements;
         this.pageSize = response.page.size;
         this.currentPage = response.page.number;

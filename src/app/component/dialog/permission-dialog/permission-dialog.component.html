@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Sửa quyền' : 'Tạo quyền mới' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="permissionForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tên quyền</mat-label>
+          <input matInput formControlName="permissionName" required>
+          <mat-error *ngIf="permissionForm.get('permissionName')?.hasError('required')">
+            Vui lòng nhập tên quyền
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mô tả</mat-label>
+            <input matInput formControlName="description" required>
+            <mat-error *ngIf="permissionForm.get('description')?.hasError('required')">
+              Vui lòng nhập mô tả
+            </mat-error>
+          </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Hủy</button>
+      <button mat-raised-button color="primary" [disabled]="permissionForm.invalid" (click)="onSubmit()">
+        {{ isEditMode ? 'Cập nhật' : 'Tạo' }}
+      </button>
+    </mat-dialog-actions>

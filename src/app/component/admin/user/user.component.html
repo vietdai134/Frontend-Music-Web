@@ -15,7 +15,7 @@
 
 
 <div class="user-table-container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="users" class="mat-elevation-z8">
       <ng-container matColumnDef="userId">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let user"> {{ user.userId }} </td>

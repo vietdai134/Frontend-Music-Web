@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Sửa thể loại' : 'Tạo thể loại mới' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="genreForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tên thể loại</mat-label>
+          <input matInput formControlName="genreName" required>
+          <mat-error *ngIf="genreForm.get('genreName')?.hasError('required')">
+            Vui lòng nhập tên thể loại
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Hủy</button>
+      <button mat-raised-button color="primary" [disabled]="genreForm.invalid" (click)="onSubmit()">
+        {{ isEditMode ? 'Cập nhật' : 'Tạo' }}
+      </button>
+    </mat-dialog-actions>

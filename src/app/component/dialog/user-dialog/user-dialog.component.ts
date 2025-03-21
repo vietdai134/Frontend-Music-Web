@@ -92,7 +92,7 @@ export class UserDialogComponent implements OnInit{
 
   getAllRoles(){
     // Gọi API để lấy danh sách roles
-    this.roleService.getAllRoles().subscribe({
+    this.roleService.getListAllRoles().subscribe({
       next: (roles) => {
         this.availableRoles = roles; // Cập nhật availableRoles từ API
       },
