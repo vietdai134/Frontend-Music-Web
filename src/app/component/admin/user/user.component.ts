@@ -12,13 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Role } from '../../../models/role.module';
 import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { UserDialogComponent } from '../../dialog/user-dialog/user-dialog.component';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [
+    CommonModule,
     MatTableModule, 
     MatPaginatorModule, 
     MatButtonModule,
@@ -32,7 +33,9 @@ import { UserDialogComponent } from '../../dialog/user-dialog/user-dialog.compon
   providers: [DatePipe]
 })
 export class UserComponent implements OnInit{
-  displayedColumns: string[] = ['userId', 'userName', 'email', 'accountType', 'roles','createdDate', 'actions'];
+  displayedColumns: string[] = ['userId', 'userName', 'email', 
+                        'accountType', 'userAvatar','roles',
+                        'createdDate','grantedDate', 'actions'];
   users:User[]=[];
   totalElements = 0;
   pageSize = 10;
@@ -54,6 +57,7 @@ export class UserComponent implements OnInit{
   loadUsers(page: number, size: number): void {
     this.userService.getAllUsers(page, size).subscribe({
       next: (response) => {
+        console.log(response.content)
         this.users = response.content;
         this.totalElements = response.page.totalElements;
         this.pageSize = response.page.size;
@@ -97,7 +101,10 @@ export class UserComponent implements OnInit{
         this.userService.deleteUser(userId).subscribe({
           next: () => {
             console.log(`Delete user with ID: ${userId}`);
-            this.loadUsers(this.currentPage, this.pageSize); // Tải lại danh sách sau khi xóa
+            // this.loadUsers(this.currentPage, this.pageSize); // Tải lại danh sách sau khi xóa
+            setTimeout(() => {
+              this.loadUsers(this.currentPage, this.pageSize);
+            }, 1000);
           },
           error: (err) => {
             console.error('Error deleting user:', err);
@@ -152,7 +159,11 @@ export class UserComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        console.log(!result.userId)
         this.loadUsers(this.currentPage, this.pageSize);
+        // setTimeout(() => {
+        //   this.loadUsers(this.currentPage, this.pageSize);
+        // }, 2500);
       }
     });
   }
@@ -170,6 +181,7 @@ export class UserComponent implements OnInit{
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
+            console.log(result.userId)
             this.loadUsers(this.currentPage, this.pageSize);
           }
         });

@@ -34,9 +34,20 @@ export class UserService {
       email: string; 
       password: string; 
       accountType: string; 
-      roleNames: string[] 
+      roleNames: string[];
+      avatar?:File;
     }): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}/user/create`, user,{ withCredentials: true });
+      const formData = new FormData();
+    formData.append('userName', user.userName);
+    formData.append('email', user.email);
+    formData.append('password', user.password);
+    formData.append('accountType', user.accountType);
+    user.roleNames.forEach(roleName => formData.append('roleNames[]', roleName)); // Gửi từng roleName riêng
+    if (user.avatar) {
+      formData.append('avatar', user.avatar);
+    }
+    console.log('Sending FormData:', Array.from(formData.entries()));
+    return this.http.post<User>(`${this.baseUrl}/user/create`, formData,{ withCredentials: true });
   }
 
   registerUser(
@@ -55,7 +66,17 @@ export class UserService {
       email:string;
       accountType: string;
       roleNames: string[];
+      avatar?:File;
     }):Observable<User>{
-      return this.http.put<User>(`${this.baseUrl}/user/update/${userId}`, user,{ withCredentials: true });
+      const formData = new FormData();
+      formData.append('userName', user.userName);
+      formData.append('email', user.email);
+      formData.append('accountType', user.accountType);
+      // formData.append('roleNames', JSON.stringify(user.roleNames));
+      user.roleNames.forEach(roleName => formData.append('roleNames[]', roleName)); // Gửi từng roleName riêng
+      if (user.avatar) {
+        formData.append('avatar', user.avatar);
+      }
+      return this.http.put<User>(`${this.baseUrl}/user/update/${userId}`, formData,{ withCredentials: true });
     }
 }

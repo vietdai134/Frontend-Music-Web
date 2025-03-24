@@ -35,6 +35,14 @@
         <th mat-header-cell *matHeaderCellDef> Loại tài khoản </th>
         <td mat-cell *matCellDef="let user"> {{ user.accountType }} </td>
       </ng-container>
+
+      <ng-container matColumnDef="userAvatar">
+        <th mat-header-cell *matHeaderCellDef> Ảnh đại diện </th>
+        <td mat-cell *matCellDef="let user">
+          <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" style="max-width: 50px;">
+          <span *ngIf="!user.avatar">Không có</span>
+        </td>
+      </ng-container>
   
       <ng-container matColumnDef="roles">
         <th mat-header-cell *matHeaderCellDef> Vai trò </th>
@@ -46,6 +54,10 @@
         <td mat-cell *matCellDef="let user"> {{ formatDate(user.createdDate) }} </td>
      </ng-container>
 
+     <ng-container matColumnDef="grantedDate">
+        <th mat-header-cell *matHeaderCellDef> Ngày cấp</th>
+        <td mat-cell *matCellDef="let user"> {{ formatDate(user.roles[0].grantedDate) }} </td>
+    </ng-container>
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Hành động </th>
         <td mat-cell *matCellDef="let user">

@@ -11,6 +11,7 @@ import { RoleService } from '../../../services/RoleServices/role.service';
 import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component';
 import { Permission } from '../../../models/permission.module';
 import { RoleDialogComponent } from '../../dialog/role-dialog/role-dialog.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-role',
@@ -25,10 +26,11 @@ import { RoleDialogComponent } from '../../dialog/role-dialog/role-dialog.compon
     MatFormFieldModule
   ],
   templateUrl: './role.component.html',
-  styleUrl: './role.component.scss'
+  styleUrl: './role.component.scss',
+  providers: [DatePipe]
 })
 export class RoleComponent implements OnInit{
-  displayedColumns: string[] = ['roleId', 'roleName', 'description', 'permissions', 'actions'];
+  displayedColumns: string[] = ['roleId', 'roleName', 'description', 'permissions', 'assignedDate','actions'];
   roles:Role[]=[];
   totalElements = 0;
   pageSize = 10;
@@ -39,7 +41,8 @@ export class RoleComponent implements OnInit{
 
   constructor(
     private roleService: RoleService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private datePipe: DatePipe
   ){}
 
   ngOnInit(): void {
@@ -167,5 +170,9 @@ export class RoleComponent implements OnInit{
       },
       error: (err) => console.error('Error fetching user:', err)
     });
+  }
+
+  formatDate(dateString: string): string {
+    return this.datePipe.transform(dateString, 'dd/MM/yyyy HH:mm:ss') || '';
   }
 }

@@ -25,6 +25,9 @@
               {{ permission.permissionName }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="roleForm.get('permissionNames')?.hasError('minSelection')">
+            Vui lòng chọn ít nhất 1 quyền
+          </mat-error>
         </mat-form-field>
     
         <!-- Hiển thị roles đã chọn với nút xóa -->

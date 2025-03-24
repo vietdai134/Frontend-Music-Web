@@ -43,7 +43,20 @@
           </mat-error>
         </mat-form-field>
     
-        <!-- Thêm phần chọn và hiển thị roles -->
+        <div class="full-width">
+          <label>Ảnh đại diện</label>
+          <input type="file" (change)="onFileChange($event)" accept="image/*">
+          <div *ngIf="selectedFileName" class="file-info">
+            <span>{{ selectedFileName }}</span>
+            <button mat-icon-button color="warn" (click)="clearFile()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="isEditMode && userForm.get('userAvatar')?.value" class="current-avatar">
+            <img [src]="userForm.get('userAvatar')?.value" alt="Current Avatar" style="max-width: 100px;">
+          </div>
+        </div>
+        
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Chọn vai trò</mat-label>
           <mat-select formControlName="roleNames" multiple>
@@ -51,9 +64,11 @@
               {{ role.roleName }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="userForm.get('roleNames')?.hasError('minSelection')">
+            Vui lòng chọn ít nhất 1 vai trò
+          </mat-error>
         </mat-form-field>
     
-        <!-- Hiển thị roles đã chọn với nút xóa -->
         <div class="selected-roles" *ngIf="userForm.get('roleNames')?.value?.length">
           <h4>Vai trò đã chọn:</h4>
           <div class="role-chip" *ngFor="let role of userForm.get('roleNames')?.value">

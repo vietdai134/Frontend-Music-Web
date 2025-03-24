@@ -1,0 +1,32 @@
+<div class="login-container">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <h2>Đăng Nhập</h2>
+  
+      <div class="form-group">
+        <label for="userName">userName</label>
+        <input type="userName" id="userName" formControlName="userName" placeholder="Nhập userName của bạn">
+        <div *ngIf="isSubmitted && signupForm.controls['userName'].invalid" class="error">
+          userName không hợp lệ!
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Nhập email của bạn">
+        <div *ngIf="isSubmitted && signupForm.controls['email'].invalid" class="error">
+          Email không hợp lệ!
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" formControlName="password" placeholder="Nhập mật khẩu">
+        <div *ngIf="isSubmitted && signupForm.controls['password'].invalid" class="error">
+          Mật khẩu phải ít nhất 6 ký tự!
+        </div>
+      </div>
+  
+      <button type="submit" class="btn-login">Đăng Nhập</button>
+    </form>
+  </div>
+  

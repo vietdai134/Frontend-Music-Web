@@ -36,6 +36,10 @@
         <td mat-cell *matCellDef="let role"> {{ getPermissionsDisplay(role) }} </td>
       </ng-container>
 
+      <ng-container matColumnDef="assignedDate">
+        <th mat-header-cell *matHeaderCellDef> Ngày cấp quyền</th>
+        <td mat-cell *matCellDef="let role"> {{ formatDate(role.permissions[0].assignedDate) }} </td>
+    </ng-container>
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Hành động </th>
         <td mat-cell *matCellDef="let role">

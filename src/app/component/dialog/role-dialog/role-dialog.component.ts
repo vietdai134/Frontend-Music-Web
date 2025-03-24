@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Permission } from '../../../models/permission.module';
 import { PermissionService } from '../../../services/PermissionServices/permission.service';
 import { RoleService } from '../../../services/RoleServices/role.service';
+import {minSelectionValidator} from '../../../shared/Validators'
 
 @Component({
   selector: 'app-role-dialog',
@@ -45,7 +46,7 @@ export class RoleDialogComponent {
     this.roleForm = this.fb.group({
       roleName: ['', Validators.required],
       description: ['', Validators.required],
-      permissionNames:[[]]
+      permissionNames:[[],minSelectionValidator(1)]
     });
 
     if (this.isEditMode) {

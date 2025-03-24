@@ -6,17 +6,17 @@ import { SongComponent } from './component/admin/song/song.component';
 import { GenreComponent } from './component/admin/genre/genre.component';
 import { PermissionComponent } from './component/admin/permission/permission.component';
 import { RoleComponent } from './component/admin/role/role.component';
-import { RolePermissionComponent } from './component/admin/role-permission/role-permission.component';
 import { SongApprovalComponent } from './component/admin/song-approval/song-approval.component';
 import { UserComponent } from './component/admin/user/user.component';
-import { UserRoleComponent } from './component/admin/user-role/user-role.component';
 import { UserPaymentComponent } from './component/admin/user-payment/user-payment.component';
 import { DashboardComponent } from './component/admin/dashboard/dashboard.component';
+import { SignupComponent } from './component/signup/signup.component';
 
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
     { path: 'login', component: LoginComponent },
+    { path: 'signup', component:SignupComponent},
     { 
         path: 'admin', component: AdminHomeComponent,
         children: [
@@ -25,10 +25,8 @@ export const routes: Routes = [
             { path: 'genre', component: GenreComponent },
             { path: 'permission', component: PermissionComponent },
             { path: 'role', component: RoleComponent },
-            { path: 'role-permission', component: RolePermissionComponent },
             { path: 'song-approval', component: SongApprovalComponent },
             { path: 'user', component: UserComponent },
-            { path: 'user-role', component: UserRoleComponent },
             { path: 'user-payment', component: UserPaymentComponent }
         ]
     }
