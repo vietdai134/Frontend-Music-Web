@@ -14,4 +14,9 @@
     <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
     <button [disabled]="currentPage >= totalPages - 1" (click)="nextPage()">Next</button>
   </div>
+
+  <audio controls>
+    <source src="https://localhost:8443/api/songs/files/1CcdwuTxpV4QltT3eEFIpbMc3DY89rdi6/stream" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </div>

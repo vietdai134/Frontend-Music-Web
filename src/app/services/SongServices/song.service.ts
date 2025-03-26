@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Song } from '../../models/song.module';
 import { environment } from '../../../environments/environment';
+import { SongResponse } from '../../response/songResponse';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,23 +11,31 @@ export class SongService {
   private baseUrl = environment.baseUrl; 
   constructor(private http: HttpClient) { }
 
-  getAllSongs(page: number = 0, size: number = 10): Observable<{
-    content: Song[];
-    page: {
-      size: number;
-      number: number;
-      totalElements: number;
-      totalPages: number;
+  getAllSongsWithStatus(page: number = 0, size: number = 10,approvalStatus:string): Observable<SongResponse> {
+    return this.http.get<SongResponse>(`${this.baseUrl}/songs/all?page=${page}&size=${size}&approvalStatus=${approvalStatus}`);
+  }
+
+  createSong(
+    song: { 
+      title: string; 
+      artist: string; 
+      songImage?: File; 
+      songFileData: File; 
+      genreNames: string[];
+      downloadable:boolean;
+    }): Observable<Song> {
+      const formData = new FormData();
+    formData.append('title', song.title);
+    formData.append('artist', song.artist);
+    formData.append('downloadable', song.downloadable.toString());
+    song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
+    if (song.songImage) {
+      formData.append('songImage', song.songImage);
     }
-  }> {
-    return this.http.get<{
-      content: Song[];
-      page: {
-        size: number;
-        number: number;
-        totalElements: number;
-        totalPages: number;
-      }
-    }>(`${this.baseUrl}/songs/all?page=${page}&size=${size}`);
+    if (song.songFileData) {
+      formData.append('songFileData', song.songFileData);
+    }
+    console.log('Sending FormData:', Array.from(formData.entries()));
+    return this.http.post<Song>(`${this.baseUrl}/songs`, formData,{ withCredentials: true });
   }
 }

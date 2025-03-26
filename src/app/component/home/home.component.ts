@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadSongs() {
-    this.songService.getAllSongs(this.currentPage, this.pageSize).subscribe({
+    this.songService.getAllSongsWithStatus(this.currentPage, this.pageSize,'APPROVED').subscribe({
       next: (data) => {
         this.songs = data.content || [];           // Access content directly
         this.totalPages = data.page.totalPages || 1; // Access totalPages from page object

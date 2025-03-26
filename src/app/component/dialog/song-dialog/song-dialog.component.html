@@ -1,0 +1,91 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Sửa tài khoản' : 'Tạo tài khoản mới' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="songForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tên bài hát</mat-label>
+          <input matInput formControlName="title" required>
+          <mat-error *ngIf="songForm.get('title')?.hasError('required')">
+            Vui lòng nhập tên bài hát
+          </mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tên nghệ sĩ</mat-label>
+            <input matInput formControlName="artist" required>
+            <mat-error *ngIf="songForm.get('artist')?.hasError('required')">
+              Vui lòng nhập tên nghệ sĩ
+            </mat-error>
+          </mat-form-field>
+    
+        <div class="full-width">
+          <label>Ảnh bài hát</label>
+          <input type="file" (change)="onImgFileChange($event)" accept="image/*">
+          <div *ngIf="selectedImgFileName" class="file-info">
+            <span>{{ selectedImgFileName }}</span>
+            <button mat-icon-button color="warn" (click)="clearImgFile()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="isEditMode && songForm.get('songImage')?.value" class="current-img-song">
+            <img [src]="songForm.get('songImage')?.value" alt="Current Image Song" style="max-width: 100px;">
+          </div>
+        </div>
+
+        <div class="full-width">
+            <label>File nhạc</label>
+            <input type="file" (change)="onSongFileChange($event)" accept="audio/*">
+            <div *ngIf="selectedSongFileName" class="file-info">
+              <span>{{ selectedSongFileName }}</span>
+              <button mat-icon-button color="warn" (click)="clearSongFile()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="isEditMode && songForm.get('songFileData')?.value" class="current-file-song">
+              <img [src]="songForm.get('songFileData')?.value" alt="Current Song File" style="max-width: 100px;">
+            </div>
+          </div>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Chọn thể loại</mat-label>
+          <mat-select formControlName="genreNames" multiple>
+            <mat-option *ngFor="let genre of availableGenres" [value]="genre.genreName">
+              {{ genre.genreName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="songForm.get('genreNames')?.hasError('minSelection')">
+            Vui lòng chọn ít nhất 1 thể loại
+          </mat-error>
+        </mat-form-field>
+    
+        <div class="selected-genres" *ngIf="songForm.get('genreNames')?.value?.length">
+          <h4>Thể loại đã chọn:</h4>
+          <div class="genre-chip" *ngFor="let genre of songForm.get('genreNames')?.value">
+            <span>{{ genre }}</span>
+            <button mat-icon-button color="warn" (click)="removeGenre(genre)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Có thể tải xuống</mat-label>
+            <mat-select formControlName="downloadable" required>
+            <mat-option [value]="true">Có</mat-option>
+            <mat-option [value]="false">Không</mat-option>
+            </mat-select>
+            <mat-error *ngIf="songForm.get('downloadable')?.hasError('required')">
+            Vui lòng chọn tùy chọn
+            </mat-error>
+        </mat-form-field>
+        
+      </form>
+
+        
+
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Hủy</button>
+      <button mat-raised-button color="primary" [disabled]="songForm.invalid" (click)="onSubmit()">
+        {{ isEditMode ? 'Cập nhật' : 'Tạo' }}
+      </button>
+    </mat-dialog-actions>

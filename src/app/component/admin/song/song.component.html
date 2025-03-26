@@ -1,1 +1,79 @@
-<p>song works!</p>
+<div class="header-container">
+    <h1 class="table-title">Quản lý bài hát</h1>
+    <div class="header-bottom">
+        <!-- <div class="search-container">
+            <mat-form-field appearance="outline" class="search-input">
+                <mat-label>Tìm kiếm người dùng</mat-label>
+                <input matInput [(ngModel)]="searchKeyword" (input)="onSearchChange($event)" placeholder="Nhập tên hoặc email">
+            </mat-form-field>
+        </div> -->
+        <div class="button-wrapper">
+            <button mat-raised-button color="primary" class="create-button" (click)="createSong()">Thêm bài hát</button>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <table mat-table [dataSource]="songs" class="mat-elevation-z8">
+      <ng-container matColumnDef="songId">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let song"> {{ song.songId }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Tên bài hát </th>
+        <td mat-cell *matCellDef="let song"> {{ song.title }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="artist">
+        <th mat-header-cell *matHeaderCellDef> Nghệ sĩ </th>
+        <td mat-cell *matCellDef="let song"> {{ song.artist }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="fileSongId">
+        <th mat-header-cell *matHeaderCellDef> File id </th>
+        <td mat-cell *matCellDef="let song"> {{ song.fileSongId }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="songImage">
+        <th mat-header-cell *matHeaderCellDef> Ảnh bài hát </th>
+        <td mat-cell *matCellDef="let song">
+          <img *ngIf="song.songImage" [src]="song.songImage" alt="songImage" style="max-width: 50px;">
+          <span *ngIf="!song.songImage">Không có</span>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="downloadable">
+        <th mat-header-cell *matHeaderCellDef> Có thể tải xuống </th>
+        <td mat-cell *matCellDef="let song"> {{ song.downloadable ? 'Có' : 'Không' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="approvedDate">
+        <th mat-header-cell *matHeaderCellDef> Ngày được duyệt</th>
+        <td mat-cell *matCellDef="let song"> {{ formatDate(song.approvedDate) }} </td>
+     </ng-container>
+
+     <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef> Người duyệt</th>
+        <td mat-cell *matCellDef="let song"> {{song.userName}} </td>
+    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Hành động </th>
+        <td mat-cell *matCellDef="let user">
+          <!-- <button mat-raised-button color="warn" (click)="deleteUser(user.userId)">Xóa</button>
+          <button mat-raised-button color="primary" (click)="editUser(user.userId)">Sửa</button> -->
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>

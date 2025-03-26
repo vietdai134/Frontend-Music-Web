@@ -1,5 +1,12 @@
+import { Genre } from "./genre.module";
 
 export interface Song{
-    id:number;
+    songId:number;
     title:string;
+    songImage?:string;
+    songFileData:string;
+    downloadable:boolean;
+    genres:Genre[];
+    userName:string;
+    approvedDate:Date;
 }

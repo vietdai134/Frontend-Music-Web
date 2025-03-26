@@ -20,6 +20,10 @@ export class GenreService {
     return this.http.get<GenreResponse>(`${this.baseUrl}/genres/all?page=${page}&size=${size}`,{ withCredentials: true });
   }
 
+  getListAllGenres():Observable<Genre[]>{
+    return this.http.get<Genre[]>(`${this.baseUrl}/genres/list`,{ withCredentials: true });
+  }
+
   getGenreById(genreId:number):Observable<Genre>{
     return this.http.get<Genre>(`${this.baseUrl}/genres/${genreId}`,{ withCredentials: true });
   }
