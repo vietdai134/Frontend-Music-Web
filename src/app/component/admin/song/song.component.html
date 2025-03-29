@@ -43,6 +43,11 @@
         </td>
       </ng-container>
   
+      <ng-container matColumnDef="genres">
+        <th mat-header-cell *matHeaderCellDef> Thể loại </th>
+        <td mat-cell *matCellDef="let genre"> {{ getGenresDisplay(genre) }} </td>
+      </ng-container>
+
       <ng-container matColumnDef="downloadable">
         <th mat-header-cell *matHeaderCellDef> Có thể tải xuống </th>
         <td mat-cell *matCellDef="let song"> {{ song.downloadable ? 'Có' : 'Không' }} </td>
@@ -59,9 +64,9 @@
     </ng-container>
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Hành động </th>
-        <td mat-cell *matCellDef="let user">
-          <!-- <button mat-raised-button color="warn" (click)="deleteUser(user.userId)">Xóa</button>
-          <button mat-raised-button color="primary" (click)="editUser(user.userId)">Sửa</button> -->
+        <td mat-cell *matCellDef="let song">
+          <!-- <button mat-raised-button color="warn" (click)="deleteUser(user.userId)">Xóa</button> -->
+          <button mat-raised-button color="primary" (click)="editUser(song.songId)">Sửa</button>
         </td>
       </ng-container>
   

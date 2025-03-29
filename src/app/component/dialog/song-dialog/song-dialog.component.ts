@@ -64,11 +64,12 @@ export class SongDialogComponent implements OnInit{
 
     if (this.isEditMode) {
       // this.userForm.patchValue(data.user); // Điền dữ liệu user hiện tại vào form
+      console.log(data.song)
       this.songForm.patchValue({
         ...data.song,
         genreNames: data.song.genres.map((genre: Genre) => genre.genreName), // Chuyển roles thành mảng roleName
         songImage: data.song.songImage,
-        
+        songFileData: data.song.fileSongId
       });
     }
   }
@@ -81,39 +82,77 @@ export class SongDialogComponent implements OnInit{
     const currentGenres = this.songForm.get('genreNames')?.value as string[];
     this.songForm.get('genreNames')?.setValue(currentGenres.filter(g => g !== genre));
   }
+  // onSubmit() {
+  //   if (this.songForm.valid) {
+  //     const songData = this.songForm.value;
+  //     const requestData = {
+  //       title: songData.title,
+  //       artist: songData.artist,
+  //       songImage: this.selectedImgFile  || undefined,
+  //       if(isEditMode){
+  //         songFileId=songData.songFileData;
+  //       }
+  //       else{
+  //          songFileData: this.selectedSongFile ? this.selectedSongFile : new File([], "") 
+  //       },
+       
+  //       genreNames: songData.genreNames,
+  //       downloadable:songData.downloadable
+  //     };
+  //     // console.log('Request Data:', requestData);
+  //     if (this.isEditMode) {
+  //       // console.log(this.data.user.userId);
+  //       console.log(requestData);
+  //       // console.log(requestData);
+  //       this.songService.updateSong(this.data.song.songId, requestData).subscribe({
+  //         next: () => this.dialogRef.close(true),
+  //         error: (err) => 
+  //           console.error('Error updating user:', err)
+  //       });
+  //       console.log("edit mode");
+  //     } else {  
+  //       console.log(requestData)
+  //       this.songService.createSong(requestData).subscribe({
+  //         next: (songResponse) => {
+  //             this.dialogRef.close(true)
+  //         },
+  //         error: (err) => console.error('Error creating song:', err)
+  //       });
+  //     }
+  //   }
+  // }
+
   onSubmit() {
     if (this.songForm.valid) {
       const songData = this.songForm.value;
-      const requestData = {
+      const requestData: any = {
         title: songData.title,
         artist: songData.artist,
-        songImage: this.selectedImgFile  || undefined,
-        songFileData: this.selectedSongFile ? this.selectedSongFile : new File([], "") ,
+        songImage: this.selectedImgFile || undefined,
         genreNames: songData.genreNames,
-        downloadable:songData.downloadable
+        downloadable: songData.downloadable
       };
-      // console.log('Request Data:', requestData);
+  
       if (this.isEditMode) {
-        // console.log(this.data.user.userId);
-        // console.log(userData);
-        // this.userService.updateUser(this.data.user.userId, userData).subscribe({
-        // this.userService.updateUser(this.data.user.userId, requestData).subscribe({
-        //   next: () => this.dialogRef.close(true),
-        //   error: (err) => 
-        //     console.error('Error updating user:', err)
-        // });
-        console.log("edit mode");
-      } else {  
-        console.log(requestData)
+        requestData.songFileId = songData.songFileData; // Nếu là chế độ sửa, giữ nguyên file
+      } else {
+        requestData.songFileData = this.selectedSongFile ? this.selectedSongFile : new File([], "");
+      }
+  
+      if (this.isEditMode) {
+        this.songService.updateSong(this.data.song.songId, requestData).subscribe({
+          next: () => this.dialogRef.close(true),
+          error: (err) => console.error('Error updating song:', err)
+        });
+      } else {
         this.songService.createSong(requestData).subscribe({
-          next: (songResponse) => {
-              this.dialogRef.close(true)
-          },
+          next: () => this.dialogRef.close(true),
           error: (err) => console.error('Error creating song:', err)
         });
       }
     }
   }
+  
 
   onCancel() {
     this.dialogRef.close(false);

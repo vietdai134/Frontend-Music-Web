@@ -11,6 +11,7 @@ import { SongService } from '../../../services/SongServices/song.service';
 import { SongDialogComponent } from '../../dialog/song-dialog/song-dialog.component';
 import { Song } from '../../../models/song.module';
 import { SongApprovalService } from '../../../services/SongApprovalServices/song-approval.service';
+import { Genre } from '../../../models/genre.module';
 
 @Component({
   selector: 'app-song',
@@ -31,7 +32,7 @@ import { SongApprovalService } from '../../../services/SongApprovalServices/song
 })
 export class SongComponent {
   displayedColumns: string[] = ['songId', 'title', 'artist', 
-    'fileSongId', 'songImage','downloadable',
+    'fileSongId', 'songImage','genres','downloadable',
     'approvedDate','userName', 'actions'];
   songs:Song[]=[];
   totalElements = 0;
@@ -77,11 +78,11 @@ export class SongComponent {
     }
   }
 
-  // getRolesDisplay(user: User): string {
-  //   return user.roles.length > 0 
-  //     ? user.roles.map((role: Role) => role.roleName).join(', ') 
-  //     : 'Không có quyền';
-  // }
+  getGenresDisplay(song: Song): string {
+    return song.genres.length > 0 
+      ? song.genres.map((genre: Genre) => genre.genreName).join(', ') 
+      : 'Không có thể loại';
+  }
 
   // deleteUser(userId: number): void {
   //   const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
@@ -154,11 +155,33 @@ export class SongComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log(!result.userId)
-        // this.loadUsers(this.currentPage, this.pageSize);
+        this.loadSongs(this.currentPage, this.pageSize);
         // setTimeout(() => {
         //   this.loadUsers(this.currentPage, this.pageSize);
         // }, 2500);
       }
+    });
+  }
+
+  // Cập nhật method editUser
+  editUser(songId: number): void {
+    console.log(`Edit user with ID: ${songId}`);
+    this.songService.getSongById(songId).subscribe({
+      next: (song) => {
+        const dialogRef = this.dialog.open(SongDialogComponent, {
+          width: '400px',
+          disableClose: true,
+          data: { song } // Truyền dữ liệu user vào dialog
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            console.log(result.userId)
+            this.loadSongs(this.currentPage, this.pageSize);
+          }
+        });
+      },
+      error: (err) => console.error('Error fetching user:', err)
     });
   }
 

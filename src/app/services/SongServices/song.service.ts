@@ -15,6 +15,10 @@ export class SongService {
     return this.http.get<SongResponse>(`${this.baseUrl}/songs/all?page=${page}&size=${size}&approvalStatus=${approvalStatus}`);
   }
 
+  getSongById(songId:number):Observable<Song>{
+    return this.http.get<Song>(`${this.baseUrl}/songs/${songId}`,{ withCredentials: true });
+  }
+
   createSong(
     song: { 
       title: string; 
@@ -38,4 +42,26 @@ export class SongService {
     console.log('Sending FormData:', Array.from(formData.entries()));
     return this.http.post<Song>(`${this.baseUrl}/songs`, formData,{ withCredentials: true });
   }
+
+  updateSong(
+      songId:number,
+      song:{
+        title:string;
+        artist:string;
+        songFileId: string;
+        genreNames: string[];
+        songImage?:File;
+        downloadable: boolean;
+      }):Observable<Song>{
+        const formData = new FormData();
+        formData.append('title', song.title);
+        formData.append('artist', song.artist);
+        formData.append('songFileId', song.songFileId);
+        // formData.append('roleNames', JSON.stringify(user.roleNames));
+        song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
+        if (song.songImage) {
+          formData.append('songImage', song.songImage);
+        }
+        return this.http.put<Song>(`${this.baseUrl}/songs/update/${songId}`, formData,{ withCredentials: true });
+      }
 }

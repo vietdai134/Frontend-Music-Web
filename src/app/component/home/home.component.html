@@ -3,11 +3,11 @@
   
   <div *ngIf="songs.length === 0">No songs found</div>
   
-  <ul>
+  <!-- <ul>
     <li *ngFor="let song of songs">
       {{ song.id }} - {{ song.title }}
     </li>
-  </ul>
+  </ul> -->
 
   <div class="pagination">
     <button [disabled]="currentPage === 0" (click)="prevPage()">Previous</button>

@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <div class="full-width">
+        <div class="full-width" *ngIf="!isEditMode">
             <label>File nhạc</label>
             <input type="file" (change)="onSongFileChange($event)" accept="audio/*">
             <div *ngIf="selectedSongFileName" class="file-info">
