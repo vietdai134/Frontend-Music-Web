@@ -15,6 +15,10 @@ export class SongService {
     return this.http.get<SongResponse>(`${this.baseUrl}/songs/all?page=${page}&size=${size}&approvalStatus=${approvalStatus}`);
   }
 
+  searchSongsWithStatus(page: number = 0, size: number = 10,keyword:string,approvalStatus:string): Observable<SongResponse> {
+    return this.http.get<SongResponse>(`${this.baseUrl}/songs/search?page=${page}&size=${size}&keyword=${keyword}&approvalStatus=${approvalStatus}`,{withCredentials:true});
+  }
+
   getSongById(songId:number):Observable<Song>{
     return this.http.get<Song>(`${this.baseUrl}/songs/${songId}`,{ withCredentials: true });
   }

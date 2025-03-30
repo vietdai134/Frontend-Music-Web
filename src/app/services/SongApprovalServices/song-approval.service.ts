@@ -11,13 +11,12 @@ export class SongApprovalService {
   private baseUrl = environment.baseUrl; 
   constructor(private http: HttpClient) { }
 
-  createSongApproval(
-    songApproval: { 
-      songId:number;
-      status:string;
-    }): Observable<SongApproval> {
+  UpdateSongApproval( 
+      songId:number,
+      status:string
+    ): Observable<void> {
       
-    return this.http.post<SongApproval>(`${this.baseUrl}/songs-approval`, songApproval,{ withCredentials: true });
+    return this.http.put<void>(`${this.baseUrl}/song-approval/${songId}?approvalStatus=${status}`,null,{ withCredentials: true });
   }
 }
 

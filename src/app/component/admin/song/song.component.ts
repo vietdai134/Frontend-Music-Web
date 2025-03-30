@@ -12,6 +12,8 @@ import { SongDialogComponent } from '../../dialog/song-dialog/song-dialog.compon
 import { Song } from '../../../models/song.module';
 import { SongApprovalService } from '../../../services/SongApprovalServices/song-approval.service';
 import { Genre } from '../../../models/genre.module';
+import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-song',
@@ -44,6 +46,7 @@ export class SongComponent {
 
   constructor(
     private songService: SongService,
+    private songApprovalService: SongApprovalService,
     private dialog: MatDialog,
     private datePipe: DatePipe
   ) {}
@@ -84,66 +87,64 @@ export class SongComponent {
       : 'Không có thể loại';
   }
 
-  // deleteUser(userId: number): void {
-  //   const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
-  //     width: '300px',
-  //     data: { 
-  //       // userId 
-  //       entity:'user',
-  //       id:userId
-  //     } // Truyền userId vào dialog
-  //   });
+  revokeSong(songId: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+      width: '300px',
+      data: { 
+        entity:'song',
+        id:songId
+      } 
+    });
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) { // Nếu người dùng xác nhận xóa
-  //       this.userService.deleteUser(userId).subscribe({
-  //         next: () => {
-  //           console.log(`Delete user with ID: ${userId}`);
-  //           // this.loadUsers(this.currentPage, this.pageSize); // Tải lại danh sách sau khi xóa
-  //           setTimeout(() => {
-  //             this.loadUsers(this.currentPage, this.pageSize);
-  //           }, 1000);
-  //         },
-  //         error: (err) => {
-  //           console.error('Error deleting user:', err);
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { // Nếu người dùng xác nhận xóa
+        this.songApprovalService.UpdateSongApproval(songId,'REVOKED').subscribe({
+          next: () => {
+            console.log(`Delete song with ID: ${songId}`);
+            this.loadSongs(this.currentPage, this.pageSize);
+          },
+          error: (err) => {
+            console.error('Error deleting song:', err);
+          }
+        });
+      }
+    });
+  }
 
-  // onSearchChange(event: Event) {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   this.searchKeyword = inputElement.value;
-  //   console.log(this,this.searchKeyword);
-  //   // Reset currentPage về 0 khi tìm kiếm
-  //   this.currentPage = 0;
+  onSearchChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchKeyword = inputElement.value;
+    console.log(this,this.searchKeyword);
+    // Reset currentPage về 0 khi tìm kiếm
+    this.currentPage = 0;
     
-  //   // Cập nhật paginator để hiển thị trang đầu tiên
-  //   if (this.paginator) {
-  //     this.paginator.pageIndex = 0;
-  //   }
-  //   this.searchUsers(this.currentPage, this.pageSize);
+    // Cập nhật paginator để hiển thị trang đầu tiên
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+    this.searchSongs(this.currentPage, this.pageSize);
     
-  // }
+  }
 
-  // searchUsers(page: number, size: number): void {
-  //   if (!this.searchKeyword.trim()) {
-  //     this.loadUsers(page, size); // Nếu không có từ khóa tìm kiếm, lấy toàn bộ danh sách
-  //     return;
-  //   }
-  //   this.userService.searchUsers(this.searchKeyword, page, size).subscribe({
-  //     next: (response) => { // Xác định kiểu dữ liệu
-  //       this.users = response.content;
-  //       this.totalElements = response.page.totalElements;
-  //       this.pageSize = response.page.size;
-  //       this.currentPage = response.page.number;
-  //     },
-  //     error: (err: any) => { // Xác định kiểu dữ liệu
-  //       console.error('Error searching users:', err);
-  //     }
-  //   });
-  // }
+  searchSongs(page: number, size: number): void {
+    if (!this.searchKeyword.trim()) {
+      console.log("khong co keyword")
+      this.loadSongs(page, size); // Nếu không có từ khóa tìm kiếm, lấy toàn bộ danh sách
+      return;
+    }
+    this.songService.searchSongsWithStatus(page, size,this.searchKeyword,'APPROVED').subscribe({
+      next: (response) => { // Xác định kiểu dữ liệu
+        console.log(response.content)
+        this.songs = response.content;
+        this.totalElements = response.page.totalElements;
+        this.pageSize = response.page.size;
+        this.currentPage = response.page.number;
+      },
+      error: (err: any) => { // Xác định kiểu dữ liệu
+        console.error('Error searching songs:', err);
+      }
+    });
+  }
 
 
   createSong(): void {
@@ -156,9 +157,6 @@ export class SongComponent {
       if (result) {
         console.log(!result.userId)
         this.loadSongs(this.currentPage, this.pageSize);
-        // setTimeout(() => {
-        //   this.loadUsers(this.currentPage, this.pageSize);
-        // }, 2500);
       }
     });
   }
