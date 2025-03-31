@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -32,7 +32,7 @@ import { timeout } from 'rxjs';
   styleUrl: './song.component.scss',
   providers: [DatePipe]
 })
-export class SongComponent {
+export class SongComponent implements OnInit{
   displayedColumns: string[] = ['songId', 'title', 'artist', 
     'fileSongId', 'songImage','genres','downloadable',
     'approvedDate','userName', 'actions'];
@@ -174,7 +174,7 @@ export class SongComponent {
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            console.log(result.userId)
+            // console.log(result.userId)
             this.loadSongs(this.currentPage, this.pageSize);
           }
         });

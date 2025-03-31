@@ -18,5 +18,13 @@ export class SongApprovalService {
       
     return this.http.put<void>(`${this.baseUrl}/song-approval/${songId}?approvalStatus=${status}`,null,{ withCredentials: true });
   }
+
+  UpdateSongUploadApproval( 
+    songId:number,
+    status:string
+  ): Observable<void> {
+    
+  return this.http.put<void>(`${this.baseUrl}/song-approval/upload-song/${songId}?approvalStatus=${status}`,null,{ withCredentials: true });
+}
 }
 

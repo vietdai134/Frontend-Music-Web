@@ -56,7 +56,10 @@ export class SongDialogComponent implements OnInit{
       title: ['', Validators.required],
       artist: ['', Validators.required],
       songImage: [''],
-      songFileData: [''],
+      // songFileData: [''],
+      songFileData: [
+        this.isEditMode ? this.data.song.fileSongId : '',
+         this.isEditMode ? [] : [Validators.required]], // Chỉ required khi tạo mới
       genreNames:[[],minSelectionValidator(1)],
       downloadable: [null, Validators.required],
       
@@ -82,45 +85,6 @@ export class SongDialogComponent implements OnInit{
     const currentGenres = this.songForm.get('genreNames')?.value as string[];
     this.songForm.get('genreNames')?.setValue(currentGenres.filter(g => g !== genre));
   }
-  // onSubmit() {
-  //   if (this.songForm.valid) {
-  //     const songData = this.songForm.value;
-  //     const requestData = {
-  //       title: songData.title,
-  //       artist: songData.artist,
-  //       songImage: this.selectedImgFile  || undefined,
-  //       if(isEditMode){
-  //         songFileId=songData.songFileData;
-  //       }
-  //       else{
-  //          songFileData: this.selectedSongFile ? this.selectedSongFile : new File([], "") 
-  //       },
-       
-  //       genreNames: songData.genreNames,
-  //       downloadable:songData.downloadable
-  //     };
-  //     // console.log('Request Data:', requestData);
-  //     if (this.isEditMode) {
-  //       // console.log(this.data.user.userId);
-  //       console.log(requestData);
-  //       // console.log(requestData);
-  //       this.songService.updateSong(this.data.song.songId, requestData).subscribe({
-  //         next: () => this.dialogRef.close(true),
-  //         error: (err) => 
-  //           console.error('Error updating user:', err)
-  //       });
-  //       console.log("edit mode");
-  //     } else {  
-  //       console.log(requestData)
-  //       this.songService.createSong(requestData).subscribe({
-  //         next: (songResponse) => {
-  //             this.dialogRef.close(true)
-  //         },
-  //         error: (err) => console.error('Error creating song:', err)
-  //       });
-  //     }
-  //   }
-  // }
 
   onSubmit() {
     if (this.songForm.valid) {
@@ -129,6 +93,8 @@ export class SongDialogComponent implements OnInit{
         title: songData.title,
         artist: songData.artist,
         songImage: this.selectedImgFile || undefined,
+        // songImage: this.selectedImgFile ,
+        // songImage: this.isEditMode && !this.selectedImgFile ? this.data.song.songImage : this.selectedImgFile, // Sửa ở đây
         genreNames: songData.genreNames,
         downloadable: songData.downloadable
       };
@@ -136,7 +102,8 @@ export class SongDialogComponent implements OnInit{
       if (this.isEditMode) {
         requestData.songFileId = songData.songFileData; // Nếu là chế độ sửa, giữ nguyên file
       } else {
-        requestData.songFileData = this.selectedSongFile ? this.selectedSongFile : new File([], "");
+        // requestData.songFileData = this.selectedSongFile ? this.selectedSongFile : new File([], "");
+        requestData.songFileData = this.selectedSongFile;
       }
   
       if (this.isEditMode) {
@@ -192,6 +159,9 @@ export class SongDialogComponent implements OnInit{
       this.selectedSongFile = input.files[0];
       this.selectedSongFileName = this.selectedSongFile.name;
       console.log('Selected file:', this.selectedSongFile);
+      if (!this.isEditMode) {
+        this.songForm.get('songFileData')?.setValue(this.selectedSongFile.name); // Gán tên file để thỏa mãn Validators.required
+      }
     }
   }
 
@@ -200,5 +170,8 @@ export class SongDialogComponent implements OnInit{
     this.selectedSongFileName = null;
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
+    if (!this.isEditMode) {
+      this.songForm.get('songFileData')?.setValue(''); // Reset về rỗng khi tạo mới
+    }
   }
 }

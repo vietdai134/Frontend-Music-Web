@@ -11,6 +11,7 @@ import { UserComponent } from './component/admin/user/user.component';
 import { UserPaymentComponent } from './component/admin/user-payment/user-payment.component';
 import { DashboardComponent } from './component/admin/dashboard/dashboard.component';
 import { SignupComponent } from './component/signup/signup.component';
+import { SongUploadComponent } from './component/admin/song-upload/song-upload.component';
 
 
 export const routes: Routes = [
@@ -25,7 +26,7 @@ export const routes: Routes = [
             { path: 'genre', component: GenreComponent },
             { path: 'permission', component: PermissionComponent },
             { path: 'role', component: RoleComponent },
-            { path: 'song-approval', component: SongApprovalComponent },
+            { path: 'song-upload', component: SongUploadComponent },
             { path: 'user', component: UserComponent },
             { path: 'user-payment', component: UserPaymentComponent }
         ]

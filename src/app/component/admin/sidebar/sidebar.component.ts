@@ -36,11 +36,11 @@ export class SidebarComponent implements OnInit{
     this.user$.subscribe(user => {
       if (this.hasModerateSongPermission(user)) {
           // Kiểm tra xem mục Moderate đã tồn tại chưa để tránh trùng lặp
-          if (!this.menuItems.some(item => item.label === 'Song-Approval')) {
+          if (!this.menuItems.some(item => item.label === 'Song-Upload')) {
               this.menuItems.push({
-                  label: 'Song-Approval',
+                  label: 'Song-Upload',
                   icon: 'fas fa-check-circle', // Chọn icon phù hợp
-                  link: '/admin/song-approval'
+                  link: '/admin/song-upload'
               });
           }
       }

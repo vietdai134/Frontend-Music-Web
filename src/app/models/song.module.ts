@@ -9,4 +9,7 @@ export interface Song{
     genres:Genre[];
     userName:string;
     approvedDate:Date;
+
+    fileSongId: string;
+    artist:string;
 }
