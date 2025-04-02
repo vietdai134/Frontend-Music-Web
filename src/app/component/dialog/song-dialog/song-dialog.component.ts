@@ -93,8 +93,6 @@ export class SongDialogComponent implements OnInit{
         title: songData.title,
         artist: songData.artist,
         songImage: this.selectedImgFile || undefined,
-        // songImage: this.selectedImgFile ,
-        // songImage: this.isEditMode && !this.selectedImgFile ? this.data.song.songImage : this.selectedImgFile, // Sửa ở đây
         genreNames: songData.genreNames,
         downloadable: songData.downloadable
       };
@@ -102,7 +100,6 @@ export class SongDialogComponent implements OnInit{
       if (this.isEditMode) {
         requestData.songFileId = songData.songFileData; // Nếu là chế độ sửa, giữ nguyên file
       } else {
-        // requestData.songFileData = this.selectedSongFile ? this.selectedSongFile : new File([], "");
         requestData.songFileData = this.selectedSongFile;
       }
   

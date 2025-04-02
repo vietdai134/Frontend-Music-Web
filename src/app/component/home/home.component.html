@@ -1,22 +1,21 @@
 <div class="song-list">
-  <h2>Songs</h2>
-  
-  <div *ngIf="songs.length === 0">No songs found</div>
-  
-  <!-- <ul>
-    <li *ngFor="let song of songs">
-      {{ song.id }} - {{ song.title }}
-    </li>
-  </ul> -->
-
-  <div class="pagination">
-    <button [disabled]="currentPage === 0" (click)="prevPage()">Previous</button>
-    <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-    <button [disabled]="currentPage >= totalPages - 1" (click)="nextPage()">Next</button>
+  <div class="song-container">
+    <mat-card *ngFor="let song of songs" class="song-card">
+      <button mat-button (click)="playSong(song)">
+        <mat-card-header>
+          <mat-card-title>{{ song.title }}</mat-card-title>
+          <mat-card-subtitle>{{ song.artist }}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" />
+      </button>
+    </mat-card>
   </div>
 
-  <audio controls>
-    <source src="https://localhost:8443/api/songs/files/1CcdwuTxpV4QltT3eEFIpbMc3DY89rdi6/stream" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageIndex]="currentPage"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </div>

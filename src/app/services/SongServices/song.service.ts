@@ -62,6 +62,7 @@ export class SongService {
         formData.append('artist', song.artist);
         formData.append('songFileId', song.songFileId);
         // formData.append('roleNames', JSON.stringify(user.roleNames));
+        formData.append('downloadable', song.downloadable.toString());
         song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
         if (song.songImage) {
           formData.append('songImage', song.songImage);

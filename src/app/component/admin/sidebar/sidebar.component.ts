@@ -16,13 +16,13 @@ export class SidebarComponent implements OnInit{
   user$: Observable<User | null>;
   menuItems = [
     { label: 'Quay lại trang chủ', icon: 'fas fa-users', link: '/' },
-    { label: 'Dashboard', icon: 'fas fa-home', link: '/admin' },
+    // { label: 'Dashboard', icon: 'fas fa-home', link: '/admin' },
     { label: 'Song', icon: 'fas fa-users', link: '/admin/song' },
     { label: 'Genre', icon: 'fas fa-shopping-cart', link: '/admin/genre' },
     { label: 'Permission', icon: 'fas fa-box', link: '/admin/permission' },
     { label: 'Role', icon: 'fas fa-cog', link: '/admin/role' },
     { label: 'Users', icon: 'fas fa-users', link: '/admin/user' },
-    { label: 'User-Payment', icon: 'fas fa-cog', link: '/admin/user-payment' }
+    // { label: 'User-Payment', icon: 'fas fa-cog', link: '/admin/user-payment' }
     
   ];
   constructor(

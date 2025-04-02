@@ -1,1 +1,2 @@
-<p>footer works!</p>
+<p *ngIf="currentSong">Now playing: {{ currentSong?.title }} - {{ currentSong?.artist }}</p>
+<audio *ngIf="songUrl" controls [src]="songUrl" autoplay></audio>

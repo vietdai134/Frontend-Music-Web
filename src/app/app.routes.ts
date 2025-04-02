@@ -6,7 +6,6 @@ import { SongComponent } from './component/admin/song/song.component';
 import { GenreComponent } from './component/admin/genre/genre.component';
 import { PermissionComponent } from './component/admin/permission/permission.component';
 import { RoleComponent } from './component/admin/role/role.component';
-import { SongApprovalComponent } from './component/admin/song-approval/song-approval.component';
 import { UserComponent } from './component/admin/user/user.component';
 import { UserPaymentComponent } from './component/admin/user-payment/user-payment.component';
 import { DashboardComponent } from './component/admin/dashboard/dashboard.component';
