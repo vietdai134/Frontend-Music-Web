@@ -1,0 +1,46 @@
+<div class="queue-container">
+    <!-- <button mat-icon-button class="create-playlist-btn" matTooltip="Tạo playlist" (click)="createPlaylist()">
+        <mat-icon>add</mat-icon>
+      </button> -->
+      <button 
+        mat-icon-button 
+        class="create-playlist-btn" 
+        matTooltip="Create Playlist" 
+        matTooltipPosition="above" 
+        (click)="createPlaylist()">
+        <mat-icon>add</mat-icon>
+    </button>
+    <!-- Phần Now Playing -->
+    <div class="now-playing-section">
+      <h4>Now Playing</h4>
+      <div class="song-item" *ngIf="currentSong">
+        <img [src]="currentSong.songImage || 'default-image.jpg'" alt="Song Image" class="song-image" />
+        <div class="song-details">
+          <p class="song-title">{{ currentSong.title }}</p>
+          <p class="song-artist">{{ currentSong.artist }}</p>
+        </div>
+      </div>
+      <div class="no-song" *ngIf="!currentSong">No song is currently playing</div>
+    </div>
+  
+    <!-- Phần Queue -->
+    <div class="queue-section">
+      <h4>Queue ({{ songQueue.length }})</h4>
+      <ul>
+        <li *ngFor="let song of songQueue; let i = index" [class.current]="song === currentSong">
+          <div class="song-item">
+            <img [src]="song.songImage || 'default-image.jpg'" alt="Song Image" class="song-image" />
+            <div class="song-details">
+              <p class="song-title">{{ song.title }}</p>
+              <p class="song-artist">{{ song.artist }}</p>
+            </div>
+            <button mat-icon-button (click)="playSong(song)" title="Play this song">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </div>
+        </li>
+        <li *ngIf="songQueue.length === 0">No songs in queue</li>
+      </ul>
+    </div>
+  </div>
+  

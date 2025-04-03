@@ -1,6 +1,11 @@
 <header class="header">
   <div class="logo">My Website</div>
-  
+  <div class="search-container">
+      <mat-form-field appearance="outline" class="search-input">
+          <mat-label>Tìm kiếm bài hát</mat-label>
+          <input matInput [(ngModel)]="searchKeyword" (input)="onSearchChange($event)" placeholder="Nhập bài hát, nghệ sĩ">
+      </mat-form-field>
+  </div>
   <div class="user-info">
     <!-- Nếu đã đăng nhập, hiển thị tên người dùng và dropdown -->
     <ng-container *ngIf="(user$ | async) as user; else loginTemplate">

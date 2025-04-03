@@ -1,2 +1,182 @@
-<p *ngIf="currentSong">Now playing: {{ currentSong?.title }} - {{ currentSong?.artist }}</p>
-<audio *ngIf="songUrl" controls [src]="songUrl" autoplay></audio>
+<!-- <footer>
+  <div class="player-container">
+    <ng-container *ngIf="currentSong">
+      <p>Now Playing: {{ currentSong.title }} - {{ currentSong.artist }}</p>
+      <div class="controls">
+        <button mat-raised-button color="primary" (click)="previousSong()" [disabled]="!canGoPrevious">
+          Previous
+        </button>
+        <button mat-raised-button color="primary" (click)="togglePlayPause()">
+          {{ isPlaying ? 'Pause' : 'Play' }}
+        </button>
+        <button mat-raised-button color="primary" (click)="nextSong()" [disabled]="!canGoNext">
+          Next
+        </button>
+        <button mat-raised-button color="warn" (click)="clearQueue()">
+          Clear Queue
+        </button>
+        <button mat-raised-button color="accent" (click)="toggleQueue()">
+          Show Queue ({{ songQueue.length }})
+        </button>
+      </div>
+      <audio #audioPlayer controls controlsList="nodownload noplaybackrate" (ended)="onSongEnded()">
+        <source [src]="songUrl" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </ng-container>
+    <ng-container *ngIf="!currentSong">
+      <p>No song is currently playing.</p>
+    </ng-container>
+  </div>
+</footer> -->
+
+<!-- <footer>
+  <div class="player-container">
+    <ng-container *ngIf="currentSong">
+      <div class="song-info">
+        <img [src]="currentSong.songImage || 'default-image.jpg'" alt="Song Image" class="song-image" />
+        <div class="song-details">
+          <p class="song-title">{{ currentSong.title }}</p>
+          <p class="song-artist">{{ currentSong.artist }}</p>
+        </div>
+      </div>
+
+      <div class="player-controls">
+        <div class="control-buttons">
+          <button mat-raised-button color="primary" (click)="previousSong()" [disabled]="!canGoPrevious">
+            Previous
+          </button>
+          <button mat-raised-button color="primary" (click)="togglePlayPause()">
+            {{ isPlaying ? 'Pause' : 'Play' }}
+          </button>
+          <button mat-raised-button color="primary" (click)="nextSong()" [disabled]="!canGoNext">
+            Next
+          </button>
+          <button mat-raised-button color="warn" (click)="clearQueue()">
+            Clear Queue
+          </button>
+          <button mat-raised-button color="accent" (click)="toggleQueue()">
+            Show Queue ({{ songQueue.length }})
+          </button>
+        </div>
+        <div class="progress-bar">
+          <input type="range" min="0" [max]="duration || 100" [value]="currentTime || 0" 
+                 (input)="onSeek($event)" class="seek-bar" />
+          <span class="time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+        </div>
+      </div>
+
+      <div class="volume-control">
+        <input type="range" min="0" max="1" step="0.1" [value]="volume" 
+               (input)="onVolumeChange($event)" class="volume-bar" />
+      </div>
+
+      <audio #audioPlayer controls controlsList="nodownload noplaybackrate" (ended)="onSongEnded()">
+        <source [src]="songUrl" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </ng-container>
+
+    <ng-container *ngIf="!currentSong">
+      <p>No song is currently playing.</p>
+    </ng-container>
+  </div>
+</footer> -->
+
+<!-- <footer>
+  <div class="player-container">
+    <ng-container *ngIf="currentSong">
+      <div class="song-info">
+        <img [src]="currentSong.songImage || 'default-image.jpg'" alt="Song Image" class="song-image" />
+        <div class="song-details">
+          <p class="song-title">{{ currentSong.title }}</p>
+          <p class="song-artist">{{ currentSong.artist }}</p>
+        </div>
+      </div>
+
+      <div class="player-controls">
+        <div class="control-buttons">
+          <button mat-raised-button color="primary" (click)="previousSong()" [disabled]="!canGoPrevious">
+            Previous
+          </button>
+          <button mat-raised-button color="primary" (click)="togglePlayPause()">
+            {{ isPlaying ? 'Pause' : 'Play' }}
+          </button>
+          <button mat-raised-button color="primary" (click)="nextSong()" [disabled]="!canGoNext">
+            Next
+          </button>
+          <button mat-raised-button color="warn" (click)="clearQueue()">
+            Clear Queue
+          </button>
+          <button mat-raised-button color="accent" (click)="toggleQueue()">
+            Show Queue ({{ songQueue.length }})
+          </button>
+        </div>
+        <audio #audioPlayer controls controlsList="nodownload noplaybackrate" (ended)="onSongEnded()">
+          <source [src]="songUrl" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="volume-control">
+        <input type="range" min="0" max="1" step="0.1" [value]="volume" 
+               (input)="onVolumeChange($event)" class="volume-bar" />
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!currentSong">
+      <p>No song is currently playing.</p>
+    </ng-container>
+  </div>
+</footer> -->
+
+<footer>
+  <div class="player-container">
+    <ng-container *ngIf="currentSong">
+      <div class="song-info">
+        <img [src]="currentSong.songImage || 'default-image.jpg'" alt="Song Image" class="song-image" />
+        <div class="song-details">
+          <p class="song-title">{{ currentSong.title }}</p>
+          <p class="song-artist">{{ currentSong.artist }}</p>
+        </div>
+      </div>
+
+      <div class="player-controls">
+        <div class="control-buttons">
+          <button mat-icon-button color="primary" (click)="previousSong()" [disabled]="!canGoPrevious" title="Previous">
+            <mat-icon>skip_previous</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="togglePlayPause()" title="{{ isPlaying ? 'Pause' : 'Play' }}">
+            <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="nextSong()" [disabled]="!canGoNext" title="Next">
+            <mat-icon>skip_next</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="clearQueue()" title="Clear Queue">
+            <mat-icon>clear_all</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="toggleQueue()" title="Show Queue">
+            <mat-icon>queue_music</mat-icon>
+            <span class="queue-count">{{ songQueue.length }}</span>
+          </button>
+        </div>
+        <audio #audioPlayer controls controlsList="nodownload noplaybackrate" (ended)="onSongEnded()">
+          <source [src]="songUrl" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="volume-control">
+        <mat-icon class="volume-icon">
+          {{ volume === 0 ? 'volume_off' : 'volume_up' }}
+        </mat-icon>
+        <input type="range" min="0" max="1" step="0.1" [value]="volume" 
+               (input)="onVolumeChange($event)" class="volume-bar" />
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!currentSong">
+      <p>No song is currently playing.</p>
+    </ng-container>
+  </div>
+</footer>
