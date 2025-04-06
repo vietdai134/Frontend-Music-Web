@@ -1,4 +1,7 @@
 <header class="header">
+  <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle">
+    <mat-icon>{{ isSidebarVisible ? 'chevron_left' : 'menu' }}</mat-icon>
+  </button>
   <div class="logo">My Website</div>
   <div class="search-container">
       <mat-form-field appearance="outline" class="search-input">
@@ -12,10 +15,10 @@
       <div class="dropdown" 
            (mouseenter)="showDropdownMenu()" 
            (mouseleave)="hideDropdownWithDelay()">
-        <span class="username">
-          {{ user.userName }}
-          <span class="arrow-down"></span>
-        </span>
+        <div class="avatar-container">
+          <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" class="avatar">
+          <span class="tooltip">{{ user.userName }}</span>
+        </div>
 
         <!-- Dropdown menu -->
         <ul class="dropdown-menu" *ngIf="showDropdown" 

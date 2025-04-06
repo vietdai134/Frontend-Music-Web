@@ -1,23 +1,36 @@
+$bg-dark: #111111;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+$card-bg: #181818;
+
 .queue-container {
-    background: white;
-    border: 1px solid #ccc;
+    // background: white;
+    background: $bg-dark;
+    // border: 1px solid #ccc;
+    border: 1px solid #333;
     z-index: 1000;
     border-radius: 8px;
     padding: 12px;
     width: 320px;
     max-height: 420px;
     overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
     // position: absolute;
     position: fixed;
     bottom: 90px;
     right: 20px;
+    color: $text-light;
+
   }
   
   h4 {
     margin-bottom: 12px;
     font-size: 16px;
-    color: #333;
+    // color: #333;
+    color: $text-light;
+
   }
   
   ul {
@@ -26,16 +39,32 @@
     margin: 0;
   }
   
+  // .song-item {
+  //   display: flex;
+  //   align-items: center;
+  //   padding: 8px;
+  //   border-radius: 6px;
+  //   transition: background 0.3s;
+  // }
+  
+  // .song-item:hover {
+  //   background: #f5f5f5;
+  // }
   .song-item {
     display: flex;
     align-items: center;
     padding: 8px;
     border-radius: 6px;
     transition: background 0.3s;
-  }
   
-  .song-item:hover {
-    background: #f5f5f5;
+    &:hover {
+      background: $hover-highlight;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
   }
   
   .song-image {
@@ -55,13 +84,15 @@
   .song-title {
     font-size: 14px;
     font-weight: bold;
-    color: #222;
+    // color: #222;
+    color: $text-light;
     margin: 0;
   }
   
   .song-artist {
     font-size: 12px;
-    color: #777;
+    // color: #777;
+    color: #cccccc;
     margin: 2px 0 0 0;
   }
   
@@ -70,38 +101,35 @@
     background: transparent;
     border: none;
     cursor: pointer;
+    color: $text-light;
+
+    &:hover {
+      color: #cccccc;
+    }
   }
   
   .current {
     font-weight: bold;
-    color: #1976d2;
+    color: #4dabf7;
   }
 
-//   .create-playlist-btn {
-//     position: absolute;
-//     top: 10px;
-//     right: 10px;
-//     background: white;
-//     border-radius: 50%;
-//     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-//     transition: transform 0.2s;
-//   }
-  
-//   .create-playlist-btn:hover {
-//     transform: scale(1.1);
-//   }
 .create-playlist-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: white;
+    // background: white;
+    background: $card-bg;
     border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+
     transition: transform 0.2s;
+    color: $text-light;
   }
   
   .create-playlist-btn:hover {
     transform: scale(1.1);
+    background: $hover-highlight;
   }
   
   

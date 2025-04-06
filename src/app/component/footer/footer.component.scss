@@ -1,35 +1,21 @@
-// .player-container {
-//   padding: 20px;
-//   text-align: center;
-// }
-
-// .controls {
-//   margin: 10px 0;
-//   button {
-//     margin: 0 5px;
-//   }
-// }
-
-// audio {
-//   width: 100%;
-//   max-width: 500px;
-//   margin-top: 10px;
-// }
-
-// audio::-webkit-media-controls-play-button,
-// audio::-webkit-media-controls-start-playback-button {
-//     display: none !important;
-// }
+$bg-dark: #111111;
+$bg-darker: #0a0a0a;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+$card-bg: #181818;
 
 footer {
   width: 100%;
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
+  background-color: $bg-darker;
   padding: 10px 20px;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 5px rgba(255, 255, 255, 0.1);
+  color: $text-light;
 }
 
 .player-container {
@@ -64,11 +50,12 @@ footer {
   font-size: 16px;
   font-weight: bold;
   margin: 0;
+  color: $text-light;
 }
 
 .song-artist {
   font-size: 14px;
-  color: #666;
+  color: #cccccc;
   margin: 0;
 }
 
@@ -93,6 +80,22 @@ button[mat-icon-button] {
   width: 40px;
   height: 40px;
   line-height: 40px;
+  color: $text-light;
+
+  &:hover {
+    background: $hover-highlight;
+    border-radius: 50%;
+  }
+}
+
+button[mat-icon-button]:disabled {
+  color: #666666 !important; // màu nhạt hơn cho nút bị vô hiệu
+  cursor: not-allowed;
+  background: transparent;
+
+  &:hover {
+    background: transparent; // tránh hover làm nổi bật nút đã disabled
+  }
 }
 
 .queue-count {
@@ -104,7 +107,63 @@ audio {
   width: 100%;
   max-width: 500px;
   height: 30px;
+  background: transparent;
+  border-radius: 4px;
+  outline: none;
 }
+
+audio::-webkit-media-controls-enclosure {
+  background-color: $bg-darker !important;
+}
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+  color: #ffffff !important;
+  font-size: 14px;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px; 
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 5px;
+  appearance: none;
+  background: linear-gradient(
+    to right,
+    $text-light 0%,
+    $text-light calc(var(--progress, 0%) * 1%),
+    $hover-highlight calc(var(--progress, 0%) * 1%),
+    $hover-highlight 100%
+  );
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: $text-light;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: $text-light;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 
 /* Phần volume */
 .volume-control {
@@ -118,54 +177,62 @@ audio {
   font-size: 24px;
   width: 24px;
   height: 24px;
-  color: #666; /* Màu icon */
+  color: #cccccc; /* Màu icon */
   cursor: pointer;
 }
 
 .volume-bar {
   width: 100px;
-  height: 4px; /* Giảm chiều cao thanh trượt */
-  background: #ddd; /* Màu nền thanh */
+  height: 4px;
   border-radius: 2px;
-  appearance: none; /* Xóa kiểu mặc định của trình duyệt */
+  appearance: none;
   outline: none;
   cursor: pointer;
+
+  background: linear-gradient(
+    to right,
+    $text-light 0%,
+    $text-light calc(var(--volume, 1) * 100%),
+    $hover-highlight calc(var(--volume, 1) * 100%),
+    $hover-highlight 100%
+  );
+  transition: background 0.2s ease;
 }
 
-/* Tùy chỉnh nút trượt của thanh volume */
 .volume-bar::-webkit-slider-thumb {
   appearance: none;
   width: 12px;
   height: 12px;
-  background: #007bff; /* Màu nút trượt */
+  background: $text-light;
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
 .volume-bar::-moz-range-thumb {
   width: 12px;
   height: 12px;
-  background: #007bff;
+  background: $text-light;
   border-radius: 50%;
   cursor: pointer;
 }
 
+
 /* Hiệu ứng khi hover hoặc kéo */
-.volume-bar:hover::-webkit-slider-thumb,
 .volume-bar:focus::-webkit-slider-thumb {
-  background: #0056b3; /* Màu đậm hơn khi hover */
+  background: #cccccc; /* Màu đậm hơn khi hover */
 }
 
-.volume-bar:hover,
 .volume-bar:focus {
-  background: #ccc; /* Màu nền thanh nhạt hơn khi hover */
+  background: #444444; /* Màu nền thanh nhạt hơn khi hover */
 }
 
 /* Khi không có bài hát */
 p {
   text-align: center;
   width: 100%;
-  color: #666;
+  color: #cccccc;
 }
 
 audio::-webkit-media-controls-play-button,

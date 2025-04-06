@@ -1,50 +1,78 @@
-// .header {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     background-color: #1e1e2d;
-//     padding: 15px 30px;
-//     color: white;
-//     font-size: 20px;
-//     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-//   }
-  
-//   .logo {
-//     font-weight: bold;
-//   }
-  
-//   .login-btn {
-//     background-color: #ff4757;
-//     border: none;
-//     padding: 10px 20px;
-//     color: white;
-//     font-size: 16px;
-//     border-radius: 5px;
-//     cursor: pointer;
-//     transition: all 0.3s ease-in-out;
-  
-//     &:hover {
-//       background-color: #e84118;
-//       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-//     }
-//   }
-  
+/* header.component.scss */
+// 🎨 Tông màu đen trắng cực tối
+$bg-dark: #111111;
+$bg-darker: #0a0a0a;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+$tooltip-bg: rgba(255, 255, 255, 0.05);
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1e1e2d;
-  padding: 15px 30px;
-  color: white;
+  background-color: $bg-dark;
+  padding: 40px 20px 30px 10px;
+  color: $text-light;
   font-size: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box; /* Đảm bảo padding không làm tràn */
+  z-index: 1100;
+  height: 10%; /* Chiều cao cố định */
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 24px;
+  color: $text-light;
+  white-space: nowrap; /* Ngăn logo xuống dòng */
+}
+
+.sidebar-toggle {
+  color: $text-light;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  flex-shrink: 0; /* Ngăn nút bị co lại */
+}
+
+.search-container {
+  flex-grow: 1;
+  margin: 0 20px;
+  min-width: 0; /* Cho phép co lại nếu cần */
+
+  .search-input {
+    width: 100%;
+    max-width: 600px; /* Giới hạn chiều rộng tối đa của search */
+    margin: 0 auto;
+
+    ::ng-deep .mat-form-field-outline {
+      color: $text-light;
+    }
+
+    ::ng-deep .mat-input-element {
+      color: $text-light;
+    }
+
+    ::ng-deep .mat-form-field-label {
+      color: #ccc;
+    }
+
+    ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+      border-color: #444;
+    }
+  }
 }
 
 .user-info {
   position: relative;
   display: flex;
   align-items: center;
+  flex-shrink: 0; /* Ngăn user-info bị co lại */
 }
 
 .dropdown {
@@ -60,7 +88,7 @@
   align-items: center;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: $hover-highlight;
   }
 }
 
@@ -68,8 +96,8 @@
   margin-left: 8px;
   width: 8px;
   height: 8px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
+  border-left: 2px solid $text-light;
+  border-bottom: 2px solid $text-light;
   transform: rotate(-45deg);
   transition: transform 0.3s ease-in-out;
 }
@@ -82,39 +110,112 @@
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: #2a2a3b;
-  border-radius: 5px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  width: 150px;
+  background-color: $bg-darker;
+  border-radius: 6px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.6);
+  width: 160px;
   list-style: none;
   padding: 10px 0;
-  margin-top: 5px;
+  margin-top: 8px;
   z-index: 1000;
-}
 
-.dropdown-menu li {
-  padding: 10px 15px;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  li {
+    padding: 10px 20px;
+    color: $text-light;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
 
-  &:hover {
-    background: #ff4757;
+    &:hover {
+      background-color: $hover-highlight;
+    }
   }
 }
 
 .login-btn {
-  background-color: #ff4757;
-  border: none;
-  padding: 10px 20px;
-  color: white;
+  background-color: transparent;
+  border: 1px solid $text-light;
+  padding: 8px 16px; /* Giảm padding để gọn hơn */
+  color: $text-light;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  white-space: nowrap;
 
   &:hover {
-    background-color: #e84118;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: $hover-highlight;
+  }
+}
+
+.avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  border: 2px solid $text-light;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 80%;
+  left: 50%;
+  transform: translateX(-60%);
+  background-color: $tooltip-bg;
+  color: $text-light;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+  border: 1px solid #333;
+}
+
+.avatar-container:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 15px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .search-container {
+    margin: 0 10px;
+  }
+
+  .search-input {
+    max-width: 100%; /* Cho phép search full width trên mobile */
+  }
+
+  .login-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
   }
 }

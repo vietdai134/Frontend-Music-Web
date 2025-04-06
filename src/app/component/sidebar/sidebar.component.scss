@@ -1,0 +1,115 @@
+/* sidebar.component.scss */
+// Sử dụng cùng biến màu với header
+$bg-dark: #111111;
+$bg-darker: #0a0a0a;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+
+.sidebar {
+  width: 250px;
+  height: calc(100vh - 64px); /* Trừ chiều cao header */
+  background-color: $bg-dark; /* Đồng bộ với header */
+  padding: 20px 0;
+  position: fixed;
+  top: 64px; /* Bắt đầu từ dưới header (giả sử header cao 64px) */
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000; /* Thấp hơn header (1100) */
+
+  &.hidden {
+    transform: translateX(-100%);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  
+    li {
+      a {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        color: $text-light;
+        text-decoration: none;
+        cursor: pointer;
+  
+        i {
+          margin-right: 15px;
+          width: 20px;
+          text-align: center;
+          color: $text-light;
+        }
+  
+        span {
+          font-size: 16px;
+        }
+      }
+  
+      &:hover {
+        background-color: $hover-highlight;
+      }
+  
+      &.active {
+        background-color: #333;
+        border-radius: 5px;
+  
+        a {
+          color: #fff;
+          font-weight: bold;
+  
+          i {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+  
+    li {
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+  
+      a {
+        display: flex;
+        align-items: center;
+        color: #ccc;
+        text-decoration: none;
+  
+        i {
+          margin-right: 8px;
+        }
+  
+        span {
+          font-size: 14px;
+        }
+      }
+  
+      &.active {
+        background-color: #333;
+        a {
+          color: #fff;
+          font-weight: bold;
+        }
+      }
+  
+      &:hover {
+        background-color: #222;
+      }
+    }
+  }
+  
+  a.active {
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #222222;
+    border-radius: 5px;
+  }
+  

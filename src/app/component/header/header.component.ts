@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/LoginServices/login.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../../models/user.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { SearchService } from '../../services/SearchServices/search.service';
+import { MatIconModule } from '@angular/material/icon';
+import { SidebarService } from '../../services/SidebarServices/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -23,26 +25,44 @@ import { SearchService } from '../../services/SearchServices/search.service';
     MatDialogModule,
     MatInputModule,
     FormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule
   ],
   standalone: true,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy{
   user$: Observable<User | null> = new Observable();
   showDropdown = false;
   hideTimeout: any;
   searchKeyword: string = '';
 
+  isSidebarVisible: boolean = true;
+  private sidebarSubscription!: Subscription;
+  
   constructor(
     private router: Router,
     private loginService: LoginService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
     this.user$ = this.loginService.user$;
+    this.sidebarSubscription = this.sidebarService.sidebarVisible$.subscribe(
+      visible => this.isSidebarVisible = visible
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
   }
 
   goToLogin() {

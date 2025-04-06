@@ -26,6 +26,8 @@ export class FooterComponent implements OnInit{
   songQueue: Song[] = [];
   canGoPrevious: boolean = false; // Kiểm tra có bài trước hay không
   canGoNext: boolean = false;     // Kiểm tra có bài sau hay không
+  currentTime: number = 0;
+  duration: number = 0;
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   
@@ -64,17 +66,6 @@ export class FooterComponent implements OnInit{
       this.updateNavigationState();
     });
 
-    // Lắng nghe trạng thái phát
-    // this.playerService.isPlaying$.subscribe(isPlaying => {
-    //   this.isPlaying = isPlaying;
-    //   if (this.audioPlayer && this.audioPlayer.nativeElement) {
-    //     if (isPlaying && this.currentSong) {
-    //       this.audioPlayer.nativeElement.play().catch(err => console.error('Play error:', err));
-    //     } else {
-    //       this.audioPlayer.nativeElement.pause();
-    //     }
-    //   }
-    // });
     this.playerService.isPlaying$.subscribe(isPlaying => {
       this.isPlaying = isPlaying;
       if (this.audioPlayer && this.audioPlayer.nativeElement) {
@@ -86,23 +77,23 @@ export class FooterComponent implements OnInit{
       }
     });
 
-    // // Lắng nghe sự kiện timeupdate và loadedmetadata để cập nhật thời gian và duration
-    // if (this.audioPlayer) {
-    //   this.audioPlayer.nativeElement.addEventListener('timeupdate', () => {
-    //     this.currentTime = this.audioPlayer.nativeElement.currentTime;
-    //     this.duration = this.audioPlayer.nativeElement.duration;
-    //   });
-    //   this.audioPlayer.nativeElement.addEventListener('loadedmetadata', () => {
-    //     this.duration = this.audioPlayer.nativeElement.duration;
-    //     this.volume = this.audioPlayer.nativeElement.volume;
-    //   });
-    // }
   }
 
   ngAfterViewInit(): void {
     if (this.audioPlayer && this.audioPlayer.nativeElement) {
       this.audioPlayer.nativeElement.addEventListener('loadedmetadata', () => {
         this.volume = this.audioPlayer.nativeElement.volume;
+      });
+    }
+
+    if (this.audioPlayer?.nativeElement) {
+      this.audioPlayer.nativeElement.addEventListener('loadedmetadata', () => {
+        this.duration = this.audioPlayer.nativeElement.duration || 0;
+      });
+  
+      // Lắng nghe sự kiện cập nhật thời gian
+      this.audioPlayer.nativeElement.addEventListener('timeupdate', () => {
+        this.onTimeUpdate();
       });
     }
   }
@@ -133,9 +124,6 @@ export class FooterComponent implements OnInit{
   // Xử lý khi bài hát kết thúc
   onSongEnded(): void {
     console.log('Song ended, playing next...');
-    // if (this.audioPlayer && this.audioPlayer.nativeElement) {
-    //   this.audioPlayer.nativeElement.pause(); // Dừng ngay lập tức khi bài kết thúc
-    // }
     if (this.audioPlayer && this.audioPlayer.nativeElement) {
       this.audioPlayer.nativeElement.pause(); // Dừng ngay lập tức
       this.audioPlayer.nativeElement.src = ''; // Xóa nguồn cũ
@@ -148,10 +136,6 @@ export class FooterComponent implements OnInit{
     this.playerService.togglePlayPause();
   }
 
-  // nextSong(): void {
-  //   this.playerService.playNext();
-  //   this.updateNavigationState();
-  // }
   nextSong(): void {
     if (this.audioPlayer && this.audioPlayer.nativeElement) {
       this.audioPlayer.nativeElement.pause();
@@ -161,10 +145,6 @@ export class FooterComponent implements OnInit{
     this.playerService.playNext();
   }
 
-  // previousSong(): void {
-  //   this.playerService.playPrevious();
-  //   this.updateNavigationState();
-  // }
   previousSong(): void {
     if (this.audioPlayer && this.audioPlayer.nativeElement) {
       this.audioPlayer.nativeElement.pause();
@@ -189,14 +169,61 @@ export class FooterComponent implements OnInit{
   }
 
   // Xử lý khi thay đổi volume
+  // onVolumeChange(event: Event): void {
+  //   const volumeValue = (event.target as HTMLInputElement).value;
+  //   if (this.audioPlayer && this.audioPlayer.nativeElement) {
+  //     this.audioPlayer.nativeElement.volume = parseFloat(volumeValue);
+  //     this.volume = parseFloat(volumeValue); // Cập nhật biến volume
+  //   }
+  // }
+
   onVolumeChange(event: Event): void {
     const volumeValue = (event.target as HTMLInputElement).value;
-    if (this.audioPlayer && this.audioPlayer.nativeElement) {
-      this.audioPlayer.nativeElement.volume = parseFloat(volumeValue);
-      this.volume = parseFloat(volumeValue); // Cập nhật biến volume
+    const volume = parseFloat(volumeValue);
+    this.volume = volume;
+  
+    if (this.audioPlayer?.nativeElement) {
+      this.audioPlayer.nativeElement.volume = volume;
+    }
+  
+    const volumeBar = document.querySelector('.volume-bar') as HTMLElement;
+    if (volumeBar) {
+      volumeBar.style.setProperty('--volume', volume.toString());
     }
   }
 
+  // Cập nhật thanh thời lượng khi nhạc chạy
+  onTimeUpdate(): void {
+    if (this.audioPlayer?.nativeElement) {
+      this.currentTime = this.audioPlayer.nativeElement.currentTime;
+      this.duration = this.audioPlayer.nativeElement.duration || 0;
+  
+      const progressPercent = this.duration
+        ? (this.currentTime / this.duration) * 100
+        : 0;
+  
+      const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+      if (progressBar) {
+        progressBar.style.setProperty('--progress', progressPercent.toString());
+      }
+    }
+  }
+  
+  
 
+  // Khi người dùng kéo thanh thời lượng
+  onSeek(event: Event): void {
+    const seekTime = parseFloat((event.target as HTMLInputElement).value);
+    if (this.audioPlayer?.nativeElement) {
+      this.audioPlayer.nativeElement.currentTime = seekTime;
+      this.currentTime = seekTime; // Cập nhật UI ngay lập tức
+    }
+  }
+  
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  }
   
 }

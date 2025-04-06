@@ -1,23 +1,99 @@
-<div class="song-list">
-  <div class="song-container">
-    <mat-card *ngFor="let song of songs" class="song-card">
-      <button mat-button (click)="playSong(song)">
-        <mat-card-header>
-          <mat-card-title>{{ song.title }}</mat-card-title>
-          <mat-card-subtitle>{{ song.artist }}</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" />
-      </button>
-    </mat-card>
+<div class="home-container">
+  <app-sidebar [isSidebarVisible]="isSidebarVisible"></app-sidebar>
+  
+  <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
+    <div class="song-list">
+      <div class="sort-container">
+        <button 
+          mat-button 
+          class="sort-btn" 
+          [ngClass]="{'active': currentSortField === 'uploadDate'}" 
+          (click)="toggleSort('uploadDate')"
+        >
+          Upload Date
+          <mat-icon>{{ isUploadDateAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+        </button>
+        <button 
+          mat-button 
+          class="sort-btn" 
+          [ngClass]="{'active': currentSortField === 'title'}" 
+          (click)="toggleSort('title')"
+        >
+          Title
+          <mat-icon>{{ isTitleAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+        </button>
+        <button 
+          mat-button 
+          class="sort-btn" 
+          [ngClass]="{'active': currentSortField === 'artist'}" 
+          (click)="toggleSort('artist')"
+        >
+          Artist
+          <mat-icon>{{ isArtistAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+        </button>
+      </div>
+
+      <div class="song-container">
+        <mat-card 
+          *ngFor="let song of songs" 
+          class="song-card"
+        >
+          <div class="song-button" (click)="playSong(song)">
+            <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+        
+            <div class="song-info">
+              <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+              <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+              <mat-card-subtitle class="user-upload">uploaded by {{ song.userName || 'Unknown User' }}</mat-card-subtitle>
+            </div>
+        
+            <div class="song-actions" (click)="$event.stopPropagation()">
+              <button mat-icon-button class="action-btn" (click)="addToPlaylist(song)">
+                <mat-icon>playlist_add</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn" (click)="likeSong(song)">
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn" (click)="showMoreOptions(song)">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="genres-container">
+            <!-- <ng-container *ngFor="let genre of song.genres"> -->
+              <!-- <ng-container *ngIf="song.genresName">
+                <button 
+                  mat-button 
+                  class="genre-btn" 
+                  *ngFor="let name of song.genresName.split(',')" 
+                  (click)="onGenreClick(name.trim())"
+                >
+                  {{ name.trim() }}
+                </button>
+              </ng-container> -->
+            <!-- </ng-container> -->
+
+            <ng-container *ngIf="song.genresName">
+              <button 
+                mat-button 
+                class="genre-btn" 
+                *ngFor="let name of song.genresName.split(',')" 
+                (click)="onGenreClick(name.trim())"
+              >
+                {{ name.trim() }}
+              </button>
+            </ng-container>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="loading" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Đang tải...</p>
+      </div>
+
+      <app-queue *ngIf="showQueue"></app-queue>
+    </div>
   </div>
-
-  <mat-paginator
-    [length]="totalElements"
-    [pageSize]="pageSize"
-    [pageIndex]="currentPage"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)">
-  </mat-paginator>
-
-  <app-queue *ngIf="showQueue"></app-queue>
 </div>

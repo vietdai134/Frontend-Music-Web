@@ -1,14 +1,12 @@
 <div class="queue-container">
-    <!-- <button mat-icon-button class="create-playlist-btn" matTooltip="Tạo playlist" (click)="createPlaylist()">
-        <mat-icon>add</mat-icon>
-      </button> -->
-      <button 
-        mat-icon-button 
-        class="create-playlist-btn" 
-        matTooltip="Create Playlist" 
-        matTooltipPosition="above" 
-        (click)="createPlaylist()">
-        <mat-icon>add</mat-icon>
+    <button 
+      *ngIf="canCreatePlaylist"
+      mat-icon-button 
+      class="create-playlist-btn" 
+      matTooltip="Save Playlist" 
+      matTooltipPosition="above" 
+      (click)="createPlaylist()">
+      <mat-icon>add</mat-icon>
     </button>
     <!-- Phần Now Playing -->
     <div class="now-playing-section">
@@ -36,6 +34,9 @@
             </div>
             <button mat-icon-button (click)="playSong(song)" title="Play this song">
               <mat-icon>play_arrow</mat-icon>
+            </button>
+            <button mat-icon-button (click)="removeFromQueue(i)" title="Remove from queue">
+              <mat-icon>close</mat-icon> <!-- Đây là dấu X -->
             </button>
           </div>
         </li>

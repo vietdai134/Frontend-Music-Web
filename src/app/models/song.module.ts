@@ -12,4 +12,6 @@ export interface Song{
 
     fileSongId: string;
     artist:string;
+    uploadDate:Date;
+    genresName?:string;
 }

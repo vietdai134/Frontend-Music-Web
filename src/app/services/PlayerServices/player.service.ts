@@ -24,31 +24,56 @@ export class PlayerService {
   private baseUrl = environment.baseUrl; 
   constructor(private http: HttpClient) { }
 
-  setCurrentSong(song: Song): void {
-    const currentSongIndex = this.songQueue.findIndex(s => s === this.currentSongSubject.value);
-    const songIndex = this.songQueue.findIndex(s => s.songId === song.songId); // Giả sử Song có songId
+  // setCurrentSong(song: Song): void {
+  //   const currentSongIndex = this.songQueue.findIndex(s => s === this.currentSongSubject.value);
+  //   const songIndex = this.songQueue.findIndex(s => s.songId === song.songId); // Giả sử Song có songId
 
-    if (songIndex !== -1 && songIndex < currentSongIndex) {
-      // Nếu bài hát đã có trong queue và ở trước bài hiện tại, xóa và thêm vào cuối
-      this.songQueue.splice(songIndex, 1);
-      this.songQueue.push(song);
-      console.log('Moved existing song to end of queue:', this.songQueue);
-    } else if (songIndex === -1) {
+  //   if (songIndex !== -1 && songIndex < currentSongIndex) {
+  //     // Nếu bài hát đã có trong queue và ở trước bài hiện tại, xóa và thêm vào cuối
+  //     this.songQueue.splice(songIndex, 1);
+  //     this.songQueue.push(song);
+  //     console.log('Moved existing song to end of queue:', this.songQueue);
+  //   } else if (songIndex === -1) {
+  //     // Nếu bài hát chưa có trong queue, thêm vào cuối
+  //     this.songQueue.push(song);
+  //     console.log('Added new song to queue:', this.songQueue);
+  //   }
+
+  //   this.songQueueSubject.next([...this.songQueue]);
+    
+  //   if (!this.currentSongSubject.value ) {
+  //     // Nếu không có bài đang phát, phát bài đầu tiên
+  //     // this.currentSongSubject.next(this.songQueue[0]);
+  //     this.currentSongSubject.next(song);
+  //     this.isPlayingSubject.next(true);
+  //   }
+  //   // this.currentSongSubject.next(song);
+  //   // this.isPlayingSubject.next(true);
+  // }
+  setCurrentSong(song: Song): void {
+    const currentSong = this.currentSongSubject.value;
+    const songIndex = this.songQueue.findIndex(s => s.songId === song.songId);
+
+    if (songIndex !== -1) {
+      const currentSongIndex = this.songQueue.findIndex(s => s === currentSong);
+      if (songIndex < currentSongIndex) {
+        // Nếu bài hát đã có trong queue và ở trước bài hiện tại, xóa và thêm vào cuối
+        this.songQueue.splice(songIndex, 1);
+        this.songQueue.push(song);
+      }
+      // Nếu bài hát đã có và không ở trước bài hiện tại, không làm gì thêm
+    } else {
       // Nếu bài hát chưa có trong queue, thêm vào cuối
       this.songQueue.push(song);
-      console.log('Added new song to queue:', this.songQueue);
     }
 
     this.songQueueSubject.next([...this.songQueue]);
     
-    if (!this.currentSongSubject.value ) {
-      // Nếu không có bài đang phát, phát bài đầu tiên
-      // this.currentSongSubject.next(this.songQueue[0]);
+    // Chỉ phát bài mới nếu không có bài đang phát
+    if (!currentSong) {
       this.currentSongSubject.next(song);
       this.isPlayingSubject.next(true);
     }
-    // this.currentSongSubject.next(song);
-    // this.isPlayingSubject.next(true);
   }
 
   playSongFromQueue(song: Song): void {
@@ -102,6 +127,7 @@ export class PlayerService {
     this.songQueue = [];
     this.currentSongSubject.next(null);
     this.isPlayingSubject.next(false);
+    this.songQueueSubject.next([]);
   }
 
   // Lấy danh sách hàng đợi (nếu cần hiển thị UI)
@@ -112,5 +138,51 @@ export class PlayerService {
   toggleShowQueue(): void {
     this.showQueueSubject.next(!this.showQueueSubject.value);
   }
+
+  // setQueue(songs: Song[]): void {
+  //   this.songQueue = [...songs]; // Gán mới toàn bộ queue
+  //   this.songQueueSubject.next(this.songQueue); // Phát sự kiện để các component theo dõi
+
+  //   const current = this.currentSongSubject.value;
+  //   const stillInQueue = songs.some(s => s.songId === current?.songId);
+  //   if (!stillInQueue) {
+  //     this.currentSongSubject.next(null);
+  //     this.isPlayingSubject.next(false);
+  //   }
+  // }
+  setQueue(songs: Song[]): void {
+    this.songQueue = [...songs];
+    this.songQueueSubject.next(this.songQueue);
+
+    const current = this.currentSongSubject.value;
+    const stillInQueue = songs.some(s => s.songId === current?.songId);
+    if (!stillInQueue) {
+      this.currentSongSubject.next(null);
+      this.isPlayingSubject.next(false);
+    }
+  }
+
+  removeSongFromQueue(index: number): void {
+    const currentSong = this.currentSongSubject.value;
+    const songToRemove = this.songQueue[index];
+
+    // Xóa bài hát tại index
+    this.songQueue.splice(index, 1);
+    this.songQueueSubject.next([...this.songQueue]);
+
+    // Nếu queue rỗng, dừng phát
+    if (this.songQueue.length === 0) {
+      this.currentSongSubject.next(null);
+      this.isPlayingSubject.next(false);
+    }
+    // Nếu xóa bài đang phát và còn bài khác trong queue, phát bài tiếp theo
+    else if (songToRemove === currentSong) {
+      const nextIndex = index < this.songQueue.length ? index : this.songQueue.length - 1;
+      this.currentSongSubject.next(this.songQueue[nextIndex]);
+      this.isPlayingSubject.next(true);
+    }
+    // Nếu xóa bài không đang phát, không cần làm gì thêm
+  }
+
 }
 
