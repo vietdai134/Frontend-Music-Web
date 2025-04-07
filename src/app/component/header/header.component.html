@@ -5,8 +5,14 @@
   <div class="logo">My Website</div>
   <div class="search-container">
       <mat-form-field appearance="outline" class="search-input">
-          <mat-label>Tìm kiếm bài hát</mat-label>
-          <input matInput [(ngModel)]="searchKeyword" (input)="onSearchChange($event)" placeholder="Nhập bài hát, nghệ sĩ">
+          <input matInput [(ngModel)]="searchKeyword" (input)="onSearchChange($event)" placeholder="Nhập thông tin tìm kiếm">
+      </mat-form-field>
+      <mat-form-field class="search-select" appearance="outline">
+        <mat-select [(value)]="selected" (selectionChange)="onTypeChange()">
+          <mat-option value="title">Bài hát</mat-option>
+          <mat-option value="artist">Nghệ sĩ</mat-option>
+          <mat-option value="username">Người dùng</mat-option>
+        </mat-select>
       </mat-form-field>
   </div>
   <div class="user-info">

@@ -14,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { SearchService } from '../../services/SearchServices/search.service';
 import { MatIconModule } from '@angular/material/icon';
 import { SidebarService } from '../../services/SidebarServices/sidebar.service';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +27,8 @@ import { SidebarService } from '../../services/SidebarServices/sidebar.service';
     MatInputModule,
     FormsModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   standalone: true,
   templateUrl: './header.component.html',
@@ -37,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   showDropdown = false;
   hideTimeout: any;
   searchKeyword: string = '';
-
+  selected = 'title';
   isSidebarVisible: boolean = true;
   private sidebarSubscription!: Subscription;
   
@@ -121,6 +123,17 @@ export class HeaderComponent implements OnInit, OnDestroy{
     const inputElement = event.target as HTMLInputElement;
     this.searchKeyword = inputElement.value;
     console.log(this.searchKeyword);
-    this.searchService.setTitleOrArtistSong(this.searchKeyword); 
+    console.log(this.selected);
+    // this.searchService.setKeyword(this.searchKeyword, this.selected);
+    this.searchService.setKeyword(this.searchKeyword);
+    this.searchService.setTypeSearch(this.selected);
+  }
+  onTypeChange() {
+    console.log('Type changed to:', this.selected);
+    this.searchService.setTypeSearch(this.selected);
+    // Nếu có keyword, gửi lại để kích hoạt tìm kiếm
+    if (this.searchKeyword) {
+      this.searchService.setKeyword(this.searchKeyword);
+    }
   }
 }

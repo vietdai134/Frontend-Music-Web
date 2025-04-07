@@ -3,6 +3,17 @@
   
   <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
     <div class="song-list">
+      <div class="selected-genres">
+        <button 
+          mat-stroked-button 
+          class="selected-genre-btn" 
+          *ngFor="let genre of selectedGenres" 
+          (click)="removeGenre(genre)"
+        >
+          {{ genre }}
+          <mat-icon class="remove-icon">close</mat-icon>
+        </button>
+      </div>
       <div class="sort-container">
         <button 
           mat-button 
@@ -31,6 +42,19 @@
           Artist
           <mat-icon>{{ isArtistAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
         </button>
+
+        <mat-form-field  >
+          <mat-label>Lọc theo thể loại</mat-label>
+          <mat-select [(ngModel)]="selectedGenres" multiple (selectionChange)="onGenreSelectionChange($event)">
+            <mat-select-trigger>
+              <!-- {{ selectedGenres.length }} genre{{ selectedGenres.length > 1 ? 's' : '' }} selected -->
+            </mat-select-trigger>
+            <mat-option *ngFor="let genre of genres" [value]="genre">
+              {{ genre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </div>
 
       <div class="song-container">
@@ -45,6 +69,7 @@
               <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
               <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
               <mat-card-subtitle class="user-upload">uploaded by {{ song.userName || 'Unknown User' }}</mat-card-subtitle>
+              <mat-card-subtitle class="uploadDate">{{ formatDate(song.uploadDate)}}</mat-card-subtitle>
             </div>
         
             <div class="song-actions" (click)="$event.stopPropagation()">
@@ -61,25 +86,13 @@
           </div>
 
           <div class="genres-container">
-            <!-- <ng-container *ngFor="let genre of song.genres"> -->
-              <!-- <ng-container *ngIf="song.genresName">
-                <button 
-                  mat-button 
-                  class="genre-btn" 
-                  *ngFor="let name of song.genresName.split(',')" 
-                  (click)="onGenreClick(name.trim())"
-                >
-                  {{ name.trim() }}
-                </button>
-              </ng-container> -->
-            <!-- </ng-container> -->
-
             <ng-container *ngIf="song.genresName">
               <button 
                 mat-button 
                 class="genre-btn" 
                 *ngFor="let name of song.genresName.split(',')" 
                 (click)="onGenreClick(name.trim())"
+                [ngClass]="{'selected': selectedGenres.includes(name.trim())}"
               >
                 {{ name.trim() }}
               </button>

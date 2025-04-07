@@ -19,7 +19,7 @@ export class PublicService {
     title?:string,
     artist?:string,
     genres?:string[],
-    userName?:string,
+    username?:string,
     page: number = 0,
     size: number = 10,
     content?:string,
@@ -37,13 +37,20 @@ export class PublicService {
     if (artist) {
       params = params.set('artist', artist);
     }
+    // if (genres && genres.length > 0) {
+    //   params = params.set('genres', genres.join(',')); // Chuyển mảng thành chuỗi ngăn cách bởi dấu phẩy
+    // }
     if (genres && genres.length > 0) {
-      params = params.set('genres', genres.join(',')); // Chuyển mảng thành chuỗi ngăn cách bởi dấu phẩy
+      genres.forEach((genre) => {
+        params = params.append('genres', genre);
+      });
     }
-    if (userName) {
-      params = params.set('username', userName);
+    
+    if (username) {
+      params = params.set('username', username);
     }
-
+    const urlWithParams = `${this.baseUrl}/public/songs/search?${params.toString()}`;
+    console.log('Generated URL:', urlWithParams);
     return this.http.get<SongResponse>(`${this.baseUrl}/public/songs/search`, { params });
   }
 }

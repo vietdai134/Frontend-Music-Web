@@ -6,6 +6,9 @@ $text-light: #ffffff;
 $hover-highlight: #222222;
 $tooltip-bg: rgba(255, 255, 255, 0.05);
 
+$mobile: 576px;   // Điện thoại
+$tablet: 768px;   // Máy tính bảng
+$desktop: 992px;
 .header {
   display: flex;
   justify-content: space-between;
@@ -22,6 +25,17 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   box-sizing: border-box; /* Đảm bảo padding không làm tràn */
   z-index: 1100;
   height: 10%; /* Chiều cao cố định */
+
+  @media (max-width: $tablet) {
+    padding: 15px 15px; // Giảm padding trên tablet
+    height: 60px; // Giảm chiều cao trên tablet
+  }
+
+  @media (max-width: $mobile) {
+    padding: 10px 10px; // Giảm thêm trên mobile
+    height: 50px; // Giảm chiều cao trên mobile
+    flex-wrap: wrap; // Cho phép xuống dòng nếu cần
+  }
 }
 
 .logo {
@@ -29,6 +43,14 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   font-size: 24px;
   color: $text-light;
   white-space: nowrap; /* Ngăn logo xuống dòng */
+
+  @media (max-width: $tablet) {
+    font-size: 20px;
+  }
+
+  @media (max-width: $mobile) {
+    font-size: 18px;
+  }
 }
 
 .sidebar-toggle {
@@ -38,33 +60,9 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   cursor: pointer;
   margin-left: 10px;
   flex-shrink: 0; /* Ngăn nút bị co lại */
-}
 
-.search-container {
-  flex-grow: 1;
-  margin: 0 20px;
-  min-width: 0; /* Cho phép co lại nếu cần */
-
-  .search-input {
-    width: 100%;
-    max-width: 600px; /* Giới hạn chiều rộng tối đa của search */
-    margin: 0 auto;
-
-    ::ng-deep .mat-form-field-outline {
-      color: $text-light;
-    }
-
-    ::ng-deep .mat-input-element {
-      color: $text-light;
-    }
-
-    ::ng-deep .mat-form-field-label {
-      color: #ccc;
-    }
-
-    ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-      border-color: #444;
-    }
+  @media (max-width: $mobile) {
+    margin-left: 5px;
   }
 }
 
@@ -77,6 +75,9 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
 
 .dropdown {
   position: relative;
+  @media (max-width: $mobile) {
+    // Giảm khoảng cách trên mobile nếu cần
+  }
 }
 
 .username {
@@ -90,6 +91,11 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   &:hover {
     background: $hover-highlight;
   }
+
+  @media (max-width: $mobile) {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
 }
 
 .arrow-down {
@@ -100,6 +106,11 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   border-bottom: 2px solid $text-light;
   transform: rotate(-45deg);
   transition: transform 0.3s ease-in-out;
+
+  @media (max-width: $mobile) {
+    width: 6px;
+    height: 6px;
+  }
 }
 
 .dropdown:hover .arrow-down {
@@ -128,6 +139,14 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
     &:hover {
       background-color: $hover-highlight;
     }
+    @media (max-width: $mobile) {
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+  }
+  @media (max-width: $mobile) {
+    width: 140px;
+    margin-top: 5px;
   }
 }
 
@@ -144,6 +163,16 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
 
   &:hover {
     background-color: $hover-highlight;
+  }
+
+  @media (max-width: $tablet) {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 5px 10px;
+    font-size: 13px;
   }
 }
 
@@ -164,6 +193,16 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   &:hover {
     transform: scale(1.1);
   }
+
+  @media (max-width: $tablet) {
+    width: 36px;
+    height: 36px;
+  }
+
+  @media (max-width: $mobile) {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .tooltip {
@@ -183,6 +222,11 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   z-index: 2000;
   backdrop-filter: blur(4px);
   border: 1px solid #333;
+
+  @media (max-width: $mobile) {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
 }
 
 .avatar-container:hover .tooltip {
@@ -206,6 +250,7 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   }
 
   .search-input {
+    flex: 1;
     max-width: 100%; /* Cho phép search full width trên mobile */
   }
 
@@ -217,5 +262,94 @@ $tooltip-bg: rgba(255, 255, 255, 0.05);
   .avatar {
     width: 32px;
     height: 32px;
+  }
+}
+
+
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px; // đẩy qua trái nếu cần
+  margin-right: auto;
+
+  .search-input {
+    color: $text-light;
+    width: 400px; // tăng độ rộng ô tìm kiếm
+  }
+
+  .search-select {
+    width: 120px; // giảm độ rộng dropdown
+  }
+
+  mat-form-field {
+    height: 40px;
+
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: $hover-highlight !important;
+      border: 1px solid #444 !important;
+      border-radius: 6px;
+      height: 40px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    ::ng-deep .mat-mdc-form-field-infix {
+      padding: 0 !important;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    ::ng-deep .mat-mdc-floating-label {
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 500;
+      color: #ccc !important;
+    }
+
+    ::ng-deep .mat-mdc-input-element,
+    ::ng-deep .mat-mdc-select {
+      font-size: 13px;
+      color: $text-light !important;
+    }
+
+    ::ng-deep .mat-mdc-select-arrow {
+      color: $text-light !important;
+    }
+
+    &:hover ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: lighten($hover-highlight, 5%) !important;
+    }
+  }
+}
+
+
+@media (max-width: 400px) {
+  .login-btn {
+    width: 100%;
+  }
+}
+@media (max-width: $mobile) {
+  .username {
+    white-space: normal;
+  }
+}
+@media (max-width: $mobile) {
+  .sidebar-toggle {
+    font-size: 16px;
+  }
+}
+@media (max-width: $mobile) {
+  .tooltip {
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    padding: 4px 8px;
+    font-size: 12px;
+    max-width: 160px;
+    text-align: center;
   }
 }

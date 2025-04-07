@@ -1,20 +1,26 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SongService } from '../../services/SongServices/song.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Song } from '../../models/song.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { PlayerService } from '../../services/PlayerServices/player.service';
 import { SearchService } from '../../services/SearchServices/search.service';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { QueueComponent } from '../queue/queue.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SidebarService } from '../../services/SidebarServices/sidebar.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { PublicService } from '../../services/PublicServices/public.service';
-
+import { combineLatest } from 'rxjs';
+import { GenreService } from '../../services/GenreServices/genre.service';
+import { Genre } from '../../models/genre.module';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-home',
@@ -27,10 +33,15 @@ import { PublicService } from '../../services/PublicServices/public.service';
     QueueComponent,
     SidebarComponent,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    FormsModule,
+    NgSelectModule
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
+  providers: [DatePipe]
 })
 export class HomeComponent implements OnInit,OnDestroy {
   songs: Song[] = [];
@@ -41,6 +52,9 @@ export class HomeComponent implements OnInit,OnDestroy {
   isLoading = false;
   showQueue: boolean = false;
   searchKeyword: string | null = null;
+  searchKeywordTitle: string | null = null;
+  searchKeywordArtist: string | null = null;
+  searchKeywordUserName: string | null = null;
   private searchSubscription!: Subscription;
   private queueSubscription!: Subscription;
 
@@ -53,23 +67,42 @@ export class HomeComponent implements OnInit,OnDestroy {
   currentSortField = 'uploadDate';
   resultSort = 'desc'; // Giá trị mặc định cho sort
 
+  genres: string[] = [];
+
+  selectedGenres: string[] =[];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
-    private songService: SongService,
     private playerService: PlayerService,
     private searchService: SearchService,
     private sidebarService: SidebarService,
-    private publicService: PublicService
+    private publicService: PublicService,
+    private genreService: GenreService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
-    this.searchSubscription = this.searchService.currentKeyword$.subscribe(keyword => {
+    combineLatest([this.searchService.currentKeyword$, this.searchService.currentTypeSearch$])
+    .subscribe(([keyword, type]) => {
+
+      this.searchKeywordTitle = null;
+      this.searchKeywordArtist = null;
+      this.searchKeywordUserName = null;
       this.searchKeyword = keyword;
+
+      if(type=='title'){
+        this.searchKeywordTitle = keyword;
+      }
+      else if(type=='artist'){
+        this.searchKeywordArtist = keyword;
+      }
+      else if(type=='username'){
+        this.searchKeywordUserName = keyword;
+      }
+
       this.currentPage = 0; // Reset về trang đầu khi tìm kiếm
-      // this.loadSongs(this.currentPage, this.pageSize);
-      this.songs = [];
-      this.loadSongs();
+      this.songs = []; // Xóa danh sách cũ
+      this.loadSongs(); // Tải lại danh sách với keyword và type mới
     });
     // this.loadSongs(this.currentPage, this.pageSize);
     this.queueSubscription = this.playerService.showQueue$.subscribe(show => {
@@ -81,6 +114,7 @@ export class HomeComponent implements OnInit,OnDestroy {
     );
 
     this.loadSongs();
+    this.loadGenres();
   }
 
   ngOnDestroy() {
@@ -97,14 +131,28 @@ export class HomeComponent implements OnInit,OnDestroy {
       this.sidebarSubscription.unsubscribe();
     }
   }
-  
+  loadGenres() {
+    this.genreService.getListAllGenres().subscribe((response) => {
+      this.genres = response.map((genre: Genre) => genre.genreName);
+    });
+  }
   loadSongs(): void {
     if (this.isLoading) return;// Nếu đang tải, thoát ra ngay
     this.isLoading = true;// Đánh dấu là đang tải dữ liệu
-    const approvalStatus = 'APPROVED';
 
-    if (this.searchKeyword && this.searchKeyword.trim() !== '') {
-      this.publicService.searchSongByKeyword(this.searchKeyword,undefined,[],undefined,this.currentPage, this.pageSize,this.currentSortField,this.resultSort).subscribe({
+    const hasKeyword = this.searchKeyword && this.searchKeyword.trim() !== '';
+    const hasGenres = this.selectedGenres !== null && this.selectedGenres.length > 0;
+    console.log("username:",this.searchKeywordUserName?? undefined);
+    // if (this.searchKeyword && this.searchKeyword.trim() !== '' && this.selectedGenres !== null) {
+    if (hasKeyword || hasGenres) {
+      this.publicService.searchSongByKeyword(
+        this.searchKeywordTitle ?? undefined  ,
+        this.searchKeywordArtist ?? undefined, 
+        this.selectedGenres ??[], 
+        this.searchKeywordUserName?? undefined, 
+        this.currentPage, this.pageSize, 
+        this.currentSortField, 
+        this.resultSort).subscribe({
         next: (response) => {
           this.songs = [...this.songs, ...response.content]; // Thêm dữ liệu mới vào danh sách hiện tại
           this.totalElements = response.page.totalElements;
@@ -134,7 +182,7 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   @HostListener('window:scroll', ['$event'])
   onScroll() {
-     // 1. Kiểm tra xem người dùng có gần cuối trang không (cách cuối trang 100px)
+    //  1. Kiểm tra xem người dùng có gần cuối trang không (cách cuối trang 100px)
     const isNearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100;
 
     // 2. Nếu đang tải dữ liệu hoặc đã tải hết toàn bộ, không tải nữa
@@ -151,7 +199,7 @@ export class HomeComponent implements OnInit,OnDestroy {
   }
 
   addToPlaylist(song: Song) {
-    console.log(`Add to playlist: ${song.title}`);
+    console.log(`Add to playlist: ${song.songId}`);
     // Logic thêm vào playlist
   }
 
@@ -167,8 +215,14 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   // Xử lý khi nhấp vào nút thể loại
   onGenreClick(genreName: string): void {
-    console.log(`Clicked genre: ${genreName}`);
-    // TODO: lọc bài hát theo thể loại nếu cần
+    // console.log(`Clicked genre: ${genreName}`);
+    if (this.selectedGenres.includes(genreName)) {
+      this.selectedGenres = this.selectedGenres.filter(g => g !== genreName);
+    } else {
+      this.selectedGenres = [...this.selectedGenres, genreName];
+    }
+    // console.log('Selected genres after click:', this.selectedGenres);
+    this.onGenreSelectionChange();
   }
 
   // Hàm xử lý khi bấm nút sắp xếp
@@ -193,7 +247,8 @@ export class HomeComponent implements OnInit,OnDestroy {
     if (field === 'uploadDate') {
       this.isUploadDateAsc = !this.isUploadDateAsc;
       this.resultSort = this.isUploadDateAsc ? 'asc' : 'desc';
-    } else if (field === 'title') {
+    } 
+    else if (field === 'title') {
       this.isTitleAsc = !this.isTitleAsc;
       this.resultSort = this.isTitleAsc ? 'asc' : 'desc';
     }
@@ -206,5 +261,23 @@ export class HomeComponent implements OnInit,OnDestroy {
     this.currentPage = 0;
     this.loadSongs(); // Tải lại danh sách bài hát với sắp xếp mới
 
+  }
+
+  removeGenre(genre: string) {
+    if (this.selectedGenres) {
+      this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
+    }
+    this.onGenreSelectionChange();
+  }
+
+  onGenreSelectionChange(event?: any): void {
+    console.log('Selected genres:', this.selectedGenres);
+    this.currentPage = 0;
+    this.songs = [];
+    this.loadSongs();
+  }
+
+  formatDate(dateString: Date): string {
+    return this.datePipe.transform(dateString, 'dd/MM/yyyy HH:mm:ss UTC+7') || '';
   }
 }
