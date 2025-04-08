@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Add to Playlist</h2>
+<div mat-dialog-content>
+  <p>Add "{{ data.song.title }}" by {{ data.song.artist }} to playlist:</p>
+  
+  <div *ngIf="!isCreatingPlaylist" class="playlist-list">
+    <div *ngIf="isLoading" class="loading-indicator">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading playlists...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && playlists.length === 0" class="no-playlists">
+      <p>You don't have any playlists yet.</p>
+    </div>
+    
+    <div class="playlist-item" *ngFor="let playlist of playlists">
+      <span class="playlist-name">{{ playlist.playlistName }}</span>
+      <button mat-icon-button color="primary" class="add-button" (click)="addToPlaylist(playlist)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    
+    <button mat-stroked-button color="primary" class="create-playlist-btn" (click)="toggleCreatePlaylist()">
+      <mat-icon>playlist_add</mat-icon>
+      Create New Playlist
+    </button>
+  </div>
+  
+  <div *ngIf="isCreatingPlaylist" class="create-playlist-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>New Playlist Name</mat-label>
+      <input matInput [(ngModel)]="newPlaylistName">
+    </mat-form-field>
+    
+    <div class="button-group">
+      <button mat-button (click)="toggleCreatePlaylist()" [disabled]="isLoading">Cancel</button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        [disabled]="!newPlaylistName.trim() || isLoading" 
+        (click)="createPlaylist()"
+      >
+        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        <span *ngIf="!isLoading">Create Playlist</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end" *ngIf="!isCreatingPlaylist">
+  <button mat-button (click)="onCancel()">Close</button>
+</div>

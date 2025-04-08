@@ -1,0 +1,59 @@
+.full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  mat-dialog-content {
+    min-height: 250px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .playlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .playlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+  
+  .playlist-name {
+    font-size: 16px;
+    flex-grow: 1;
+  }
+  
+  .add-button {
+    flex-shrink: 0;
+  }
+  
+  .create-playlist-btn {
+    margin-top: 16px;
+    width: 100%;
+  }
+  
+  .create-playlist-form {
+    margin-top: 16px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }

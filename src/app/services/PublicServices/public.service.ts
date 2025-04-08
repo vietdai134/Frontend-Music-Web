@@ -16,6 +16,7 @@ export class PublicService {
   }
 
   searchSongByKeyword(
+    songIds?: string[],
     title?:string,
     artist?:string,
     genres?:string[],
@@ -31,15 +32,17 @@ export class PublicService {
       .set('size', size.toString())
       .set('sort', sortParam);
 
+    if (songIds && songIds.length > 0) {
+      songIds.forEach((id) => {
+        params = params.append('songIds', id);
+      });
+    }
     if (title) {
       params = params.set('title', title);
     }
     if (artist) {
       params = params.set('artist', artist);
     }
-    // if (genres && genres.length > 0) {
-    //   params = params.set('genres', genres.join(',')); // Chuyển mảng thành chuỗi ngăn cách bởi dấu phẩy
-    // }
     if (genres && genres.length > 0) {
       genres.forEach((genre) => {
         params = params.append('genres', genre);

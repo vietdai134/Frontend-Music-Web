@@ -1,0 +1,662 @@
+$bg-dark: #111111;
+$bg-darker: #0a0a0a;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+$card-bg: #181818;
+
+$mobile: 576px;   // Điện thoại
+$tablet: 768px;   // Máy tính bảng
+$desktop: 992px;
+.home-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding: 15px;
+  margin-top: 64px;
+  margin-bottom: 70px;
+  transition: margin-left 0.3s ease-in-out;
+  background-color: $bg-dark;
+  color: $text-light;
+  overflow: visible;
+
+  @media (max-width: $mobile) {
+    padding: 10px;
+    margin-top: 50px; // Giảm margin-top trên mobile
+  }
+}
+
+.song-list {
+  padding: 20px;
+  overflow: visible;
+  @media (max-width: $mobile) {
+    padding: 10px;
+  }
+}
+
+.song-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  overflow: visible;
+  @media (max-width: $tablet) {
+    gap: 12px; // Giảm khoảng cách trên tablet
+  }
+
+  @media (max-width: $mobile) {
+    gap: 10px; // Giảm thêm trên mobile
+  }
+}
+
+.song-card {
+  width: 100%;
+  max-width: 32%;
+  background-color: $card-bg;
+  border-radius: 12px;
+  overflow: visible; /* Đảm bảo genres-container hiển thị */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+  box-sizing: border-box;
+
+  &:hover {
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px); // Nâng card lên khi hover
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+  }
+
+  @media (max-width: $desktop) {
+    max-width: 48%; // 2 cột trên tablet
+  }
+
+  @media (max-width: $mobile) {
+    max-width: 100%; // 1 cột trên mobile
+  }
+
+  .song-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px ;
+    cursor: pointer;
+    background: transparent;
+    width: 100%;
+    box-sizing: border-box; /* Ngăn padding làm tràn */
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $hover-highlight;
+      border-radius: 12px;
+    }
+    @media (max-width: $mobile) {
+      padding: 8px; // Tăng padding trên mobile cho dễ chạm
+    }
+  }
+
+  .song-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-right: 15px;
+    margin-left: 10px;
+    .song-button:hover & {
+      transform: scale(1.05); // Phóng to ảnh khi hover
+    }
+
+    @media (max-width: $tablet) {
+      width: 80px;
+      height: 80px;
+    }
+
+    @media (max-width: $mobile) {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+      margin-left: 5px;
+    }
+  }
+
+  .song-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+
+    .song-title {
+      color: $text-light;
+      font-size: 17px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.3s ease;
+      .song-button:hover & {
+        color: #cccccc; // Đổi màu khi hover (xanh lá Spotify)
+      }
+      @media (max-width: $mobile) {
+        font-size: 15px;
+      }
+    }
+
+    .song-artist {
+      color: #cccccc;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @media (max-width: $mobile) {
+        font-size: 14px;
+      }
+    }
+
+    .user-upload {
+      display: block;
+      color: #666;
+      font-size: 14px;
+      @media (max-width: $mobile) {
+        font-size: 12px;
+      }
+    }
+
+    .uploadDate{
+      color: #cccccc;
+      font-size: 12px;
+      @media (max-width: $mobile) {
+        font-size: 10px;
+      }
+    }
+  }
+
+  .song-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    // padding-right: 5px;
+    @media (max-width: $mobile) {
+      flex-direction: row; // Chuyển sang ngang trên mobile
+      gap: 8px;
+      margin-left: 5px;
+    }
+
+    .action-btn {
+      color: $text-light;
+      padding: 5px;
+
+      &:hover {
+        color: #cccccc;
+        transform: scale(1.1);
+      }
+      @media (max-width: $mobile) {
+        padding: 3px;
+      }
+    }
+  }
+
+  .genres-container {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93%;
+    max-width: 93%;
+    background-color: $bg-darker;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover .genres-container {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+  }
+  @media (max-width: $mobile) {
+    width: 90%;
+    padding: 6px 8px;
+    gap: 4px;
+  }
+}
+
+.genre-btn {
+  font-size: 12px;
+  padding: 4px 10px;
+  background-color: $hover-highlight !important;
+  color: $text-light !important;
+  border-radius: 6px;
+  border: 1px solid #444;
+  line-height: 1.4;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: lighten($hover-highlight, 5%) !important;
+    color: #ffffff !important;
+  }
+  &.selected {
+    background-color: #ffffff !important; /* Màu nền khi được chọn */
+    color: black !important; /* Màu chữ trắng */
+    font-weight: bold !important; /* Tô đậm chữ */
+  }
+
+  @media (max-width: $mobile) {
+    font-size: 11px;
+    padding: 3px 8px;
+    min-height: 28px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  color: $text-light;
+
+  ::ng-deep .mat-spinner circle {
+    stroke: $text-light;
+  }
+}
+
+.sort-container {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+.sort-btn {
+  background-color: $hover-highlight !important;
+  color: $text-light !important;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: normal;
+
+  min-height: 32px; 
+  height: auto;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: lighten($hover-highlight, 5%) !important;
+  }
+
+  &.active {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: bold;
+
+    &:hover {
+      background-color: #e0e0e0 !important;
+    }
+  }
+
+  mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  @media (max-width: $mobile) {
+    width: 100%; // Chiếm toàn bộ chiều rộng trên mobile
+    justify-content: space-between;
+  }
+}
+
+mat-form-field {
+  width: 15%;
+  margin-left: auto;
+  
+
+  @media (max-width: $mobile) {
+    width: 100%; // Chiếm toàn bộ chiều rộng trên mobile
+  }
+
+  ::ng-deep .mat-mdc-form-field {
+    background-color: transparent !important; // loại bỏ nền trắng của wrapper nếu có
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: $hover-highlight !important;
+    border: 1px solid #444 !important;
+    border-radius: 6px !important;
+    padding: 0 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    padding: 0 !important;
+  }
+
+  ::ng-deep .mat-mdc-floating-label {
+    color: #cccccc !important;
+    font-size: 13px;
+    font-weight: 600;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  ::ng-deep .mat-mdc-select {
+    color: $text-light !important;
+    font-size: 13px;
+  }
+
+  ::ng-deep .mat-mdc-select-arrow {
+    color: $text-light !important;
+  }
+
+  ::ng-deep .mat-mdc-form-field-underline {
+    display: none !important;
+  }
+
+  &:hover ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: lighten($hover-highlight, 5%) !important;
+  }
+}
+
+/* Nhóm các button sort lại bên trái */
+.sort-btn-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.selected-genres {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  gap: 8px;
+
+  @media (max-width: $mobile) {
+    gap: 6px;
+  }
+}
+
+.selected-genre-btn {
+  font-size: 13px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  color: $text-light !important;
+  background-color: $hover-highlight !important;
+  border-radius: 10px;
+  border: 2px solid #444;
+  
+  &:hover {
+    background-color: lighten($hover-highlight, 5%) !important;
+  }
+
+  @media (max-width: $mobile) {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+  
+}
+
+.remove-icon {
+  font-size: 16px;
+  margin-left: 4px;
+
+  @media (max-width: $mobile) {
+    font-size: 14px;
+    margin-left: 2px;
+  }
+}
+
+.selected {
+  background-color: #007bff; /* Màu nền khi genre được chọn */
+  color: white; /* Màu chữ khi genre được chọn */
+}
+
+
+.playlist-container {
+    position: relative;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 15px;
+  
+    mat-label {
+      color: $text-light;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+  
+    .playlist-buttons-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      .playlist-buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 12px; // Tăng khoảng cách giữa các nút cho cân đối
+        padding: 0 40px;
+        max-width: 100%;
+        overflow: hidden;
+  
+        .playlist-btn {
+          flex: 0 0 auto;
+          padding: 8px 16px; // Kích thước tương tự sort-btn
+          border-radius: 6px; // Đồng bộ với sort-btn
+          background-color: $hover-highlight !important; // Màu nền giống sort-btn
+          color: $text-light !important; // Màu chữ giống sort-btn
+          border: 1px solid #444; // Viền giống sort-btn
+          font-size: 13px; // Kích thước chữ giống sort-btn
+          line-height: 1.4;
+          min-height: 60px; // Tăng chiều cao để chứa 2 dòng
+          height: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        //   justify-content: center;
+        justify-content: space-between;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        //   position: relative;
+        //   padding-right: 40px;
+  
+          .playlist-info {
+            display: flex;
+            flex-direction: column; // playlistName trên, createdDate dưới
+            text-align: center;
+  
+            .playlist-name {
+              font-size: 14px; // Chữ to hơn một chút cho tên playlist
+              font-weight: 500;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 150px; // Giới hạn chiều rộng để không tràn
+            }
+  
+            .playlist-date {
+              font-size: 11px; // Chữ nhỏ hơn cho ngày
+              color: #cccccc; // Màu nhạt hơn để phân biệt
+              margin-top: 2px; // Khoảng cách nhỏ giữa tên và ngày
+            }
+          }
+
+          .playlist-actions {
+            display: flex;
+            // flex-direction: column; // Sắp xếp các button action theo hàng dọc
+            // position: absolute;
+            flex-direction: row; // Sắp xếp các button action theo hàng ngang
+            justify-content: center;
+            // right: 5px; // Đặt ở ngoài cùng bên phải
+            gap: 8px; // Khoảng cách giữa các button action
+            margin-top: 6px;
+            
+            // top: 50%;
+            // transform: translateY(-50%);
+            // gap: 2px; // Khoảng cách nhỏ giữa các button action
+  
+            .action-btn {
+              width: 24px;
+              height: 24px;
+              line-height: 24px;
+              padding: 0;
+              margin: 0;
+  
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+  
+          &:hover {
+            background-color: lighten($hover-highlight, 5%) !important; // Hiệu ứng hover giống sort-btn
+          }
+  
+          &.active {
+            background-color: #ffffff !important; // Màu active giống sort-btn
+            color: #000000 !important; // Màu chữ active giống sort-btn
+            font-weight: bold;
+  
+            &:hover {
+              background-color: #e0e0e0 !important; // Hover khi active giống sort-btn
+            }
+  
+            .playlist-date {
+              color: #6e6e6e !important; // Đổi màu ngày khi active để dễ đọc
+            }
+          }
+
+        }
+      }
+  
+      .scroll-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+  
+        &.left {
+          left: 5px;
+        }
+  
+        &.right {
+          right: 5px;
+        }
+  
+        &.disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+      }
+    }
+  
+    // Responsive
+    @media (max-width: $tablet) {
+      .playlist-buttons {
+        gap: 10px;
+        padding: 0 35px;
+  
+        .playlist-btn {
+          padding: 6px 12px; // Thu nhỏ trên tablet
+          min-height: 56px;
+        //   padding-right: 35px;
+  
+          .playlist-name {
+            font-size: 13px;
+            max-width: 120px;
+          }
+  
+          .playlist-date {
+            font-size: 10px;
+          }
+        }
+      }
+  
+      .scroll-btn {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  
+    @media (max-width: $mobile) {
+      padding: 5px 0;
+  
+      .playlist-buttons {
+        gap: 8px;
+        padding: 0 30px;
+  
+        .playlist-btn {
+          padding: 5px 10px; // Thu nhỏ hơn trên mobile
+          min-height: 52px;
+        //   padding-right: 30px;
+  
+          .playlist-name {
+            font-size: 12px;
+            max-width: 100px;
+          }
+  
+          .playlist-date {
+            font-size: 9px;
+          }
+        }
+      }
+  
+      .scroll-btn {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+

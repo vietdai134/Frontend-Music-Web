@@ -11,6 +11,7 @@ import { UserPaymentComponent } from './component/admin/user-payment/user-paymen
 import { DashboardComponent } from './component/admin/dashboard/dashboard.component';
 import { SignupComponent } from './component/signup/signup.component';
 import { SongUploadComponent } from './component/admin/song-upload/song-upload.component';
+import { PlaylistComponent } from './component/playlist/playlist.component';
 
 
 export const routes: Routes = [
@@ -29,6 +30,8 @@ export const routes: Routes = [
             { path: 'user', component: UserComponent },
             { path: 'user-payment', component: UserPaymentComponent }
         ]
-    }
+    },
+    { path: 'playlists', component:PlaylistComponent}
+
 
 ];

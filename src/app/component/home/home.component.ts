@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SongService } from '../../services/SongServices/song.service';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Song } from '../../models/song.module';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +20,10 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatDialog } from '@angular/material/dialog';
+import { PlaylistDialogComponent } from '../dialog/playlist-dialog/playlist-dialog.component';
+import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -70,6 +73,8 @@ export class HomeComponent implements OnInit,OnDestroy {
   genres: string[] = [];
 
   selectedGenres: string[] =[];
+
+  selectedSongIds: string[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
@@ -78,7 +83,10 @@ export class HomeComponent implements OnInit,OnDestroy {
     private sidebarService: SidebarService,
     private publicService: PublicService,
     private genreService: GenreService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private dialog: MatDialog,
+    private playlistService: PlaylistService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -142,10 +150,12 @@ export class HomeComponent implements OnInit,OnDestroy {
 
     const hasKeyword = this.searchKeyword && this.searchKeyword.trim() !== '';
     const hasGenres = this.selectedGenres !== null && this.selectedGenres.length > 0;
+    const hasSongIds =this.selectedSongIds !== null && this.selectedSongIds.length > 0;
     console.log("username:",this.searchKeywordUserName?? undefined);
     // if (this.searchKeyword && this.searchKeyword.trim() !== '' && this.selectedGenres !== null) {
-    if (hasKeyword || hasGenres) {
+    if (hasKeyword || hasGenres || hasSongIds) {
       this.publicService.searchSongByKeyword(
+        this.selectedSongIds ?? [], 
         this.searchKeywordTitle ?? undefined  ,
         this.searchKeywordArtist ?? undefined, 
         this.selectedGenres ??[], 
@@ -198,9 +208,37 @@ export class HomeComponent implements OnInit,OnDestroy {
     this.playerService.setCurrentSong(song); 
   }
 
-  addToPlaylist(song: Song) {
-    console.log(`Add to playlist: ${song.songId}`);
-    // Logic thêm vào playlist
+  addToPlaylist(song: any): void {
+    const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+      width: '400px',
+      data: { song: song }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.action === 'add') {
+          console.log('Adding song:', result.song.songId, 'to playlist:', result.playlist.playlistId);
+          this.playlistService.addSongToPlaylist(result.song.songId, result.playlist.playlistId).subscribe({
+            next: (response) => {
+              console.log('Song added to playlist successfully:', response);
+              this.snackBar.open(
+                `Added to playlist`, 
+                'Close', 
+                {
+                  duration: 3000,           // The snackbar will disappear after 3 seconds
+                  horizontalPosition: 'end', // Position at the right side
+                  verticalPosition: 'bottom', // Position at the bottom
+                  panelClass: ['success-snackbar'] // Optional custom CSS class for styling
+                }
+              );
+            }
+            , error: (err) => {
+              console.error('Error adding song to playlist:', err);
+            }
+          });
+        }
+      }
+    });
   }
 
   likeSong(song: Song) {
