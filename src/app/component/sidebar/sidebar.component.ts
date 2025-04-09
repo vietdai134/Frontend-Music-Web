@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit{
           this.menuItems.push({
             label: 'Liked Songs',
             icon: 'fas fa-cog',
-            link: '/liked-songs'
+            link: '/likedsongs'
           });
         }
       }

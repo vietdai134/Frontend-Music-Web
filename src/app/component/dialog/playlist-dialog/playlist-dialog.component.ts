@@ -11,6 +11,7 @@ import { PlaylistService } from '../../../services/PlaylistServices/playlist.ser
 import { Playlist } from '../../../models/playlist.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Song } from '../../../models/song.module';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -38,7 +39,7 @@ export class PlaylistDialogComponent implements OnInit {
     private playlistService: PlaylistService,
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<PlaylistDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { song: any }
+    @Inject(MAT_DIALOG_DATA) public data: { song: any;songQueue?: Song[] }
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +76,14 @@ export class PlaylistDialogComponent implements OnInit {
   }
 
   addToPlaylist(playlist: Playlist): void {
-    this.dialogRef.close({ action: 'add', playlist: playlist, song: this.data.song });
+    if (this.data.songQueue) {
+      // Trường hợp thêm nhiều bài từ QueueComponent
+      this.dialogRef.close({ action: 'add', playlist: playlist });
+    } else if (this.data.song) {
+      // Trường hợp thêm một bài từ HistorySongComponent hoặc HomeComponent
+      this.dialogRef.close({ action: 'add', playlist: playlist, song: this.data.song });
+    }
+    // this.dialogRef.close({ action: 'add', playlist: playlist, song: this.data.song });
   }
 
   toggleCreatePlaylist(): void {

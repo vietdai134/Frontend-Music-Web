@@ -28,6 +28,13 @@ export class PlaylistService {
     return this.http.post<any>(`${this.baseUrl}/playlist/add-song?songId=${songId}&playlistId=${playlistId}`, {}, { withCredentials: true });
   }
 
+  addMultipleSongsToPlaylist(playlistId: number, songIds: number[]): Observable<any> {
+    // Tạo query string từ songIds và playlistId
+    const queryParams = songIds.map(id => `songIds=${id}`).join('&') + `&playlistId=${playlistId}`;
+    const url = `${this.baseUrl}/playlist/add-multi-song?${queryParams}`;
+    return this.http.post<any>(url, null, { withCredentials: true });
+}
+
   deleteSongFromPlaylist(playlistId: number, songId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/playlist/delete-song?songId=${songId}&playlistId=${playlistId}`, { withCredentials: true });
   }

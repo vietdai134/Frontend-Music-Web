@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'; // Thêm MatSnackBar
 import { MatIconModule } from '@angular/material/icon';
+import { ListenHistoryService } from '../../services/ListenHistoryServices/listen-history.service';
 
 @Component({
   selector: 'app-footer',
@@ -35,6 +36,7 @@ export class FooterComponent implements OnInit{
 
   constructor(
     private playerService: PlayerService,
+    private historyService: ListenHistoryService,
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +113,7 @@ export class FooterComponent implements OnInit{
             if (this.isPlaying) {
               // this.audioPlayer.nativeElement.play();
               this.audioPlayer.nativeElement.play().catch(err => console.error('Play error:', err));
+              this.addSongToHisotry(this.currentSong?.songId ?? 0); // Thêm bài hát vào lịch sử nghe
             }
           }
         // }, 0);
@@ -226,4 +229,14 @@ export class FooterComponent implements OnInit{
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   }
   
+  addSongToHisotry(songId: number): void {
+    this.historyService.addSongToHistory(songId).subscribe({
+      next: (response) => {
+        console.log('Song added to history successfully:', response);
+      }
+      , error: (err) => {
+        console.error('Error adding song to history:', err);
+      }
+    });
+  }
 }

@@ -15,6 +15,15 @@
           </button>
         </div>
         <div class="sort-container">
+        <button 
+            mat-button 
+            class="sort-btn" 
+            [ngClass]="{'active': currentSortField === 'listenedDate'}" 
+            (click)="toggleListenedDateSort()"
+            >
+            Listened Date
+            <mat-icon>{{ isListenedDateAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+        </button>
           <button 
             mat-button 
             class="sort-btn" 
@@ -42,12 +51,13 @@
             Artist
             <mat-icon>{{ isArtistAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
           </button>
+        
   
           <mat-form-field  >
             <mat-label>Lọc theo thể loại</mat-label>
             <mat-select [(ngModel)]="selectedGenres" multiple (selectionChange)="onGenreSelectionChange($event)">
               <mat-select-trigger>
-                
+                <!-- {{ selectedGenres.length }} genre{{ selectedGenres.length > 1 ? 's' : '' }} selected -->
               </mat-select-trigger>
               <mat-option *ngFor="let genre of genres" [value]="genre">
                 {{ genre }}
@@ -56,62 +66,7 @@
           </mat-form-field>
   
         </div>
-
-        <div class="playlist-container">   
-            <mat-label>Danh sách playlist</mat-label> 
-            <div class="playlist-buttons-wrapper">
-              <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="currentPage === 0">
-                <mat-icon>chevron_left</mat-icon>
-              </button>
-              <div class="playlist-buttons">
-                <button 
-                  mat-button 
-                  class="playlist-btn" 
-                  *ngFor="let playlist of playlistsDisplayed" 
-                  (click)="selectPlaylist(playlist); $event.stopPropagation()"
-                  [ngClass]="{'active': selectedPlaylist?.playlistId === playlist.playlistId}"
-                >
-                  <!-- <div class="playlist-info">
-                    <span class="playlist-name">{{ playlist.playlistName }}</span>
-                    <span class="playlist-date">Created: {{ formatDate(playlist.createdDate) }}</span>
-                  </div> -->
-                  <div class="playlist-info">
-                    <ng-container *ngIf="editingPlaylist?.playlistId === playlist.playlistId; else normalView">
-                      <input 
-                        #editInput
-                        type="text" 
-                        class="edit-playlist-name" 
-                        [(ngModel)]="tempPlaylistName" 
-                        (keyup.enter)="savePlaylistName(playlist)" 
-                        (keyup.escape)="cancelEdit()"
-                        (click)="$event.stopPropagation()"
-                        
-                      >
-                    </ng-container>
-                    <ng-template #normalView>
-                      <span class="playlist-name">{{ playlist.playlistName }}</span>
-                      <span class="playlist-date">Created: {{ formatDate(playlist.createdDate) }}</span>
-                    </ng-template>
-                  </div>
-                  <div class="playlist-actions" (click)="$event.stopPropagation()">
-                    <button mat-icon-button class="action-btn" matTooltip="Edit" (click)="editPlaylist(playlist)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button class="action-btn" matTooltip="Delete" (click)="deletePlaylist(playlist)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                    <button mat-icon-button class="action-btn" matTooltip="Add to Queue" (click)="addPlaylistToQueue()">
-                      <mat-icon>queue_music</mat-icon>
-                    </button>
-                  </div>
-                </button>
-              </div>
-              <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isLastPage()">
-                <mat-icon>chevron_right</mat-icon>
-              </button>
-            </div>
-        </div>
-
+  
         <div class="song-container">
           <mat-card 
             *ngFor="let song of songs" 
@@ -124,22 +79,28 @@
                 <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
                 <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
                 <mat-card-subtitle class="user-upload">uploaded by {{ song.userName || 'Unknown User' }}</mat-card-subtitle>
-                <mat-card-subtitle class="uploadDate">{{ formatDate(song.uploadDate)}}</mat-card-subtitle>
+                <mat-card-subtitle class="listenedDate">Nghe lúc: {{ song.listenedDate ? (song.listenedDate | date:'HH:mm:ss dd/MM/yyyy') : 'Không rõ thời gian' }}</mat-card-subtitle>
               </div>
           
               <div class="song-actions" (click)="$event.stopPropagation()">
-                <button mat-icon-button class="action-btn" (click)="deleteFromPlaylist(song)">
-                  <mat-icon>playlist_remove</mat-icon>
+                <button mat-icon-button class="action-btn" (click)="addToPlaylist(song)">
+                  <mat-icon>playlist_add</mat-icon>
                 </button>
+                <!-- <button mat-icon-button class="action-btn" (click)="likeSong(song)">
+                  <mat-icon>favorite_border</mat-icon>
+                </button> -->
                 <button mat-icon-button class="action-btn" *ngIf="likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
-                  <mat-icon>favorite</mat-icon> <!-- Biểu tượng khi đã thích -->
-                </button>
-                <button mat-icon-button class="action-btn" *ngIf="!likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
-                  <mat-icon>favorite_border</mat-icon> <!-- Biểu tượng khi chưa thích -->
-                </button>
+                    <mat-icon>favorite</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn" *ngIf="!likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
+                    <mat-icon>favorite_border</mat-icon>
+                  </button>
                 <button mat-icon-button class="action-btn" (click)="downloadSong(song)">
                   <mat-icon>download</mat-icon>
                 </button>
+                <button mat-icon-button class="action-btn" (click)="removeFromHistory(song)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
               </div>
             </div>
   

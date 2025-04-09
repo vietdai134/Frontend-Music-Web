@@ -1,13 +1,18 @@
 <h2 mat-dialog-title>Add to Playlist</h2>
 <div mat-dialog-content>
-  <p>Add "{{ data.song.title }}" by {{ data.song.artist }} to playlist:</p>
+  <!-- <p>Add "{{ data.song.title }}" by {{ data.song.artist }} to playlist:</p> -->
   
   <div *ngIf="!isCreatingPlaylist" class="playlist-list">
     <div *ngIf="isLoading" class="loading-indicator">
       <mat-spinner diameter="40"></mat-spinner>
       <p>Loading playlists...</p>
     </div>
-    
+    <div *ngIf="data.songQueue">
+      <p>Adding {{ data.songQueue.length }} songs from queue to playlist:</p>
+    </div>
+    <div *ngIf="data.song && !data.songQueue">
+      <p>Adding song: {{ data.song.title }} - {{ data.song.artist }}</p>
+    </div>
     <div *ngIf="!isLoading && playlists.length === 0" class="no-playlists">
       <p>You don't have any playlists yet.</p>
     </div>

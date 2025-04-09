@@ -8,6 +8,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoginService } from '../../services/LoginServices/login.service';
 import { Observable } from 'rxjs';
 import { User } from '../../models/user.module';
+import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlaylistDialogComponent } from '../dialog/playlist-dialog/playlist-dialog.component';
 
 @Component({
   selector: 'app-queue',
@@ -29,6 +33,9 @@ export class QueueComponent implements OnInit{
   constructor(
     private playerService: PlayerService,
     private loginService: LoginService,
+    private playlistService: PlaylistService, // Thêm PlaylistService
+    private dialog: MatDialog, // Thêm MatDialog
+    private snackBar: MatSnackBar
   ) {
     this.user$ = this.loginService.user$;
   }
@@ -54,11 +61,64 @@ export class QueueComponent implements OnInit{
     this.playerService.playSongFromQueue(song); // Phát ngay bài này, giữ nguyên vị trí
   }
 
-  createPlaylist(): void {
-    console.log('Playlist created with:', this.songQueue);
+  // createPlaylist(): void {
+  //   console.log('Playlist created with:', this.songQueue);
     
-    // Nếu muốn hiển thị thông báo
-    // alert(`Playlist gồm ${this.songQueue.length} bài hát đã được tạo!`);
+  //   // Nếu muốn hiển thị thông báo
+  //   // alert(`Playlist gồm ${this.songQueue.length} bài hát đã được tạo!`);
+  // }
+  createPlaylist(): void {
+    if (this.songQueue.length === 0) {
+      this.snackBar.open('Queue is empty!', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom',
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    // Mở dialog PlaylistDialogComponent
+    const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+      width: '400px',
+      data: { songQueue: this.songQueue } // Truyền toàn bộ songQueue vào dialog
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.action === 'add') {
+        const playlistId = result.playlist.playlistId;
+        const songIds = this.songQueue.map(song => song.songId); // Lấy danh sách songId từ songQueue
+
+        // Gọi addMultipleSongsToPlaylist
+        this.playlistService.addMultipleSongsToPlaylist(playlistId, songIds).subscribe({
+          next: () => {
+            this.snackBar.open(
+              `Added ${songIds.length} songs to playlist "${result.playlist.playlistName}"`,
+              'Close',
+              {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'bottom',
+                panelClass: ['success-snackbar']
+              }
+            );
+          },
+          error: (err) => {
+            console.error('Error adding songs to playlist:', err);
+            this.snackBar.open(
+              'Failed to add songs to playlist',
+              'Close',
+              {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'bottom',
+                panelClass: ['error-snackbar']
+              }
+            );
+          }
+        });
+      }
+    });
   }
 
   removeFromQueue(index: number): void {

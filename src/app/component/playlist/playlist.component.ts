@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {  Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { PlayerService } from '../../services/PlayerServices/player.service';
@@ -23,10 +23,14 @@ import { Playlist } from '../../models/playlist.module';
 import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
 import { ConfirmDeleteComponent } from '../dialog/confirm-delete/confirm-delete.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LikedSongService } from '../../services/LikedSongServices/liked-song.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SongService } from '../../services/SongServices/song.service';
 
 
 @Component({
   selector: 'app-playlist',
+  standalone: true,
   imports: [
     SidebarComponent,
     CommonModule ,
@@ -81,6 +85,9 @@ export class PlaylistComponent implements OnInit,OnDestroy{
     selectedPlaylist: Playlist | null = null;
     playlistCurrentPage: number = 0;
     itemsPerPage: number = 4;
+
+    likedSongIds: string[] = [];
+
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     @ViewChild('playlistButtons', { static: false }) playlistButtons!: ElementRef;
@@ -95,7 +102,10 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       private genreService: GenreService,
       private playlistService: PlaylistService,
       private datePipe: DatePipe,
-      private dialog: MatDialog
+      private dialog: MatDialog,
+      private likedSongService: LikedSongService,
+      private snackBar: MatSnackBar,
+      private songService: SongService,
     ) {}
 
     ngOnDestroy(): void {
@@ -112,6 +122,7 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       }
     }
     ngOnInit(): void {
+      this.loadLikedSongs();
       this.loadPlaylists();
       this.loadGenres();
       combineLatest([this.searchService.currentKeyword$, this.searchService.currentTypeSearch$])
@@ -260,15 +271,73 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       });
     }
 
-    likeSong(song: Song) {
-      console.log(`Like song: ${song.title}`);
-      // Logic thích bài hát
-    }
+likeSong(song: Song) {
+    console.log(`Like song: ${song.title}`);
+    this.likedSongService.addSongToLikedSongs(song.songId).subscribe({
+      next: (response) => {
+        this.likedSongIds.push(song.songId.toString());
+        console.log('Song liked successfully:', response);
+        this.snackBar.open(
+          `Liked ${song.title}`, 
+          'Close', 
+          {
+            duration: 3000,           // The snackbar will disappear after 3 seconds
+            horizontalPosition: 'end', // Position at the right side
+            verticalPosition: 'bottom', // Position at the bottom
+            panelClass: ['success-snackbar'] // Optional custom CSS class for styling
+          }
+        );
+      },
+      error: (err) => {
+        console.error('Error liking song:', err);
+      }
+    });
+    // Logic thích bài hát
+  }
 
-    showMoreOptions(song: Song) {
-      console.log(`More options for: ${song.title}`);
-      // Logic hiển thị thêm tùy chọn
-    }
+  unlikeSong(song: Song) {
+    console.log(`Unlike song: ${song.title}`);
+    this.likedSongService.deleteSongFromLikedSongs(song.songId).subscribe({
+      next: (response) => {
+        this.likedSongIds = this.likedSongIds.filter(id => id !== song.songId.toString());
+        console.log('Song unliked successfully:', response);
+        this.snackBar.open(
+          `Unliked ${song.title}`, 
+          'Close', 
+          {
+            duration: 3000,           // The snackbar will disappear after 3 seconds
+            horizontalPosition: 'end', // Position at the right side
+            verticalPosition: 'bottom', // Position at the bottom
+            panelClass: ['success-snackbar'] // Optional custom CSS class for styling
+          }
+        );
+      },
+      error: (err) => {
+        console.error('Error unliking song:', err);
+      }
+    });
+  }
+
+  downloadSong(song: Song) {
+    console.log(`More options for: ${song.fileSongId}`);
+    // Logic hiển thị thêm tùy chọn
+    this.songService.downloadSong(song.fileSongId).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = song.title + '.mp3'; // Tên file tải về
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url); // Giải phóng URL đã tạo
+        a.remove(); // Xóa phần tử <a> đã tạo
+      }
+      , error: (err) => {
+        console.error('Error downloading song:', err);
+      }
+    });
+  }
   
     // Xử lý khi nhấp vào nút thể loại
     onGenreClick(genreName: string): void {
@@ -467,4 +536,17 @@ export class PlaylistComponent implements OnInit,OnDestroy{
         this.playerService.setCurrentSong(song); 
       }
     }
+
+    loadLikedSongs(): void {
+      this.likedSongService.getAllLikedSongs().subscribe({
+        next: (response) => {
+          this.likedSongIds =Array.isArray(response) ? response.map(item => item.songId.toString()) : [];
+          console.log(this.likedSongIds);
+        },
+        error: (err) => {
+          console.error('Error fetching liked songs:', err);
+        }
+      });
+    }
+
 }

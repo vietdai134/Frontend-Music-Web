@@ -1,37 +1,34 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Song } from '../../models/song.module';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { PlayerService } from '../../services/PlayerServices/player.service';
-import { SearchService } from '../../services/SearchServices/search.service';
-import { filter, Observable, Subscription } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { QueueComponent } from '../queue/queue.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { SidebarService } from '../../services/SidebarServices/sidebar.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { PublicService } from '../../services/PublicServices/public.service';
-import { combineLatest } from 'rxjs';
-import { GenreService } from '../../services/GenreServices/genre.service';
-import { Genre } from '../../models/genre.module';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { MatDialog } from '@angular/material/dialog';
-import { PlaylistDialogComponent } from '../dialog/playlist-dialog/playlist-dialog.component';
-import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription, combineLatest } from 'rxjs';
+import { Genre } from '../../models/genre.module';
+import { Song } from '../../models/song.module';
+import { GenreService } from '../../services/GenreServices/genre.service';
+import { PlayerService } from '../../services/PlayerServices/player.service';
+import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
+import { PublicService } from '../../services/PublicServices/public.service';
+import { SearchService } from '../../services/SearchServices/search.service';
+import { SidebarService } from '../../services/SidebarServices/sidebar.service';
+import { PlaylistDialogComponent } from '../dialog/playlist-dialog/playlist-dialog.component';
 import { ListenHistoryService } from '../../services/ListenHistoryServices/listen-history.service';
 import { LikedSongService } from '../../services/LikedSongServices/liked-song.service';
 import { SongService } from '../../services/SongServices/song.service';
-import { LoginService } from '../../services/LoginServices/login.service';
-import { User } from '../../models/user.module';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-liked-song',
   standalone: true,
   imports: [
     CommonModule ,
@@ -47,18 +44,15 @@ import { User } from '../../models/user.module';
     FormsModule,
     NgSelectModule
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  templateUrl: './liked-song.component.html',
+  styleUrl: './liked-song.component.scss',
   providers: [DatePipe]
 })
-export class HomeComponent implements OnInit,OnDestroy {
-  user$: Observable<User | null> = new Observable();
-  isLoggedIn: boolean = false;
-
+export class LikedSongComponent implements OnInit,OnDestroy{
   songs: Song[] = [];
 
   totalElements = 0;
-  pageSize = 20;
+  pageSize = 10;
   currentPage = 0;
   isLoading = false;
   showQueue: boolean = false;
@@ -71,7 +65,6 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   isSidebarVisible: boolean = true;
   private sidebarSubscription!: Subscription;
-  private userSubscription!: Subscription;
 
   isUploadDateAsc = false; // Trạng thái sắp xếp cho Upload Date
   isTitleAsc = false;      // Trạng thái sắp xếp cho Title
@@ -80,12 +73,11 @@ export class HomeComponent implements OnInit,OnDestroy {
   resultSort = 'desc'; // Giá trị mặc định cho sort
 
   genres: string[] = [];
-
   selectedGenres: string[] =[];
 
   selectedSongIds: string[] = [];
 
-  likedSongIds: string[] = [];
+  hasNoSongs: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -100,24 +92,11 @@ export class HomeComponent implements OnInit,OnDestroy {
     private playlistService: PlaylistService,
     private snackBar: MatSnackBar,
     private likedSongService: LikedSongService,
-    private songService: SongService,
-    private loginService: LoginService,
-  ) {
-    this.user$ = this.loginService.user$;
-  }
+    private songService:SongService
+  ) {}
 
   ngOnInit() {
-
-    this.userSubscription = this.user$.subscribe(user => {
-      this.isLoggedIn = !!user; // true nếu user tồn tại, false nếu null
-      if (this.isLoggedIn) {
-        this.loadLikedSongs(); // Chỉ load danh sách liked songs nếu đã đăng nhập
-      } else {
-        this.likedSongIds = []; // Reset likedSongIds nếu chưa đăng nhập
-      }
-    });
-
-    // this.loadLikedSongs();
+    this.loadLikedSongs();
     combineLatest([this.searchService.currentKeyword$, this.searchService.currentTypeSearch$])
     .subscribe(([keyword, type]) => {
 
@@ -166,10 +145,6 @@ export class HomeComponent implements OnInit,OnDestroy {
     if (this.sidebarSubscription) {
       this.sidebarSubscription.unsubscribe();
     }
-
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe(); // Hủy subscription của user$
-    }
   }
   loadGenres() {
     this.genreService.getListAllGenres().subscribe((response) => {
@@ -177,14 +152,15 @@ export class HomeComponent implements OnInit,OnDestroy {
     });
   }
   loadSongs(): void {
-    if (this.isLoading) return;// Nếu đang tải, thoát ra ngay
+    if (this.isLoading) return;// Nếu đang tải, thoát ra ngayz
     this.isLoading = true;// Đánh dấu là đang tải dữ liệu
 
     const hasKeyword = this.searchKeyword && this.searchKeyword.trim() !== '';
     const hasGenres = this.selectedGenres !== null && this.selectedGenres.length > 0;
     const hasSongIds =this.selectedSongIds !== null && this.selectedSongIds.length > 0;
-    
-    if (hasKeyword || hasGenres || hasSongIds) {
+    console.log("username:",this.searchKeywordUserName?? undefined);
+    // if (hasKeyword || hasGenres || hasSongIds) {
+    if (hasSongIds) {
       this.publicService.searchSongByKeyword(
         this.selectedSongIds ?? [], 
         this.searchKeywordTitle ?? undefined  ,
@@ -193,8 +169,7 @@ export class HomeComponent implements OnInit,OnDestroy {
         this.searchKeywordUserName?? undefined, 
         this.currentPage, this.pageSize, 
         this.currentSortField, 
-        this.resultSort
-      ).subscribe({
+        this.resultSort).subscribe({
         next: (response) => {
           this.songs = [...this.songs, ...response.content]; // Thêm dữ liệu mới vào danh sách hiện tại
           this.totalElements = response.page.totalElements;
@@ -203,24 +178,14 @@ export class HomeComponent implements OnInit,OnDestroy {
         error: (err) => {
           console.error('Error fetching search results:', err);
           this.isLoading = false;//Đặt lại để có thể thử tải lại
-          this.totalElements = 0;
         }
       });
-    } else {
-      this.publicService.getAllSongsWithApproved(this.currentPage, this.pageSize,this.currentSortField,this.resultSort).subscribe({
-        next: (response) => {
-          console.log(response.content)
-          this.songs = [...this.songs, ...response.content];
-          console.log(this.songs)
-          this.totalElements = response.page.totalElements;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error fetching songs:', err);
-          this.isLoading = false;
-          this.totalElements = 0;
-        }
-      });
+    } 
+    else{
+      this.songs = []; // Xóa danh sách bài hát
+      this.totalElements = 0;
+      this.isLoading = false;
+      this.hasNoSongs = true;
     }
   }
 
@@ -275,37 +240,13 @@ export class HomeComponent implements OnInit,OnDestroy {
     });
   }
 
-  likeSong(song: Song) {
-    console.log(`Like song: ${song.title}`);
-    this.likedSongService.addSongToLikedSongs(song.songId).subscribe({
-      next: (response) => {
-        this.likedSongIds.push(song.songId.toString());
-        console.log('Song liked successfully:', response);
-        this.snackBar.open(
-          `Liked ${song.title}`, 
-          'Close', 
-          {
-            duration: 3000,           // The snackbar will disappear after 3 seconds
-            horizontalPosition: 'end', // Position at the right side
-            verticalPosition: 'bottom', // Position at the bottom
-            panelClass: ['success-snackbar'] // Optional custom CSS class for styling
-          }
-        );
-      },
-      error: (err) => {
-        console.error('Error liking song:', err);
-      }
-    });
-  }
-
   unlikeSong(song: Song) {
-    console.log(`Unlike song: ${song.title}`);
+    console.log(`Like song: ${song.songId}`);
     this.likedSongService.deleteSongFromLikedSongs(song.songId).subscribe({
       next: (response) => {
-        this.likedSongIds = this.likedSongIds.filter(id => id !== song.songId.toString());
-        console.log('Song unliked successfully:', response);
+        console.log('Song removed from liked songs successfully:', response);
         this.snackBar.open(
-          `Unliked ${song.title}`, 
+          `Removed from liked songs`, 
           'Close', 
           {
             duration: 3000,           // The snackbar will disappear after 3 seconds
@@ -314,9 +255,10 @@ export class HomeComponent implements OnInit,OnDestroy {
             panelClass: ['success-snackbar'] // Optional custom CSS class for styling
           }
         );
-      },
-      error: (err) => {
-        console.error('Error unliking song:', err);
+        this.loadLikedSongs();
+      }
+      , error: (err) => {
+        console.error('Error removing song from liked songs:', err);
       }
     });
   }
@@ -344,11 +286,13 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   // Xử lý khi nhấp vào nút thể loại
   onGenreClick(genreName: string): void {
+    // console.log(`Clicked genre: ${genreName}`);
     if (this.selectedGenres.includes(genreName)) {
       this.selectedGenres = this.selectedGenres.filter(g => g !== genreName);
     } else {
       this.selectedGenres = [...this.selectedGenres, genreName];
     }
+    // console.log('Selected genres after click:', this.selectedGenres);
     this.onGenreSelectionChange();
   }
 
@@ -398,7 +342,7 @@ export class HomeComponent implements OnInit,OnDestroy {
   }
 
   onGenreSelectionChange(event?: any): void {
-    // console.log('Selected genres:', this.selectedGenres);
+    console.log('Selected genres:', this.selectedGenres);
     this.currentPage = 0;
     this.songs = [];
     this.loadSongs();
@@ -409,16 +353,20 @@ export class HomeComponent implements OnInit,OnDestroy {
   }
 
   loadLikedSongs(): void {
-    if (!this.isLoggedIn) {
-      this.likedSongIds = []; // Reset nếu chưa đăng nhập
-      return;
-    }
     this.likedSongService.getAllLikedSongs().subscribe({
       next: (response) => {
-        this.likedSongIds =Array.isArray(response) ? response.map(item => item.songId.toString()) : [];
-        console.log(this.likedSongIds);
-      },
-      error: (err) => {
+        this.selectedSongIds = Array.isArray(response) ? response.map(item => item.songId.toString()) : []; // Giả sử response chứa danh sách bài hát
+        console.log('Songs in selected playlist:', this.selectedSongIds);
+
+        this.currentPage = 0;
+        this.songs = [];
+        this.loadSongs();
+        this.hasNoSongs = this.selectedSongIds.length === 0; // Kiểm tra nếu không có bài hát
+        if (!this.hasNoSongs) {
+          this.loadSongs(); // Chỉ load nếu có bài hát
+        }
+      }
+      , error: (err) => {
         console.error('Error fetching liked songs:', err);
       }
     });

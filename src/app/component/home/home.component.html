@@ -73,14 +73,18 @@
             </div>
         
             <div class="song-actions" (click)="$event.stopPropagation()">
-              <button mat-icon-button class="action-btn" (click)="addToPlaylist(song)">
+              <button mat-icon-button class="action-btn" *ngIf="isLoggedIn" (click)="addToPlaylist(song)">
                 <mat-icon>playlist_add</mat-icon>
               </button>
-              <button mat-icon-button class="action-btn" (click)="likeSong(song)">
+              <!-- Kiểm tra nếu songId nằm trong likedSongIds thì hiển thị nút Unlike, ngược lại hiển thị nút Like -->
+              <button mat-icon-button class="action-btn" *ngIf="isLoggedIn && likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
+                <mat-icon>favorite</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn" *ngIf="isLoggedIn && !likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
                 <mat-icon>favorite_border</mat-icon>
               </button>
-              <button mat-icon-button class="action-btn" (click)="showMoreOptions(song)">
-                <mat-icon>more_vert</mat-icon>
+              <button mat-icon-button class="action-btn" (click)="downloadSong(song)">
+                <mat-icon>download</mat-icon>
               </button>
             </div>
           </div>

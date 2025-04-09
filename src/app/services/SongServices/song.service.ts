@@ -69,4 +69,8 @@ export class SongService {
         }
         return this.http.put<Song>(`${this.baseUrl}/songs/update/${songId}`, formData,{ withCredentials: true });
       }
+
+  downloadSong(fileSongId:string):Observable<Blob>{
+    return this.http.get(`${this.baseUrl}/songs/download/${fileSongId}`, { responseType: 'blob', withCredentials: false });
+  }
 }

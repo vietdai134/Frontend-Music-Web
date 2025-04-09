@@ -12,6 +12,8 @@ import { DashboardComponent } from './component/admin/dashboard/dashboard.compon
 import { SignupComponent } from './component/signup/signup.component';
 import { SongUploadComponent } from './component/admin/song-upload/song-upload.component';
 import { PlaylistComponent } from './component/playlist/playlist.component';
+import { LikedSongComponent } from './component/liked-song/liked-song.component';
+import { HistorySongComponent } from './component/history-song/history-song.component';
 
 
 export const routes: Routes = [
@@ -31,7 +33,9 @@ export const routes: Routes = [
             { path: 'user-payment', component: UserPaymentComponent }
         ]
     },
-    { path: 'playlists', component:PlaylistComponent}
+    { path: 'playlists', component:PlaylistComponent},
+    { path: 'history', component:HistorySongComponent},
+    { path: 'likedsongs', component:LikedSongComponent}
 
 
 ];
