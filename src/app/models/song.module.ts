@@ -5,7 +5,6 @@ export interface Song{
     title:string;
     songImage?:string;
     songFileData:string;
-    downloadable:boolean;
     genres:Genre[];
     userName:string;
     approvedDate:Date;

@@ -1,0 +1,144 @@
+
+<div class="home-container">
+    <app-sidebar [isSidebarVisible]="isSidebarVisible"></app-sidebar>
+  
+    <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
+      <div class="song-list">
+        <div class="sort-container">
+            <div class="sort-buttons">
+                <button mat-button class="sort-btn" [ngClass]="{'active': currentSortField === 'uploadDate'}"
+                    (click)="toggleSort('uploadDate')">
+                    Upload Date
+                    <mat-icon>{{ isUploadDateAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                </button>
+                <button mat-button class="sort-btn" [ngClass]="{'active': currentSortField === 'title'}"
+                    (click)="toggleSort('title')">
+                    Title
+                    <mat-icon>{{ isTitleAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                </button>
+                <button mat-button class="sort-btn" [ngClass]="{'active': currentSortField === 'artist'}"
+                    (click)="toggleSort('artist')">
+                    Artist
+                    <mat-icon>{{ isArtistAsc ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                </button>
+            </div>
+        
+            <button mat-button class="upload-btn" (click)="onUploadSong()">
+                <mat-icon>upload</mat-icon>
+                Upload Song
+
+            </button>
+        </div>
+  
+        <!-- Tabs with "No songs" message -->
+        <mat-tab-group class="status-tabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
+          <mat-tab label="PENDING">
+            <div class="song-container">
+              <ng-container *ngIf="songs.length > 0; else noSongs">
+                <mat-card *ngFor="let song of songs" class="song-card">
+                  <div class="song-button">
+                    <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+                    <div class="song-info">
+                      <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                      <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </mat-card>
+              </ng-container>
+              <ng-template #noSongs>
+                <div class="no-songs-message">Không có bài hát nào</div>
+              </ng-template>
+            </div>
+          </mat-tab>
+          <mat-tab label="APPROVED">
+            <div class="song-container">
+              <ng-container *ngIf="songs.length > 0; else noSongs">
+                <mat-card *ngFor="let song of songs" class="song-card">
+                  <div class="song-button">
+                    <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+                    <div class="song-info">
+                      <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                      <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </mat-card>
+              </ng-container>
+              <ng-template #noSongs>
+                <div class="no-songs-message">Không có bài hát nào</div>
+              </ng-template>
+            </div>
+          </mat-tab>
+          <mat-tab label="REJECTED">
+            <div class="song-container">
+              <ng-container *ngIf="songs.length > 0; else noSongs">
+                <mat-card *ngFor="let song of songs" class="song-card">
+                  <div class="song-button">
+                    <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+                    <div class="song-info">
+                      <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                      <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </mat-card>
+              </ng-container>
+              <ng-template #noSongs>
+                <div class="no-songs-message">Không có bài hát nào</div>
+              </ng-template>
+            </div>
+          </mat-tab>
+          <mat-tab label="UNDER_REVIEW">
+            <div class="song-container">
+              <ng-container *ngIf="songs.length > 0; else noSongs">
+                <mat-card *ngFor="let song of songs" class="song-card">
+                  <div class="song-button">
+                    <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+                    <div class="song-info">
+                      <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                      <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </mat-card>
+              </ng-container>
+              <ng-template #noSongs>
+                <div class="no-songs-message">Không có bài hát nào</div>
+              </ng-template>
+            </div>
+          </mat-tab>
+          <mat-tab label="REVOKED">
+            <div class="song-container">
+              <ng-container *ngIf="songs.length > 0; else noSongs">
+                <mat-card *ngFor="let song of songs" class="song-card">
+                  <div class="song-button">
+                    <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+                    <div class="song-info">
+                      <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                      <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </mat-card>
+              </ng-container>
+              <ng-template #noSongs>
+                <div class="no-songs-message">Không có bài hát nào</div>
+              </ng-template>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+  
+        <div class="loading" *ngIf="isLoading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Đang tải...</p>
+        </div>
+  
+        <mat-paginator *ngIf="songs.length > 0" [length]="totalElements" [pageSize]="pageSize" [pageIndex]="currentPage"
+            (page)="onPageChange($event)">
+          </mat-paginator>
+  
+        <app-queue *ngIf="showQueue"></app-queue>
+      </div>
+    </div>
+  </div>

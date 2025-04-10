@@ -48,11 +48,6 @@
         <td mat-cell *matCellDef="let genre"> {{ getGenresDisplay(genre) }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="downloadable">
-        <th mat-header-cell *matHeaderCellDef> Có thể tải xuống </th>
-        <td mat-cell *matCellDef="let song"> {{ song.downloadable ? 'Có' : 'Không' }} </td>
-      </ng-container>
-
       <ng-container matColumnDef="approvedDate">
         <th mat-header-cell *matHeaderCellDef> Ngày được duyệt</th>
         <td mat-cell *matCellDef="let song"> {{ formatDate(song.approvedDate) }} </td>

@@ -30,12 +30,10 @@ export class SongService {
       songImage?: File; 
       songFileData: File; 
       genreNames: string[];
-      downloadable:boolean;
     }): Observable<Song> {
       const formData = new FormData();
     formData.append('title', song.title);
     formData.append('artist', song.artist);
-    formData.append('downloadable', song.downloadable.toString());
     song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
     if (song.songImage) {
       formData.append('songImage', song.songImage);
@@ -55,14 +53,11 @@ export class SongService {
         songFileId: string;
         genreNames: string[];
         songImage?:File;
-        downloadable: boolean;
       }):Observable<Song>{
         const formData = new FormData();
         formData.append('title', song.title);
         formData.append('artist', song.artist);
         formData.append('songFileId', song.songFileId);
-        // formData.append('roleNames', JSON.stringify(user.roleNames));
-        formData.append('downloadable', song.downloadable.toString());
         song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
         if (song.songImage) {
           formData.append('songImage', song.songImage);

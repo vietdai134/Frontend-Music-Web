@@ -2,7 +2,10 @@
     <app-sidebar [isSidebarVisible]="isSidebarVisible"></app-sidebar>
     
     <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
-      <div class="song-list">
+      <div class="no-playlists" *ngIf="playlists.length === 0">
+        <h3>Không có danh sách playlist</h3>
+      </div>
+      <div class="song-list" *ngIf="playlists.length > 0">
         <div class="selected-genres">
           <button 
             mat-stroked-button 
@@ -112,59 +115,72 @@
             </div>
         </div>
 
-        <div class="song-container">
-          <mat-card 
-            *ngFor="let song of songs" 
-            class="song-card"
-          >
-            <div class="song-button" (click)="playSong(song)">
-              <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
-          
-              <div class="song-info">
-                <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
-                <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
-                <mat-card-subtitle class="user-upload">uploaded by {{ song.userName || 'Unknown User' }}</mat-card-subtitle>
-                <mat-card-subtitle class="uploadDate">{{ formatDate(song.uploadDate)}}</mat-card-subtitle>
-              </div>
-          
-              <div class="song-actions" (click)="$event.stopPropagation()">
-                <button mat-icon-button class="action-btn" (click)="deleteFromPlaylist(song)">
-                  <mat-icon>playlist_remove</mat-icon>
-                </button>
-                <button mat-icon-button class="action-btn" *ngIf="likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
-                  <mat-icon>favorite</mat-icon> <!-- Biểu tượng khi đã thích -->
-                </button>
-                <button mat-icon-button class="action-btn" *ngIf="!likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
-                  <mat-icon>favorite_border</mat-icon> <!-- Biểu tượng khi chưa thích -->
-                </button>
-                <button mat-icon-button class="action-btn" (click)="downloadSong(song)">
-                  <mat-icon>download</mat-icon>
-                </button>
-              </div>
-            </div>
-  
-            <div class="genres-container">
-              <ng-container *ngIf="song.genresName">
-                <button 
-                  mat-button 
-                  class="genre-btn" 
-                  *ngFor="let name of song.genresName.split(',')" 
-                  (click)="onGenreClick(name.trim())"
-                  [ngClass]="{'selected': selectedGenres.includes(name.trim())}"
-                >
-                  {{ name.trim() }}
-                </button>
-              </ng-container>
-            </div>
-          </mat-card>
+        <div *ngIf="selectedPlaylist && songs.length === 0 && !isLoading; else songContent">
+          <div class="no-songs">
+            <h3>Không có bài hát trong playlist này</h3>
+          </div>
         </div>
-  
-        <div class="loading" *ngIf="isLoading">
-          <mat-spinner diameter="40"></mat-spinner>
-          <p>Đang tải...</p>
-        </div>
-  
-        <app-queue *ngIf="showQueue"></app-queue>
+        <ng-template #songContent>
+          <div class="song-container" *ngIf="songs.length > 0">
+            <mat-card 
+              *ngFor="let song of songs" 
+              class="song-card"
+            >
+              <div class="song-button" (click)="playSong(song)">
+                <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
+            
+                <div class="song-info">
+                  <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
+                  <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                  <mat-card-subtitle class="user-upload">uploaded by {{ song.userName || 'Unknown User' }}</mat-card-subtitle>
+                  <mat-card-subtitle class="uploadDate">{{ formatDate(song.uploadDate)}}</mat-card-subtitle>
+                </div>
+            
+                <div class="song-actions" (click)="$event.stopPropagation()">
+                  <button mat-icon-button class="action-btn" (click)="deleteFromPlaylist(song)">
+                    <mat-icon>playlist_remove</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn" *ngIf="likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
+                    <mat-icon>favorite</mat-icon> <!-- Biểu tượng khi đã thích -->
+                  </button>
+                  <button mat-icon-button class="action-btn" *ngIf="!likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
+                    <mat-icon>favorite_border</mat-icon> <!-- Biểu tượng khi chưa thích -->
+                  </button>
+                  <button mat-icon-button class="action-btn" (click)="downloadSong(song)">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                </div>
+              </div>
+    
+              <div class="genres-container">
+                <ng-container *ngIf="song.genresName">
+                  <button 
+                    mat-button 
+                    class="genre-btn" 
+                    *ngFor="let name of song.genresName.split(',')" 
+                    (click)="onGenreClick(name.trim())"
+                    [ngClass]="{'selected': selectedGenres.includes(name.trim())}"
+                  >
+                    {{ name.trim() }}
+                  </button>
+                </ng-container>
+              </div>
+            </mat-card>
+          </div>
+    
+          <div class="loading" *ngIf="isLoading">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Đang tải...</p>
+          </div>
+    
+          <app-queue *ngIf="showQueue"></app-queue>
+        </ng-template>
+        
       </div>
+      <ng-template #noSongsTemplate>
+        <div class="no-songs">
+          <h3>Không có danh sách phát</h3>
+        </div>
+      </ng-template>
     </div>
   </div>

@@ -13,7 +13,6 @@ import { Song } from '../../../models/song.module';
 import { SongApprovalService } from '../../../services/SongApprovalServices/song-approval.service';
 import { Genre } from '../../../models/genre.module';
 import { ConfirmDeleteComponent } from '../../dialog/confirm-delete/confirm-delete.component';
-import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-song',
@@ -34,7 +33,7 @@ import { timeout } from 'rxjs';
 })
 export class SongComponent implements OnInit{
   displayedColumns: string[] = ['songId', 'title', 'artist', 
-    'fileSongId', 'songImage','genres','downloadable',
+    'fileSongId', 'songImage','genres', 
     'approvedDate','userName', 'actions'];
   songs:Song[]=[];
   totalElements = 0;

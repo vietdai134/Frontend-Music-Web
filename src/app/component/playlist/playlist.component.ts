@@ -122,8 +122,8 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       }
     }
     ngOnInit(): void {
-      this.loadLikedSongs();
       this.loadPlaylists();
+      this.loadLikedSongs();
       this.loadGenres();
       combineLatest([this.searchService.currentKeyword$, this.searchService.currentTypeSearch$])
         .subscribe(([keyword, type]) => {
@@ -163,6 +163,7 @@ export class PlaylistComponent implements OnInit,OnDestroy{
     }
 
     loadPlaylists(){
+      
       this.playlistService.getAllPlaylists().subscribe((response) => {
         this.playlists = response;
         console.log(this.playlists);
@@ -183,7 +184,8 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       const hasSongIds =this.selectedSongIds !== null && this.selectedSongIds.length > 0;
       console.log("username:",this.searchKeywordUserName?? undefined);
       // if (this.searchKeyword && this.searchKeyword.trim() !== '' && this.selectedGenres !== null) {
-      if (hasKeyword || hasGenres || hasSongIds) {
+      // if (hasKeyword || hasGenres || hasSongIds) {
+      if (hasSongIds) {
         this.publicService.searchSongByKeyword(
           this.selectedSongIds ?? [], 
           this.searchKeywordTitle ?? undefined  ,
@@ -203,20 +205,11 @@ export class PlaylistComponent implements OnInit,OnDestroy{
             this.isLoading = false;//Đặt lại để có thể thử tải lại
           }
         });
-      } else {
-        this.publicService.getAllSongsWithApproved(this.currentPage, this.pageSize,this.currentSortField,this.resultSort).subscribe({
-          next: (response) => {
-            // console.log(response.content)
-            this.songs = [...this.songs, ...response.content];
-            // console.log(this.songs)
-            this.totalElements = response.page.totalElements;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error('Error fetching songs:', err);
-            this.isLoading = false;
-          }
-        });
+      } 
+      else{
+        this.songs = []; // Xóa danh sách bài hát
+        this.totalElements = 0;
+        this.isLoading = false;
       }
     }
   

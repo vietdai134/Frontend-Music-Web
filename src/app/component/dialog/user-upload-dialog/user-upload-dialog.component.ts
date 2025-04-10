@@ -1,21 +1,21 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Genre } from '../../../models/genre.module';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { SongService } from '../../../services/SongServices/song.service';
-import { GenreService } from '../../../services/GenreServices/genre.service';
-import { minSelectionValidator } from '../../../shared/Validators';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SongApprovalService } from '../../../services/SongApprovalServices/song-approval.service';
+import { MatSelectModule } from '@angular/material/select';
+import { Genre } from '../../../models/genre.module';
+import { GenreService } from '../../../services/GenreServices/genre.service';
+import { SongService } from '../../../services/SongServices/song.service';
+import { UserUploadService } from '../../../services/UserUploadServices/user-upload.service';
+import { minSelectionValidator } from '../../../shared/Validators';
 
 @Component({
-  selector: 'app-song-dialog',
+  selector: 'app-user-upload-dialog',
   imports: [
     MatDialogModule,       // Thêm module cho dialog
     MatFormFieldModule,    // Cho mat-form-field
@@ -28,10 +28,10 @@ import { SongApprovalService } from '../../../services/SongApprovalServices/song
     CommonModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './song-dialog.component.html',
-  styleUrl: './song-dialog.component.scss'
+  templateUrl: './user-upload-dialog.component.html',
+  styleUrl: './user-upload-dialog.component.scss'
 })
-export class SongDialogComponent implements OnInit{
+export class UserUploadDialogComponent implements OnInit{
   songForm: FormGroup;
   isEditMode: boolean;
   availableGenres:Genre[]= [];
@@ -43,10 +43,10 @@ export class SongDialogComponent implements OnInit{
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<SongDialogComponent>,
+    private dialogRef: MatDialogRef<UserUploadDialogComponent>,
     private songService: SongService,
     private genreService: GenreService,
-    private songApprovalService: SongApprovalService,
+    private userUploadService: UserUploadService,
     @Inject(MAT_DIALOG_DATA) 
     public data: any
   ){
@@ -107,7 +107,7 @@ export class SongDialogComponent implements OnInit{
           error: (err) => console.error('Error updating song:', err)
         });
       } else {
-        this.songService.createSong(requestData).subscribe({
+        this.userUploadService.uploadSong(requestData).subscribe({
           next: () => this.dialogRef.close(true),
           error: (err) => console.error('Error creating song:', err)
         });

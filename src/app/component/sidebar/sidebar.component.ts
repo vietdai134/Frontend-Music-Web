@@ -20,7 +20,6 @@ export class SidebarComponent implements OnInit{
   user$: Observable<User | null>;
   menuItems = [
     { label: 'Home', icon: 'fas fa-home', link: '' },
-    // { label: 'Profile', icon: 'fas fa-user', link: '/profile' },
   ];
 
   constructor(
@@ -55,7 +54,7 @@ export class SidebarComponent implements OnInit{
           this.menuItems.push({
             label: 'Liked Songs',
             icon: 'fas fa-cog',
-            link: '/likedsongs'
+            link: '/liked-songs'
           });
         }
       }

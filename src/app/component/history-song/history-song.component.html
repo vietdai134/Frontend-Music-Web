@@ -2,7 +2,7 @@
     <app-sidebar [isSidebarVisible]="isSidebarVisible"></app-sidebar>
     
     <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
-      <div class="song-list">
+      <div class="song-list" *ngIf="!hasNoSongs; else noSongsTemplate">
         <div class="selected-genres">
           <button 
             mat-stroked-button 
@@ -127,5 +127,10 @@
   
         <app-queue *ngIf="showQueue"></app-queue>
       </div>
+      <ng-template #noSongsTemplate>
+        <div class="no-songs">
+          <h3>Không có bài hát</h3>
+        </div>
+      </ng-template>
     </div>
   </div>

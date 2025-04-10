@@ -85,6 +85,8 @@ export class HistorySongComponent implements OnInit,OnDestroy{
 
   likedSongIds: string[] = [];
 
+  hasNoSongs: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
@@ -170,7 +172,8 @@ export class HistorySongComponent implements OnInit,OnDestroy{
     const serverSortField = this.currentSortField === 'listenedDate' ? 'uploadDate' : this.currentSortField;
     const serverSortOrder = this.resultSort;
     // if (this.searchKeyword && this.searchKeyword.trim() !== '' && this.selectedGenres !== null) {
-    if (hasKeyword || hasGenres || hasSongIds) {
+    // if (hasKeyword || hasGenres || hasSongIds) {
+    if (hasSongIds) {
       this.publicService.searchSongByKeyword(
         this.selectedSongIds ?? [], 
         this.searchKeywordTitle ?? undefined  ,
@@ -206,39 +209,12 @@ export class HistorySongComponent implements OnInit,OnDestroy{
           this.isLoading = false;//Đặt lại để có thể thử tải lại
         }
       });
-    } else {
-      this.publicService.getAllSongsWithApproved(this.currentPage, 
-        this.pageSize,
-        // this.currentSortField,
-        // this.resultSort).subscribe({
-          serverSortField, 
-          serverSortOrder).subscribe({
-        next: (response) => {
-          console.log(response.content)
-          // this.songs = [...this.songs, ...response.content];
-          // console.log(this.songs)
-          this.songs = [...this.songs, ...response.content.map(song => {
-            const listenedDate = this.listenHistoryMap[song.songId.toString()];
-            return {
-              ...song,
-              listenedDate: listenedDate || null
-            };
-          })];
-    
-          // Nếu sort mặc định là listenedDate thì sort local
-          if (this.currentSortField === 'listenedDate') {
-            this.sortByListenedDate();
-          }
-
-
-          this.totalElements = response.page.totalElements;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error fetching songs:', err);
-          this.isLoading = false;
-        }
-      });
+    } 
+    else{
+      this.songs = []; // Xóa danh sách bài hát
+      this.totalElements = 0;
+      this.isLoading = false;
+      this.hasNoSongs = true;
     }
   }
 
@@ -377,8 +353,13 @@ export class HistorySongComponent implements OnInit,OnDestroy{
           }
         );
         this.songs = this.songs.filter(item => item.songId !== song.songId);
+
+        if (this.songs.length === 0) {
+          this.hasNoSongs = true; // Cập nhật ngay lập tức nếu không còn bài hát
+        }
+
         this.currentPage = 0; // Reset về trang đầu
-        this.songs = []; // Xóa danh sách cũ
+        // this.songs = []; // Xóa danh sách cũ
         this.loadListenHistory();
       }
       , error: (err) => {
@@ -468,6 +449,12 @@ export class HistorySongComponent implements OnInit,OnDestroy{
           this.listenHistoryMap[item.songId.toString()] = item.listenedDate;
         });
 
+        
+        
+        this.hasNoSongs = this.selectedSongIds.length === 0; // Kiểm tra nếu không có bài hát
+        // if (!this.hasNoSongs) {
+        //   this.loadSongs(); // Chỉ load nếu có bài hát
+        // }
         this.currentPage = 0;
         this.songs = [];
         this.loadSongs();

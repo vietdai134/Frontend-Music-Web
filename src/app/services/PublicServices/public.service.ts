@@ -11,7 +11,12 @@ export class PublicService {
   private baseUrl = environment.baseUrl; 
   constructor(private http: HttpClient) { }
   
-  getAllSongsWithApproved(page: number = 0, size: number = 10,content:string,sort:string): Observable<SongResponse> {
+  getAllSongsWithApproved(
+    page: number = 0, 
+    size: number = 10,
+    content:string,
+    sort:string
+  ): Observable<SongResponse> {
     return this.http.get<SongResponse>(`${this.baseUrl}/public/all?page=${page}&size=${size}&sort=${content}%2C${sort}`);
   }
 

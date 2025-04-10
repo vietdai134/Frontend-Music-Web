@@ -1,0 +1,463 @@
+$bg-dark: #111111;
+$bg-darker: #0a0a0a;
+$text-light: #ffffff;
+$hover-highlight: #222222;
+$card-bg: #181818;
+
+$mobile: 576px;   // Điện thoại
+$tablet: 768px;   // Máy tính bảng
+$desktop: 992px;
+.home-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding: 15px;
+  margin-top: 64px;
+  margin-bottom: 70px;
+  transition: margin-left 0.3s ease-in-out;
+  background-color: $bg-dark;
+  color: $text-light;
+  overflow: visible;
+
+  @media (max-width: $mobile) {
+    padding: 10px;
+    margin-top: 50px; // Giảm margin-top trên mobile
+  }
+}
+
+.song-list {
+  padding: 20px;
+  overflow: visible;
+  @media (max-width: $mobile) {
+    padding: 10px;
+  }
+}
+
+.song-container {
+    margin-top:2%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  overflow: visible;
+  @media (max-width: $tablet) {
+    gap: 12px; // Giảm khoảng cách trên tablet
+  }
+
+  @media (max-width: $mobile) {
+    gap: 10px; // Giảm thêm trên mobile
+  }
+}
+
+.song-card {
+  width: 100%;
+  max-width: 32%;
+  background-color: $card-bg;
+  border-radius: 12px;
+  overflow: visible; /* Đảm bảo genres-container hiển thị */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+  box-sizing: border-box;
+
+  &:hover {
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px); // Nâng card lên khi hover
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+  }
+
+  @media (max-width: $desktop) {
+    max-width: 48%; // 2 cột trên tablet
+  }
+
+  @media (max-width: $mobile) {
+    max-width: 100%; // 1 cột trên mobile
+  }
+
+  .song-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px ;
+    cursor: pointer;
+    background: transparent;
+    width: 100%;
+    box-sizing: border-box; /* Ngăn padding làm tràn */
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $hover-highlight;
+      border-radius: 12px;
+    }
+    @media (max-width: $mobile) {
+      padding: 8px; // Tăng padding trên mobile cho dễ chạm
+    }
+  }
+
+  .song-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-right: 15px;
+    margin-left: 10px;
+    .song-button:hover & {
+      transform: scale(1.05); // Phóng to ảnh khi hover
+    }
+
+    @media (max-width: $tablet) {
+      width: 80px;
+      height: 80px;
+    }
+
+    @media (max-width: $mobile) {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+      margin-left: 5px;
+    }
+  }
+
+  .song-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+
+    .song-title {
+      color: $text-light;
+      font-size: 17px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.3s ease;
+      .song-button:hover & {
+        color: #cccccc; // Đổi màu khi hover (xanh lá Spotify)
+      }
+      @media (max-width: $mobile) {
+        font-size: 15px;
+      }
+    }
+
+    .song-artist {
+      color: #cccccc;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @media (max-width: $mobile) {
+        font-size: 14px;
+      }
+    }
+
+    .uploadDate{
+      color: #cccccc;
+      font-size: 12px;
+      @media (max-width: $mobile) {
+        font-size: 10px;
+      }
+    }
+  }
+
+}
+
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  color: $text-light;
+
+  ::ng-deep .mat-spinner circle {
+    stroke: $text-light;
+  }
+}
+
+.sort-container {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 16px; // Spacing between sort buttons
+    flex-wrap: wrap; // Allow wrapping within the group
+
+    @media (max-width: $mobile) {
+        width: 100%; // Full width on mobile
+        flex-direction: column; // Stack buttons vertically on mobile
+        gap: 10px;
+    }
+}
+
+.sort-btn {
+  background-color: $hover-highlight !important;
+  color: $text-light !important;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: normal;
+
+  min-height: 32px; 
+  height: auto;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: lighten($hover-highlight, 5%) !important;
+  }
+
+  &.active {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: bold;
+
+    &:hover {
+      background-color: #e0e0e0 !important;
+    }
+  }
+
+  mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  @media (max-width: $mobile) {
+    width: 100%; // Chiếm toàn bộ chiều rộng trên mobile
+    justify-content: space-between;
+  }
+}
+
+.upload-btn {
+    background-color: $card-bg !important; // Dark background for consistency
+    color: $text-light !important; // White text
+    border: 1px solid $text-light; // White border for contrast
+    border-radius: 6px;
+    padding: 4px 12px; // Slightly more padding
+    font-size: 13px;
+    font-weight: 500;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      background-color: $hover-highlight !important;
+      transform: scale(1.05); // Slight scale-up on hover
+    }
+  
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+  
+    @media (max-width: $mobile) {
+      width: 100%; // Full width on mobile
+      justify-content: center; // Center content on mobile
+    }
+  }
+
+
+.status-tabs {
+    margin-bottom: 24px;
+  
+    ::ng-deep .mat-mdc-tab-labels {
+      background-color: transparent;
+      padding: 0;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+  
+    ::ng-deep .mdc-tab {
+      background-color: $card-bg !important;
+      border-radius: 12px;
+      border: none !important;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: flex; // Use flexbox to center content
+        align-items: center; // Vertically center the content
+        height: 48px;
+  
+        .mdc-tab__content {
+            display: flex;
+            align-items: center; // Vertically center the text within the tab
+            justify-content: center; // Horizontally center (optional)
+            height: 100%; // Ensure it takes full height of the tab
+          }
+
+      .mdc-tab__text-label {
+        color: $text-light !important;
+      }
+  
+      &:hover {
+        background-color: $hover-highlight !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+        .mdc-tab__text-label {
+          color: $text-light !important;
+        }
+      }
+  
+      &.mdc-tab--active {
+        background-color: $text-light !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        position: relative;
+  
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 50%;
+          height: 3px;
+          background: linear-gradient(to right, $bg-dark, $hover-highlight);
+          border-radius: 2px;
+          box-shadow: 0 0 8px rgba($bg-dark, 0.8);
+        }
+  
+        .mdc-tab__text-label {
+          color: $bg-dark !important;
+          font-weight: bold !important;
+        }
+      }
+    }
+  
+    ::ng-deep .mat-mdc-tab-group .mat-ink-bar {
+      display: none !important;
+    }
+  
+    @media (max-width: $mobile) {
+      ::ng-deep .mdc-tab {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 10px;
+        height: 44px;
+
+        .mdc-tab__content {
+            align-items: center; // Keep centered on mobile
+          }
+  
+        .mdc-tab__text-label {
+          color: $text-light !important;
+        }
+  
+        &.mdc-tab--active {
+          &::after {
+            width: 60%;
+          }
+  
+          .mdc-tab__text-label {
+            color: $bg-dark !important;
+          }
+        }
+      }
+  
+      ::ng-deep .mat-mdc-tab-labels {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  }
+  
+  // Styling for the "No songs" message
+  .no-songs-message {
+    color: $text-light; // White text
+    background-color: $card-bg; // Dark card background
+    border-radius: 12px; // Match tab rounding
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 20px 0; // Spacing above and below
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // Subtle shadow
+  }
+  
+  // Styling for mat-paginator
+  ::ng-deep .mat-mdc-paginator {
+    background-color: $bg-darker !important;
+    color: $text-light !important;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      color: $text-light !important;
+      font-size: 14px;
+    }
+  
+    .mdc-icon-button {
+      color: $text-light !important;
+      background-color: $card-bg !important;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 6px;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background-color: $hover-highlight !important;
+        transform: scale(1.1);
+      }
+  
+      &[disabled] {
+        color: rgba($text-light, 0.3) !important;
+        background-color: $card-bg !important;
+      }
+    }
+  
+    .mat-mdc-select {
+      color: $text-light !important;
+  
+      .mat-mdc-select-value {
+        color: $text-light !important;
+      }
+  
+      .mat-mdc-select-arrow {
+        color: $text-light !important;
+      }
+    }
+  
+    .mat-mdc-paginator-container {
+      justify-content: center !important;
+      gap: 12px;
+    }
+  }
+

@@ -360,7 +360,7 @@ export class LikedSongComponent implements OnInit,OnDestroy{
 
         this.currentPage = 0;
         this.songs = [];
-        this.loadSongs();
+        // this.loadSongs();
         this.hasNoSongs = this.selectedSongIds.length === 0; // Kiểm tra nếu không có bài hát
         if (!this.hasNoSongs) {
           this.loadSongs(); // Chỉ load nếu có bài hát
