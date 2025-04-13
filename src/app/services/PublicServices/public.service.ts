@@ -26,6 +26,7 @@ export class PublicService {
     artist?:string,
     genres?:string[],
     username?:string,
+    albumNames?:string,
     page: number = 0,
     size: number = 10,
     content?:string,
@@ -56,6 +57,9 @@ export class PublicService {
     
     if (username) {
       params = params.set('username', username);
+    }
+    if (albumNames) {
+      params = params.set('albumName', albumNames);
     }
     const urlWithParams = `${this.baseUrl}/public/songs/search?${params.toString()}`;
     console.log('Generated URL:', urlWithParams);

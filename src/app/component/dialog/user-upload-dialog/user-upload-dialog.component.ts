@@ -102,7 +102,7 @@ export class UserUploadDialogComponent implements OnInit{
       }
   
       if (this.isEditMode) {
-        this.songService.updateSong(this.data.song.songId, requestData).subscribe({
+        this.userUploadService.updateUploadSong(this.data.song.songId, requestData).subscribe({
           next: () => this.dialogRef.close(true),
           error: (err) => console.error('Error updating song:', err)
         });

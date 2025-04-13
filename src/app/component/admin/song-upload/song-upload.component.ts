@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SongUpload } from '../../../models/songUpload.module';
 import { SongUploadService } from '../../../services/SongUploadServices/song-upload.service';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -11,6 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SongApprovalService } from '../../../services/SongApprovalServices/song-approval.service';
+import { Subscription } from 'rxjs';
+import { WebSocketService } from '../../../services/WebSocketServices/web-socket.service';
 
 @Component({
   selector: 'app-song-upload',
@@ -29,7 +31,7 @@ import { SongApprovalService } from '../../../services/SongApprovalServices/song
   styleUrl: './song-upload.component.scss',
   providers: [DatePipe]
 })
-export class SongUploadComponent implements OnInit{
+export class SongUploadComponent implements OnInit,OnDestroy{
   displayedColumns: string[] = ['uploadId', 'title', 'artist', 
     'fileSongId', 'songImage','uploadDate','userName', 'actions'];
   songUploads: SongUpload[]=[];
@@ -41,23 +43,45 @@ export class SongUploadComponent implements OnInit{
 
   statusOptions: string[] = ['PENDING','REJECTED','UNDER_REVIEW','REVOKED'];
 
+  private webSocketSubscription: Subscription | null = null;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private songUploadService: SongUploadService,
     private songApprovalService: SongApprovalService,
     private dialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private webSocketService: WebSocketService
   ) {}
   ngOnInit(): void {
     this.loadUploadSongs(this.currentPage, this.pageSize,this.status);
+    this.subscribeToStatusUpdates();
   }
 
+  ngOnDestroy(): void {
+    if (this.webSocketSubscription) {
+      this.webSocketSubscription.unsubscribe();
+    }
+  }
 
-
-  loadUploadSongs(page: number, size: number, status:string): void {
-    this.songUploadService.getAllSongsUpload(page, size,status).subscribe({
+  // loadUploadSongs(page: number, size: number, status:string): void {
+  //   this.songUploadService.getAllSongsUpload(page, size,status).subscribe({
+  //     next: (response) => {
+  //       this.songUploads = response.content;
+  //       this.totalElements = response.page.totalElements;
+  //       this.pageSize = response.page.size;
+  //       this.currentPage = response.page.number;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching songs:', err);
+  //     }
+  //   });
+  // }
+  loadUploadSongs(page: number, size: number, status: string): void {
+    console.log('Loading songs with status:', status, 'page:', page, 'size:', size);
+    this.songUploadService.getAllSongsUpload(page, size, status).subscribe({
       next: (response) => {
+        console.log('Loaded songs:', response.content);
         this.songUploads = response.content;
         this.totalElements = response.page.totalElements;
         this.pageSize = response.page.size;
@@ -65,7 +89,7 @@ export class SongUploadComponent implements OnInit{
       },
       error: (err) => {
         console.error('Error fetching songs:', err);
-      }
+      },
     });
   }
 
@@ -153,6 +177,41 @@ export class SongUploadComponent implements OnInit{
       error: (err) => {
         console.error('Error updating song status:', err);
       }
+    });
+  }
+
+  // subscribeToStatusUpdates(): void {
+  //   // this.webSocketService.connect();
+  //   this.webSocketSubscription = this.webSocketService.getStatusUpdates().subscribe({
+  //     next: (statusUpdate) => {
+  //         this.songUploads = []; // Reset danh sách trước khi tải
+  //         this.currentPage = 0; // Reset về trang đầu
+  //         if (this.paginator) this.paginator.pageIndex = 0;
+  //         this.loadUploadSongs(this.currentPage, this.pageSize,this.status);
+  //     },
+  //     error: (err) => {
+  //       console.error('WebSocket error:', err);
+  //     },
+  //   });
+  // }
+  subscribeToStatusUpdates(): void {
+    this.webSocketSubscription = this.webSocketService.getStatusUpdates().subscribe({
+      next: (statusUpdate) => {
+        console.log('Received status update:', statusUpdate);
+        console.log('Current status:', this.status);
+        if (statusUpdate.status === 'PENDING' && this.status === 'PENDING') {
+          console.log('New song uploaded, reloading PENDING list');
+          this.songUploads = [];
+          this.currentPage = 0;
+          if (this.paginator) this.paginator.pageIndex = 0;
+          this.loadUploadSongs(this.currentPage, this.pageSize, this.status);
+        } else {
+          console.log('No reload needed - status mismatch');
+        }
+      },
+      error: (err) => {
+        console.error('WebSocket error:', err);
+      },
     });
   }
 }

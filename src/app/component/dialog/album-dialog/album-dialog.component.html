@@ -1,0 +1,76 @@
+<!-- <h2 mat-dialog-title>Add to Album</h2> -->
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Album' : 'Add to Album' }}</h2>
+<div mat-dialog-content>
+  <div *ngIf="!isCreatingAlbum && !isEditMode" class="album-list">
+    <div *ngIf="isLoading" class="loading-indicator">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading albums...</p>
+    </div>
+    <div *ngIf="data.songQueue">
+      <p>Adding {{ data.songQueue.length }} songs from queue to album:</p>
+    </div>
+    <div *ngIf="data.song && !data.songQueue">
+      <p>Adding song: {{ data.song.title }} - {{ data.song.artist }}</p>
+    </div>
+    <div *ngIf="!isLoading && albums.length === 0" class="no-albums">
+      <p>You don't have any albums yet.</p>
+    </div>
+    
+    <div class="album-item" *ngFor="let album of albums">
+      <img *ngIf="album.albumImage" [src]="album.albumImage" alt="Album Image" class="album-image" />
+      <span class="album-name">{{ album.albumName }}</span>
+      <button mat-icon-button color="primary" class="add-button" (click)="addToAlbum(album)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    
+    <button mat-stroked-button color="primary" class="create-album-btn" (click)="toggleCreateAlbum()">
+      <mat-icon>album_add</mat-icon>
+      Create New Album
+    </button>
+  </div>
+  
+  <div *ngIf="isCreatingAlbum || isEditMode" class="create-album-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <!-- <mat-label>New Album Name</mat-label> -->
+      <mat-label>{{ isEditMode ? 'Album Name' : 'New Album Name' }}</mat-label>
+      <input matInput [(ngModel)]="newAlbumName">
+    </mat-form-field>
+    <div class="full-width">
+        <label for="albumImage">Upload Album Image (Optional)</label>
+        <input id="albumImage" type="file" accept="image/*" (change)="onFileSelected($event)">
+        <div *ngIf="isEditMode && existingAlbumImage" class="current-image">
+          <p>Current Image:</p>
+          <img [src]="existingAlbumImage" alt="Current Album Image" class="album-image-preview" />
+        </div>
+      </div>
+    <!-- <div class="button-group">
+      <button mat-button (click)="toggleCreateAlbum()" [disabled]="isLoading">Cancel</button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        [disabled]="!newAlbumName.trim() || isLoading" 
+        (click)="createAlbum()"
+      >
+        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        <span *ngIf="!isLoading">Create Album</span>
+      </button>
+    </div> -->
+    <div class="button-group">
+      <!-- <button mat-button (click)="onCancel()" [disabled]="isLoading">Cancel</button> -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        [disabled]="!newAlbumName.trim() || isLoading" 
+        (click)="isEditMode ? updateAlbum() : createAlbum()"
+      >
+        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        <span *ngIf="!isLoading">{{ isEditMode ? 'Update Album' : 'Create Album' }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end" *ngIf="!isCreatingAlbum || isEditMode">
+  <button mat-button (click)="onCancel()">Close</button>
+</div>

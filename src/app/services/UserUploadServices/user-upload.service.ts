@@ -29,24 +29,44 @@ export class UserUploadService {
   }
 
   uploadSong(
-      song: { 
-        title: string; 
-        artist: string; 
-        songImage?: File; 
-        songFileData: File; 
-        genreNames: string[];
-      }): Observable<Song> {
-        const formData = new FormData();
+    song: { 
+      title: string; 
+      artist: string; 
+      songImage?: File; 
+      songFileData: File; 
+      genreNames: string[];
+    }): Observable<Song> {
+      const formData = new FormData();
+    formData.append('title', song.title);
+    formData.append('artist', song.artist);
+    song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
+    if (song.songImage) {
+      formData.append('songImage', song.songImage);
+    }
+    if (song.songFileData) {
+      formData.append('songFileData', song.songFileData);
+    }
+    console.log('Sending FormData:', Array.from(formData.entries()));
+    return this.http.post<Song>(`${this.baseUrl}/song-upload`, formData,{ withCredentials: true });
+  }
+
+  updateUploadSong(
+    songId:number,
+    song:{
+      title:string;
+      artist:string;
+      songFileId: string;
+      genreNames: string[];
+      songImage?:File;
+    }):Observable<Song>{
+      const formData = new FormData();
       formData.append('title', song.title);
       formData.append('artist', song.artist);
+      formData.append('songFileId', song.songFileId);
       song.genreNames.forEach(genreName => formData.append('genreNames[]', genreName)); // Gửi từng roleName riêng
       if (song.songImage) {
         formData.append('songImage', song.songImage);
       }
-      if (song.songFileData) {
-        formData.append('songFileData', song.songFileData);
-      }
-      console.log('Sending FormData:', Array.from(formData.entries()));
-      return this.http.post<Song>(`${this.baseUrl}/song-upload`, formData,{ withCredentials: true });
-    }
+      return this.http.put<Song>(`${this.baseUrl}/song-upload/update/${songId}`, formData,{ withCredentials: true });
+  }
 }

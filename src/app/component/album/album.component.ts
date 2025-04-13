@@ -1,9 +1,5 @@
-import {  Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { combineLatest, Subscription } from 'rxjs';
-import { PlayerService } from '../../services/PlayerServices/player.service';
-import { SidebarService } from '../../services/SidebarServices/sidebar.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,23 +10,29 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { QueueComponent } from '../queue/queue.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { combineLatest, Subscription } from 'rxjs';
 import { Song } from '../../models/song.module';
-import { SearchService } from '../../services/SearchServices/search.service';
-import { PublicService } from '../../services/PublicServices/public.service';
-import { GenreService } from '../../services/GenreServices/genre.service';
-import { Genre } from '../../models/genre.module';
 import { Playlist } from '../../models/playlist.module';
-import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
-import { ConfirmDeleteComponent } from '../dialog/confirm-delete/confirm-delete.component';
+import { PlayerService } from '../../services/PlayerServices/player.service';
 import { MatDialog } from '@angular/material/dialog';
-import { LikedSongService } from '../../services/LikedSongServices/liked-song.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Genre } from '../../models/genre.module';
+import { GenreService } from '../../services/GenreServices/genre.service';
+import { LikedSongService } from '../../services/LikedSongServices/liked-song.service';
+import { PlaylistService } from '../../services/PlaylistServices/playlist.service';
+import { PublicService } from '../../services/PublicServices/public.service';
+import { SearchService } from '../../services/SearchServices/search.service';
+import { SidebarService } from '../../services/SidebarServices/sidebar.service';
 import { SongService } from '../../services/SongServices/song.service';
-
+import { ConfirmDeleteComponent } from '../dialog/confirm-delete/confirm-delete.component';
+import { AlbumService } from '../../services/AlbumServices/album.service';
+import { Album } from '../../models/album.module';
+import { PlaylistDialogComponent } from '../dialog/playlist-dialog/playlist-dialog.component';
+import { AlbumDialogComponent } from '../dialog/album-dialog/album-dialog.component';
 
 @Component({
-  selector: 'app-playlist',
-  standalone: true,
+  selector: 'app-album',
   imports: [
     SidebarComponent,
     CommonModule ,
@@ -45,11 +47,11 @@ import { SongService } from '../../services/SongServices/song.service';
     FormsModule,
     NgSelectModule
   ],
-  templateUrl: './playlist.component.html',
-  styleUrl: './playlist.component.scss',
+  templateUrl: './album.component.html',
+  styleUrl: './album.component.scss',
   providers: [DatePipe]
 })
-export class PlaylistComponent implements OnInit,OnDestroy{
+export class AlbumComponent implements OnInit, OnDestroy{
     songs: Song[] = [];
   
     totalElements = 0;
@@ -67,8 +69,6 @@ export class PlaylistComponent implements OnInit,OnDestroy{
     isSidebarVisible: boolean = true;
     private sidebarSubscription!: Subscription;
 
-    editingPlaylist: any = null;
-    tempPlaylistName: string = '';
 
     isUploadDateAsc = false; // Trạng thái sắp xếp cho Upload Date
     isTitleAsc = false;      // Trạng thái sắp xếp cho Title
@@ -80,12 +80,12 @@ export class PlaylistComponent implements OnInit,OnDestroy{
 
     selectedGenres: string[] =[];
     selectedSongIds: string[] = [];
-    
-    playlists: Playlist[] = [];
-    playlistsDisplayed: Playlist[] = [];
-    selectedPlaylist: Playlist | null = null;
-    playlistCurrentPage: number = 0;
-    itemsPerPage: number = 4;
+
+    albums: Album[] = [];
+    albumsDisplayed: Album[] = [];
+    selectedAlbum: Album | null = null;
+    albumCurrentPage: number = 0;
+    itemsPerPage: number = 3;
 
     likedSongIds: string[] = [];
 
@@ -107,6 +107,7 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       private likedSongService: LikedSongService,
       private snackBar: MatSnackBar,
       private songService: SongService,
+      private albumService:AlbumService
     ) {}
 
     ngOnDestroy(): void {
@@ -123,7 +124,7 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       }
     }
     ngOnInit(): void {
-      this.loadPlaylists();
+      this.loadAlbums();
       this.loadLikedSongs();
       this.loadGenres();
       combineLatest([this.searchService.currentKeyword$, this.searchService.currentTypeSearch$])
@@ -166,16 +167,16 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       });
     }
 
-    loadPlaylists(){
-      
-      this.playlistService.getAllPlaylists().subscribe((response) => {
-        this.playlists = response;
-        console.log(this.playlists);
-        this.updateDisplayedPlaylists();
-        if (this.playlists.length > 0) {
-          this.selectPlaylist(this.playlists[0]); // Chọn playlist đầu tiên
+    loadAlbums(){
+      this.albumService.getAllAlbums().subscribe((response) => {
+        this.albums = response;
+        console.log(this.albums);
+        this.updateDisplayedAlbums();
+        if (this.albums.length > 0) {
+          this.selectAlbum(this.albums[0]); // Chọn playlist đầu tiên
         }
       });
+
       
     }
 
@@ -236,9 +237,9 @@ export class PlaylistComponent implements OnInit,OnDestroy{
       this.playerService.setCurrentSong(song); 
     }
 
-    deleteFromPlaylist(song: Song) {
+    deleteFromAlbum(song: Song) {
       console.log(`Add to playlist: ${song.songId}`);
-      console.log(`Add to playlist: ${this.selectedPlaylist?.playlistId}`);
+      console.log(`Add to playlist: ${this.selectedAlbum?.albumId}`);
       const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
         width: '300px',
         data: { 
@@ -249,16 +250,18 @@ export class PlaylistComponent implements OnInit,OnDestroy{
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) { // Nếu người dùng xác nhận xóa
-          if(this.selectedPlaylist?.playlistId == null){
-            console.log("Chưa chọn playlist nào")
+          if(this.selectedAlbum?.albumId == null){
+            console.log("Chưa chọn album nào")
             return;
           }
-          this.playlistService.deleteSongFromPlaylist(this.selectedPlaylist?.playlistId, song.songId).subscribe(
+          this.albumService.deleteSongFromAlbum(this.selectedAlbum?.albumId, song.songId).subscribe(
             (response) => {
               console.log('Song removed from playlist:', response);
               this.selectedSongIds = this.selectedSongIds.filter(id => id !== song.songId.toString());
-              this.songs = this.songs.filter(s => s.songId !== song.songId); // Xóa bài hát khỏi danh sách hiện tại
+              // this.songs = this.songs.filter(s => s.songId !== song.songId); // Xóa bài hát khỏi danh sách hiện tại
+              this.songs = [];
               this.currentPage = 0;
+              this.totalElements = 0;
               this.loadSongs(); // Tải lại danh sách bài hát
             },
             (error) => {
@@ -405,34 +408,34 @@ likeSong(song: Song) {
       return this.datePipe.transform(dateString, 'HH:mm:ss dd/MM/yyyy  UTC+7') || '';
     }
 
-    updateDisplayedPlaylists() {
+    updateDisplayedAlbums() {
       const start = this.currentPage * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      this.playlistsDisplayed = this.playlists.slice(start, end);
+      this.albumsDisplayed = this.albums.slice(start, end);
     }
     scrollLeft() {
       if (this.currentPage > 0) {
         this.currentPage--;
-        this.updateDisplayedPlaylists();
+        this.updateDisplayedAlbums();
       }
     }
   
     scrollRight() {
       if (!this.isLastPage()) {
         this.currentPage++;
-        this.updateDisplayedPlaylists();
+        this.updateDisplayedAlbums();
       }
     }
   
     isLastPage(): boolean {
-      return (this.currentPage + 1) * this.itemsPerPage >= this.playlists.length;
+      return (this.currentPage + 1) * this.itemsPerPage >= this.albums.length;
     }
   
-    selectPlaylist(playlist: Playlist) {
-      this.selectedPlaylist = playlist;//gán playlist đã chọn để đổi màu
+    selectAlbum(album: Album) {
+      this.selectedAlbum = album;//gán playlist đã chọn để đổi màu
       // Thêm logic để lọc bài hát theo playlist nếu cần
-      console.log('Selected playlist:', playlist.playlistId);
-      this.playlistService.getSongsByPlaylistId(playlist.playlistId).subscribe(
+      console.log('Selected playlist:', album.albumId);
+      this.albumService.getSongsByAlbumId(album.albumId).subscribe(
         (response) => {
           console.log('Songs in selected playlist:', response);
           this.selectedSongIds = Array.isArray(response) ? response.map(item => item.songId.toString()) : []; // Giả sử response chứa danh sách bài hát
@@ -449,75 +452,44 @@ likeSong(song: Song) {
       
     }
 
-    editPlaylist(playlist: any): void {
-      this.editingPlaylist = playlist;
-      this.tempPlaylistName = playlist.playlistName;
-      
-      // Đảm bảo focus vào input sau khi DOM được cập nhật
-      setTimeout(() => {
-        const editInput = document.querySelector('.edit-playlist-name') as HTMLInputElement;
-        if (editInput) {
-          editInput.focus();
-          editInput.select(); // Chọn toàn bộ text
-        }
-      }, 0);
-    }
-    
-    savePlaylistName(playlist: any): void {
-      // Kiểm tra để không lưu tên trống
-      if (this.tempPlaylistName.trim()) {
-        playlist.playlistName = this.tempPlaylistName.trim();
-        // Ở đây bạn sẽ gọi service để lưu thay đổi vào database
-        this.updatePlaylistInDatabase(playlist);
-      }
-      this.editingPlaylist = null;
-    }
-    
-    cancelEdit(): void {
-      this.editingPlaylist = null;
-    }
-    @HostListener('document:click', ['$event'])
-    handleClickOutside(event: MouseEvent) {
-      // Kiểm tra xem có đang trong chế độ chỉnh sửa không
-      if (this.editingPlaylist) {
-        // Kiểm tra xem click có phải là bên ngoài input không
-        const editInput = document.querySelector('.edit-playlist-name');
-        if (editInput && !editInput.contains(event.target as Node)) {
-          this.cancelEdit();
-        }
-      }
-    }
-    
-    updatePlaylistInDatabase(playlist: Playlist): void {
-      // Gọi service để cập nhật playlist trong database
-      console.log('Updating playlist in database:', playlist);
-      this.playlistService.updatePlaylist(playlist.playlistId,playlist.playlistName).subscribe(
-        (response) => {
-          console.log('Playlist updated successfully:', response);
-          this.loadPlaylists(); // Tải lại danh sách playlist sau khi cập nhật
-        },
-        (error) => {
-          console.error('Error updating playlist:', error);
-        }
-      );
-    }
+    editAlbum(album: Album): void {
+      console.log('Edit album:', album);
 
-    deletePlaylist(playlist: Playlist): void {
-      console.log('Delete playlist:', playlist);
+      const dialogRef = this.dialog.open(AlbumDialogComponent, {
+        width: '400px',
+        data: { 
+          mode: 'edit',
+          album: album 
+        }
+      });
+    
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result.action === 'edit') {
+          // Xử lý sau khi chỉnh sửa album
+          console.log('Album edited:', result.album);
+          // Có thể cần reload dữ liệu hoặc cập nhật UI
+          this.loadAlbums(); // Giả sử bạn có phương thức này để tải lại albums
+        }
+      });
+    }
+    
+
+    deleteAlbum(album: Album): void {
+      console.log('Delete album:', album);
       const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
         width: '300px',
         data: { 
-          entity:'playlist',
-          id: playlist.playlistName
+          entity:'album',
+          id: album.albumName
         } 
       });
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) { // Nếu người dùng xác nhận xóa
-          this.playlistService.deletePlaylist(playlist.playlistId).subscribe(
+          this.albumService.deleteAlbum(album.albumId).subscribe(
             (response) => {
               console.log('Song removed from playlist:', response);
-              this.loadPlaylists();
+              this.loadAlbums();
             },
             (error) => {
               console.error('Error removing song from playlist:', error);
@@ -527,7 +499,7 @@ likeSong(song: Song) {
       });
     }
 
-    addPlaylistToQueue(): void {
+    addAlbumToQueue(): void {
       console.log(this.songs);
       for (const song of this.songs){
         console.log(song);
@@ -547,4 +519,36 @@ likeSong(song: Song) {
       });
     }
 
+    addToPlaylist(song: any): void {
+        const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+          width: '400px',
+          data: { song: song }
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            if (result.action === 'add') {
+              console.log('Adding song:', result.song.songId, 'to playlist:', result.playlist.playlistId);
+              this.playlistService.addSongToPlaylist(result.song.songId, result.playlist.playlistId).subscribe({
+                next: (response) => {
+                  console.log('Song added to playlist successfully:', response);
+                  this.snackBar.open(
+                    `Added to playlist`, 
+                    'Close', 
+                    {
+                      duration: 3000,           // The snackbar will disappear after 3 seconds
+                      horizontalPosition: 'end', // Position at the right side
+                      verticalPosition: 'bottom', // Position at the bottom
+                      panelClass: ['success-snackbar'] // Optional custom CSS class for styling
+                    }
+                  );
+                }
+                , error: (err) => {
+                  console.error('Error adding song to playlist:', err);
+                }
+              });
+            }
+          }
+        });
+      }
 }

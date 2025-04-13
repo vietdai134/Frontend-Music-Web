@@ -15,4 +15,6 @@ export interface Song{
     genresName?:string;
 
     listenedDate?: string | null;
+
+    albumNames?: string | null;
 }

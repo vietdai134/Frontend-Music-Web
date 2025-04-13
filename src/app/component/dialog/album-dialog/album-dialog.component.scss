@@ -1,0 +1,279 @@
+// Root variables for dark theme (black background, white text)
+:root {
+    --primary-color: #ffffff;
+    --secondary-color: #000000;
+    --background-color: #000000;
+    --text-color: #ffffff;
+    --border-color: #333333;
+    --hover-color: #222222;
+    --disabled-color: #444444;
+    --accent-color: #ffffff;
+    --item-bg-color: #111111;
+  }
+  
+  // Dialog container
+  .mat-dialog-container {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  // Dialog title
+  h2.mat-dialog-title {
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+    font-weight: 500;
+  }
+  
+  // Dialog content
+  .mat-dialog-content {
+    padding: 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+    box-sizing: border-box;
+    
+    p {
+      color: var(--text-color);
+    }
+  }
+  
+  // Loading state
+  .loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    
+    p {
+      margin-top: 10px;
+      color: var(--text-color);
+    }
+  }
+  
+  // Album list container
+  .album-list {
+    // margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  // No albums message
+  .no-albums {
+    text-align: center;
+    margin: 24px 0;
+    
+    p {
+      color: var(--text-color);
+      font-style: italic;
+    }
+  }
+  
+  // Album item styling
+  .album-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 8px;
+    background-color: var(--item-bg-color);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .album-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 16px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .album-name {
+      flex-grow: 1;
+      font-size: 16px;
+      color: var(--text-color);
+    }
+    
+    .add-button {
+      margin-left: auto;
+    }
+  }
+  
+  // Create album button
+  .create-album-btn {
+    width: 100%;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--item-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    
+    &:hover {
+      background-color: var(--hover-color);
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+      color: var(--text-color);
+    }
+  }
+  
+  // Create album form
+  .create-album-form {
+    margin-top: 16px;
+    
+    .full-width {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+    
+    input[type="file"] {
+      width: 100%;
+      padding: 8px 0;
+      color: var(--text-color);
+      background-color: var(--item-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 8px;
+    }
+    
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 16px;
+    }
+  }
+  
+  .album-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  box-sizing: border-box;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  
+  .loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .no-albums {
+    text-align: center;
+    color: #cccccc;
+  }
+  
+  .current-image {
+    margin-top: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .album-image-preview {
+    width: 100%; /* Ảnh khớp với chiều rộng container */
+    max-width: 100%; /* Không vượt quá container */
+    height: auto; /* Giữ tỷ lệ ảnh */
+    object-fit: contain; /* Hiển thị toàn bộ ảnh, không cắt */
+    border-radius: 4px;
+    display: block;
+    border-radius: 4px;
+  }
+
+  // Dialog actions
+  .mat-dialog-actions {
+    padding: 16px;
+    margin-bottom: 0;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--background-color);
+  }
+  
+  // Override Angular Material components for dark theme
+  ::ng-deep {
+    // Form fields
+    .mat-form-field-label {
+      color: var(--text-color) !important;
+    }
+    
+    .mat-form-field-underline {
+      background-color: var(--border-color) !important;
+    }
+    
+    .mat-form-field-ripple {
+      background-color: var(--primary-color) !important;
+    }
+    
+    .mat-input-element {
+      color: var(--text-color) !important;
+    }
+    
+    .mat-form-field-appearance-fill .mat-form-field-flex {
+      background-color: var(--item-bg-color) !important;
+    }
+    
+    // Buttons
+    .mat-button, .mat-stroked-button {
+      color: var(--text-color) !important;
+      border-color: var(--border-color) !important;
+      
+      &:hover {
+        background-color: var(--hover-color) !important;
+      }
+    }
+    
+    .mat-raised-button.mat-primary {
+      background-color: var(--primary-color) !important;
+      color: var(--secondary-color) !important;
+    }
+    
+    .mat-icon-button.mat-primary {
+      color: var(--primary-color) !important;
+    }
+    
+    // Icons
+    .mat-icon {
+      color: var(--text-color);
+    }
+    
+    // Spinner
+    .mat-progress-spinner circle, .mat-spinner circle {
+      stroke: var(--primary-color) !important;
+    }
+    
+    // Disabled states
+    .mat-button-disabled {
+      color: var(--disabled-color) !important;
+      background-color: transparent !important;
+    }
+    
+    .mat-raised-button.mat-primary[disabled] {
+      background-color: var(--disabled-color) !important;
+      color: var(--text-color) !important;
+      opacity: 0.6;
+    }
+  }

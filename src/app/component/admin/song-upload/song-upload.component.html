@@ -71,10 +71,12 @@
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let song">
             <div *ngIf="getSongStatus() === 'PENDING' || getSongStatus() === 'UNDER_REVIEW'">
-                <button mat-raised-button color="primary" (click)="updateSongStatus(song.uploadId, 'APPROVED')">
+                <button mat-raised-button color="primary" 
+                  (click)="updateSongStatus(song.uploadId, 'APPROVED')">
                   Approve
                 </button>
-                <button mat-raised-button color="warn" style="margin-left: 8px;" (click)="updateSongStatus(song.uploadId, 'REJECTED')">
+                <button mat-raised-button color="warn" style="margin-left: 8px;" 
+                (click)="updateSongStatus(song.uploadId, 'REJECTED')">
                   Reject
                 </button>
               </div>
@@ -84,20 +86,6 @@
                       (click)="updateSongStatus(song.uploadId, 'UNDER_REVIEW')">
                 Review
               </button>
-              <!-- <div *ngIf="getSongStatus() === 'UNDER_REVIEW'">
-                <button mat-raised-button color="primary" (click)="updateSongStatus(song.uploadId, 'APPROVED')">
-                  Approve
-                </button>
-                <button mat-raised-button color="warn" style="margin-left: 8px;" (click)="updateSongStatus(song.uploadId, 'REJECTED')">
-                  Reject
-                </button>
-              </div> -->
-
-              <!-- Các trạng thái khác (tùy chọn) -->
-              <!-- <button mat-raised-button color="warn" *ngIf="getSongStatus() === 'REVOKED'" 
-                      (click)="updateSongStatus(song.uploadId, 'REVOKED')">
-                Review
-              </button> -->
           </td>
         </ng-container>
       

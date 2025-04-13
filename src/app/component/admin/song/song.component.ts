@@ -161,8 +161,8 @@ export class SongComponent implements OnInit{
   }
 
   // Cập nhật method editUser
-  editUser(songId: number): void {
-    console.log(`Edit user with ID: ${songId}`);
+  editSong(songId: number): void {
+    console.log(`Edit song with ID: ${songId}`);
     this.songService.getSongById(songId).subscribe({
       next: (song) => {
         const dialogRef = this.dialog.open(SongDialogComponent, {

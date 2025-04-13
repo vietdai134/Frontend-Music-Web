@@ -156,6 +156,16 @@ $desktop: 992px;
         font-size: 14px;
       }
     }
+    .song-album {
+      color: #cccccc;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @media (max-width: $mobile) {
+        font-size: 14px;
+      }
+    }
 
     .user-upload {
       display: block;

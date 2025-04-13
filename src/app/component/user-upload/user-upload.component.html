@@ -43,6 +43,12 @@
                       <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
                       <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
                     </div>
+
+                    <div class="song-actions" (click)="$event.stopPropagation()">
+                      <button mat-icon-button class="action-btn" (click)="editUploadSong(song.songId)">
+                        <mat-icon>edit</mat-icon>
+                      </button> 
+                    </div>
                   </div>
                 </mat-card>
               </ng-container>
@@ -55,12 +61,32 @@
             <div class="song-container">
               <ng-container *ngIf="songs.length > 0; else noSongs">
                 <mat-card *ngFor="let song of songs" class="song-card">
-                  <div class="song-button">
+                  <div class="song-button" (click)="playSong(song)">
                     <img *ngIf="song.songImage" [src]="song.songImage" alt="Song Image" class="song-image" />
                     <div class="song-info">
                       <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
                       <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
+                      <mat-card-subtitle class="song-album">Album: {{ song.albumNames || 'Không có' }}</mat-card-subtitle>
                       <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+
+                    <div class="song-actions" (click)="$event.stopPropagation()">
+                      <button mat-icon-button class="action-btn" (click)="addToPlaylist(song)">
+                        <mat-icon>playlist_add</mat-icon>
+                      </button>
+
+                      <button mat-icon-button class="action-btn" (click)="addToAlbum(song)">
+                        <mat-icon>album_add</mat-icon>
+                      </button>
+                      <button mat-icon-button class="action-btn" *ngIf="likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
+                        <mat-icon>favorite</mat-icon> <!-- Biểu tượng khi đã thích -->
+                      </button>
+                      <button mat-icon-button class="action-btn" *ngIf="!likedSongIds.includes(song.songId.toString())" (click)="likeSong(song)">
+                        <mat-icon>favorite_border</mat-icon> <!-- Biểu tượng khi chưa thích -->
+                      </button>
+                      <button mat-icon-button class="action-btn" (click)="downloadSong(song)">
+                        <mat-icon>download</mat-icon>
+                      </button>
                     </div>
                   </div>
                 </mat-card>
@@ -80,6 +106,11 @@
                       <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
                       <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
                       <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                    <div class="song-actions" (click)="$event.stopPropagation()">
+                      <button mat-icon-button class="action-btn" (click)="editUploadSong(song.songId)">
+                        <mat-icon>edit</mat-icon>
+                      </button> 
                     </div>
                   </div>
                 </mat-card>
@@ -118,6 +149,11 @@
                       <mat-card-title class="song-title">{{ song.title }}</mat-card-title>
                       <mat-card-subtitle class="song-artist">{{ song.artist }}</mat-card-subtitle>
                       <mat-card-subtitle class="uploadDate">Ngày đăng: {{ formatDate(song.uploadDate) }}</mat-card-subtitle>
+                    </div>
+                    <div class="song-actions" (click)="$event.stopPropagation()">
+                      <button mat-icon-button class="action-btn" (click)="editUploadSong(song.songId)">
+                        <mat-icon>edit</mat-icon>
+                      </button> 
                     </div>
                   </div>
                 </mat-card>

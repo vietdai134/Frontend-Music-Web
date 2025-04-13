@@ -32,7 +32,7 @@ export class FooterComponent implements OnInit{
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   
-  volume: number = 1;
+  volume: number = 0.3;
 
   constructor(
     private playerService: PlayerService,
@@ -84,7 +84,9 @@ export class FooterComponent implements OnInit{
   ngAfterViewInit(): void {
     if (this.audioPlayer && this.audioPlayer.nativeElement) {
       this.audioPlayer.nativeElement.addEventListener('loadedmetadata', () => {
-        this.volume = this.audioPlayer.nativeElement.volume;
+        // this.volume = this.audioPlayer.nativeElement.volume;
+        this.audioPlayer.nativeElement.volume = this.volume; // Đảm bảo volume đúng ngay khi tải
+      console.log('Loaded metadata, volume set to:', this.volume);
       });
     }
 
@@ -110,6 +112,7 @@ export class FooterComponent implements OnInit{
             this.audioPlayer.nativeElement.src = this.songUrl ?? '';
             this.audioPlayer.nativeElement.load();
             // this.audioPlayer.nativeElement.play();
+            this.audioPlayer.nativeElement.volume = this.volume;
             if (this.isPlaying) {
               // this.audioPlayer.nativeElement.play();
               this.audioPlayer.nativeElement.play().catch(err => console.error('Play error:', err));
@@ -172,14 +175,6 @@ export class FooterComponent implements OnInit{
   }
 
   // Xử lý khi thay đổi volume
-  // onVolumeChange(event: Event): void {
-  //   const volumeValue = (event.target as HTMLInputElement).value;
-  //   if (this.audioPlayer && this.audioPlayer.nativeElement) {
-  //     this.audioPlayer.nativeElement.volume = parseFloat(volumeValue);
-  //     this.volume = parseFloat(volumeValue); // Cập nhật biến volume
-  //   }
-  // }
-
   onVolumeChange(event: Event): void {
     const volumeValue = (event.target as HTMLInputElement).value;
     const volume = parseFloat(volumeValue);

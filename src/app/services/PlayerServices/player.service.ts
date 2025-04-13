@@ -24,32 +24,6 @@ export class PlayerService {
   private baseUrl = environment.baseUrl; 
   constructor(private http: HttpClient) { }
 
-  // setCurrentSong(song: Song): void {
-  //   const currentSongIndex = this.songQueue.findIndex(s => s === this.currentSongSubject.value);
-  //   const songIndex = this.songQueue.findIndex(s => s.songId === song.songId); // Giả sử Song có songId
-
-  //   if (songIndex !== -1 && songIndex < currentSongIndex) {
-  //     // Nếu bài hát đã có trong queue và ở trước bài hiện tại, xóa và thêm vào cuối
-  //     this.songQueue.splice(songIndex, 1);
-  //     this.songQueue.push(song);
-  //     console.log('Moved existing song to end of queue:', this.songQueue);
-  //   } else if (songIndex === -1) {
-  //     // Nếu bài hát chưa có trong queue, thêm vào cuối
-  //     this.songQueue.push(song);
-  //     console.log('Added new song to queue:', this.songQueue);
-  //   }
-
-  //   this.songQueueSubject.next([...this.songQueue]);
-    
-  //   if (!this.currentSongSubject.value ) {
-  //     // Nếu không có bài đang phát, phát bài đầu tiên
-  //     // this.currentSongSubject.next(this.songQueue[0]);
-  //     this.currentSongSubject.next(song);
-  //     this.isPlayingSubject.next(true);
-  //   }
-  //   // this.currentSongSubject.next(song);
-  //   // this.isPlayingSubject.next(true);
-  // }
   setCurrentSong(song: Song): void {
     const currentSong = this.currentSongSubject.value;
     const songIndex = this.songQueue.findIndex(s => s.songId === song.songId);
@@ -138,18 +112,7 @@ export class PlayerService {
   toggleShowQueue(): void {
     this.showQueueSubject.next(!this.showQueueSubject.value);
   }
-
-  // setQueue(songs: Song[]): void {
-  //   this.songQueue = [...songs]; // Gán mới toàn bộ queue
-  //   this.songQueueSubject.next(this.songQueue); // Phát sự kiện để các component theo dõi
-
-  //   const current = this.currentSongSubject.value;
-  //   const stillInQueue = songs.some(s => s.songId === current?.songId);
-  //   if (!stillInQueue) {
-  //     this.currentSongSubject.next(null);
-  //     this.isPlayingSubject.next(false);
-  //   }
-  // }
+  
   setQueue(songs: Song[]): void {
     this.songQueue = [...songs];
     this.songQueueSubject.next(this.songQueue);

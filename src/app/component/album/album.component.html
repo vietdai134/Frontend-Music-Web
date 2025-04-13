@@ -2,10 +2,10 @@
     <app-sidebar [isSidebarVisible]="isSidebarVisible"></app-sidebar>
     
     <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
-      <div class="no-playlists" *ngIf="playlists.length === 0">
+      <div class="no-albums" *ngIf="albums.length === 0">
         <h3>Không có danh sách playlist</h3>
       </div>
-      <div class="song-list" *ngIf="playlists.length > 0">
+      <div class="song-list" *ngIf="albums.length > 0">
         <div class="selected-genres">
           <button 
             mat-stroked-button 
@@ -60,64 +60,66 @@
   
         </div>
 
-        <div class="playlist-container">   
-            <mat-label>Danh sách playlist</mat-label> 
-            <div class="playlist-buttons-wrapper">
+        <div class="album-container">   
+            <mat-label>Danh sách album</mat-label>        
+            <div class="album-buttons-wrapper">
               <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="currentPage === 0">
                 <mat-icon>chevron_left</mat-icon>
               </button>
-              <div class="playlist-buttons">
+              <div class="album-buttons">
                 <button 
                   mat-button 
-                  class="playlist-btn" 
-                  *ngFor="let playlist of playlistsDisplayed" 
-                  (click)="selectPlaylist(playlist); $event.stopPropagation()"
-                  [ngClass]="{'active': selectedPlaylist?.playlistId === playlist.playlistId}"
+                  class="album-btn" 
+                  *ngFor="let album of albumsDisplayed" 
+                  (click)="selectAlbum(album); $event.stopPropagation()"
+                  [ngClass]="{'active': selectedAlbum?.albumId === album.albumId}"
                 >
-                  <!-- <div class="playlist-info">
-                    <span class="playlist-name">{{ playlist.playlistName }}</span>
-                    <span class="playlist-date">Created: {{ formatDate(playlist.createdDate) }}</span>
-                  </div> -->
-                  <div class="playlist-info">
-                    <ng-container *ngIf="editingPlaylist?.playlistId === playlist.playlistId; else normalView">
+                  <!-- <ng-container *ngIf="editingAlbum?.albumId === album.albumId; else normalView">
+                    <div class="edit-container">
                       <input 
                         #editInput
                         type="text" 
-                        class="edit-playlist-name" 
-                        [(ngModel)]="tempPlaylistName" 
-                        (keyup.enter)="savePlaylistName(playlist)" 
+                        class="edit-album-name" 
+                        [(ngModel)]="tempAlbumName" 
+                        (keyup.enter)="saveAlbumName(album)" 
                         (keyup.escape)="cancelEdit()"
                         (click)="$event.stopPropagation()"
-                        
                       >
-                    </ng-container>
-                    <ng-template #normalView>
-                      <span class="playlist-name">{{ playlist.playlistName }}</span>
-                      <span class="playlist-date">Created: {{ formatDate(playlist.createdDate) }}</span>
-                    </ng-template>
-                  </div>
-                  <div class="playlist-actions" (click)="$event.stopPropagation()">
-                    <button mat-icon-button class="action-btn" matTooltip="Edit" (click)="editPlaylist(playlist)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button class="action-btn" matTooltip="Delete" (click)="deletePlaylist(playlist)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                    <button mat-icon-button class="action-btn" matTooltip="Add to Queue" (click)="addPlaylistToQueue()">
-                      <mat-icon>queue_music</mat-icon>
-                    </button>
-                  </div>
+                    </div>
+                  </ng-container> -->
+                  <!-- <ng-template #normalView> -->
+                    <div class="album-content">
+                      <div class="album-image-container">
+                        <img *ngIf="album.albumImage" [src]="album.albumImage" alt="Album Image" class="album-image" />
+                      </div>
+                      <div class="album-info">
+                        <span class="album-name">{{ album.albumName }}</span>
+                        <span class="album-date">Created: {{ formatDate(album.createdDate) }}</span>
+                      </div>
+                      <div class="album-actions" (click)="$event.stopPropagation()">
+                        <button mat-icon-button class="action-btn" matTooltip="Edit" (click)="editAlbum(album)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button class="action-btn" matTooltip="Delete" (click)="deleteAlbum(album)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                        <button mat-icon-button class="action-btn" matTooltip="Add to Queue" (click)="addAlbumToQueue()">
+                          <mat-icon>queue_music</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  <!-- </ng-template> -->
                 </button>
               </div>
               <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isLastPage()">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
-        </div>
+          </div>
 
-        <div *ngIf="selectedPlaylist && songs.length === 0 && !isLoading; else songContent">
+        <div *ngIf="selectedAlbum && songs.length === 0 && !isLoading; else songContent">
           <div class="no-songs">
-            <h3>Không có bài hát trong playlist này</h3>
+            <h3>Không có bài hát trong album này</h3>
           </div>
         </div>
         <ng-template #songContent>
@@ -138,8 +140,11 @@
                 </div>
             
                 <div class="song-actions" (click)="$event.stopPropagation()">
-                  <button mat-icon-button class="action-btn" (click)="deleteFromPlaylist(song)">
-                    <mat-icon>playlist_remove</mat-icon>
+                  <button mat-icon-button class="action-btn" (click)="deleteFromAlbum(song)">
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn" (click)="addToPlaylist(song)">
+                    <mat-icon>playlist_add</mat-icon>
                   </button>
                   <button mat-icon-button class="action-btn" *ngIf="likedSongIds.includes(song.songId.toString())" (click)="unlikeSong(song)">
                     <mat-icon>favorite</mat-icon> <!-- Biểu tượng khi đã thích -->

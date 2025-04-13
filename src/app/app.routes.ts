@@ -15,6 +15,7 @@ import { PlaylistComponent } from './component/playlist/playlist.component';
 import { LikedSongComponent } from './component/liked-song/liked-song.component';
 import { HistorySongComponent } from './component/history-song/history-song.component';
 import { UserUploadComponent } from './component/user-upload/user-upload.component';
+import { AlbumComponent } from './component/album/album.component';
 
 
 export const routes: Routes = [
@@ -38,6 +39,7 @@ export const routes: Routes = [
     { path: 'history', component:HistorySongComponent},
     { path: 'liked-songs', component:LikedSongComponent},
     { path: 'upload-song', component:UserUploadComponent},
+    { path: 'albums', component:AlbumComponent}
 
 
 ];

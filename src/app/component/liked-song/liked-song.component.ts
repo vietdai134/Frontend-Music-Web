@@ -60,6 +60,7 @@ export class LikedSongComponent implements OnInit,OnDestroy{
   searchKeywordTitle: string | null = null;
   searchKeywordArtist: string | null = null;
   searchKeywordUserName: string | null = null;
+  searchKeywordAlbumName: string | null = null;
   private searchSubscription!: Subscription;
   private queueSubscription!: Subscription;
 
@@ -103,6 +104,7 @@ export class LikedSongComponent implements OnInit,OnDestroy{
       this.searchKeywordTitle = null;
       this.searchKeywordArtist = null;
       this.searchKeywordUserName = null;
+      this.searchKeywordAlbumName = null;
       this.searchKeyword = keyword;
 
       if(type=='title'){
@@ -113,6 +115,9 @@ export class LikedSongComponent implements OnInit,OnDestroy{
       }
       else if(type=='username'){
         this.searchKeywordUserName = keyword;
+      }
+      else if(type=='albumNames'){
+        this.searchKeywordAlbumName = keyword;
       }
 
       this.currentPage = 0; // Reset về trang đầu khi tìm kiếm
@@ -167,6 +172,7 @@ export class LikedSongComponent implements OnInit,OnDestroy{
         this.searchKeywordArtist ?? undefined, 
         this.selectedGenres ??[], 
         this.searchKeywordUserName?? undefined, 
+        this.searchKeywordAlbumName?? undefined,
         this.currentPage, this.pageSize, 
         this.currentSortField, 
         this.resultSort).subscribe({
