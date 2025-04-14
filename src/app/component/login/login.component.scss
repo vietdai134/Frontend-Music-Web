@@ -1,56 +1,188 @@
-$primary-color: #007bff;
-$error-color: #ff4d4d;
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+}
+
+.auth-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  // background-color: #111;
+  background-color: #000;
+}
+
+.auth-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  // background-color: #000;
+  background-color: #111;
+}
+
+.welcome-message {
+  text-align: center;
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  p {
+    font-size: 1.2rem;
+    color: #ccc;
+  }
+}
 
 .login-container {
   width: 100%;
-  max-width: 350px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #fff;
+  max-width: 400px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    h2 {
+      font-size: 2rem;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: #fff;
+      }
+
+      input {
+        padding: 0.8rem;
+        font-size: 1rem;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background-color: #222;
+        color: #fff;
+        outline: none;
+
+        &::placeholder {
+          color: #888;
+        }
+
+        &:focus {
+          border-color: #fff;
+        }
+      }
+
+      .error {
+        color: #ff5555;
+        font-size: 0.9rem;
+        margin-top: 0.3rem;
+      }
+
+      .forgot-password {
+        font-size: 0.9rem;
+        color: #ccc;
+        text-align: right;
+        margin-top: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          color: #fff;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .btn-login {
+      padding: 0.8rem;
+      font-size: 1rem;
+      background-color: #fff;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #ccc;
+      }
+
+      &:disabled {
+        background-color: #555;
+        cursor: not-allowed;
+      }
+    }
+
+    .switch-link {
+      text-align: center;
+      margin-top: 1rem;
+      color: #ccc;
+
+      .sign-up{
+        cursor: pointer;
+      }
+      a {
+        color: #fff;
+        text-decoration: underline;
+        &:hover {
+          color: #ccc;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-left,
+  .auth-right {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .login-container {
+    max-width: 100%;
+  }
+}
+
+.notification {
+  padding: 12px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+  font-weight: 500;
+  animation: fade-in 0.3s ease;
   text-align: center;
 
-  h2 {
-    margin-bottom: 20px;
-    color: $primary-color;
+  &.success {
+    background-color: #0f0f0f;
+    color: #00ff99;
+    border: 1px solid #00ff99;
   }
 
-  .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-
-    label {
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .error {
-      color: $error-color;
-      font-size: 14px;
-      margin-top: 5px;
-    }
+  &.error {
+    background-color: #0f0f0f;
+    color: #ff4d4f;
+    border: 1px solid #ff4d4f;
   }
+}
 
-  .btn-login {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: $primary-color;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-
-    &:hover {
-      background: darken($primary-color, 10%);
-    }
-  }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

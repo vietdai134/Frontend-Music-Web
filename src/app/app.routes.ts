@@ -16,12 +16,14 @@ import { LikedSongComponent } from './component/liked-song/liked-song.component'
 import { HistorySongComponent } from './component/history-song/history-song.component';
 import { UserUploadComponent } from './component/user-upload/user-upload.component';
 import { AlbumComponent } from './component/album/album.component';
+import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
-    { path: 'login', component: LoginComponent },
-    { path: 'signup', component:SignupComponent},
+    { path: 'login', component: LoginComponent, data: { animation: 'login' } },
+    { path: 'signup', component:SignupComponent, data: { animation: 'signup' }},
     { 
         path: 'admin', component: AdminHomeComponent,
         children: [
@@ -39,7 +41,9 @@ export const routes: Routes = [
     { path: 'history', component:HistorySongComponent},
     { path: 'liked-songs', component:LikedSongComponent},
     { path: 'upload-song', component:UserUploadComponent},
-    { path: 'albums', component:AlbumComponent}
+    { path: 'albums', component:AlbumComponent},
+    { path: 'forgot-password', component:ForgotPasswordComponent},
+    { path: 'reset-password' , component:ResetPasswordComponent}
 
 
 ];

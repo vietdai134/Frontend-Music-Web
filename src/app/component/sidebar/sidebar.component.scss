@@ -41,6 +41,11 @@ $hover-highlight: #222222;
           color: $text-light;
         }
   
+        mat-icon {
+          margin-right: 20px;  /* Tạo khoảng cách giữa icon và label */
+          font-size: 20px; /* Điều chỉnh kích thước icon */
+        }
+
         span {
           font-size: 16px;
         }

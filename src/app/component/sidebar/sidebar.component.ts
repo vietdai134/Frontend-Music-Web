@@ -4,12 +4,14 @@ import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../services/LoginServices/login.service';
 import { Observable } from 'rxjs';
 import { User } from '../../models/user.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
     CommonModule, 
-    RouterModule
+    RouterModule,
+    MatIconModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
@@ -19,7 +21,7 @@ export class SidebarComponent implements OnInit{
   
   user$: Observable<User | null>;
   menuItems = [
-    { label: 'Home', icon: 'fas fa-home', link: '' },
+    { label: 'Home', icon: 'home', link: '' },
   ];
 
   constructor(
@@ -35,7 +37,7 @@ export class SidebarComponent implements OnInit{
         if (!this.menuItems.some(item => item.label === 'Playlists')) {
           this.menuItems.push({
             label: 'Playlists',
-            icon: 'fas fa-cog',
+            icon: 'library_music',
             link: '/playlists'
           });
         }
@@ -44,7 +46,7 @@ export class SidebarComponent implements OnInit{
         if (!this.menuItems.some(item => item.label === 'History')) {
           this.menuItems.push({
             label: 'History',
-            icon: 'fas fa-cog',
+            icon: 'history',
             link: '/history'
           });
         }
@@ -53,7 +55,7 @@ export class SidebarComponent implements OnInit{
         if (!this.menuItems.some(item => item.label === 'Liked Songs')) {
           this.menuItems.push({
             label: 'Liked Songs',
-            icon: 'fas fa-cog',
+            icon: 'favorite',
             link: '/liked-songs'
           });
         }
@@ -62,7 +64,7 @@ export class SidebarComponent implements OnInit{
         if (!this.menuItems.some(item => item.label === 'Upload Song')) {
           this.menuItems.push({
             label: 'Upload Song',
-            icon: 'fas fa-cog',
+            icon: 'cloud_upload',
             link: '/upload-song'
           });
         }
@@ -71,7 +73,7 @@ export class SidebarComponent implements OnInit{
         if (!this.menuItems.some(item => item.label === 'Albums')) {
           this.menuItems.push({
             label: 'Albums',
-            icon: 'fas fa-cog',
+            icon: 'album',
             link: '/albums'
           });
         }

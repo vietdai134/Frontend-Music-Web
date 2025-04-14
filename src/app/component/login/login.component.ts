@@ -17,6 +17,9 @@ export class LoginComponent {
   loginForm: FormGroup;
   isSubmitted = false;
 
+  successMessage = '';
+  errorMessage = '';
+
   constructor(
     private router: Router,
     private fb: FormBuilder, 
@@ -33,17 +36,30 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loginService.userLogin(this.loginForm.value.email, this.loginForm.value.password).subscribe(
         (res:any) => {
-          console.log('Login Success:', res?.message);
-          alert('Đăng nhập thành công!');
-          this.router.navigate(['/']);
+          // console.log('Login Success:', res?.message);
+          // alert('Đăng nhập thành công!');
+          // this.router.navigate(['/']);
+          this.successMessage = 'Đăng nhập thành công!';
+          this.errorMessage = '';
+  
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 2000);
         },
         (err) => {
-          console.log('Login Error:', err);
-          alert('Đăng nhập thất bại!');
+          // console.log('Login Error:', err);
+          // alert('Đăng nhập thất bại!');
+          this.errorMessage = 'Email hoặc mật khẩu không đúng!';
+          this.successMessage = '';
         }
       );
     }
   }
 
-
+  goSignUp() {
+    this.router.navigate(['/signup']);
+  }
+  goForgetPassword(){
+    this.router.navigate(['/forgot-password'])
+  }
 }

@@ -43,7 +43,12 @@ $desktop: 992px;
   font-size: 24px;
   color: $text-light;
   white-space: nowrap; /* Ngăn logo xuống dòng */
+  cursor: pointer;
+  transition: transform 0.2s ease;
 
+  &:hover {
+    transform: scale(1.05);
+  }
   @media (max-width: $tablet) {
     font-size: 20px;
   }
@@ -75,6 +80,7 @@ $desktop: 992px;
 
 .dropdown {
   position: relative;
+  display: inline-block;
   @media (max-width: $mobile) {
     // Giảm khoảng cách trên mobile nếu cần
   }
@@ -119,34 +125,46 @@ $desktop: 992px;
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 48px;
   right: 0;
-  background-color: $bg-darker;
-  border-radius: 6px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.6);
-  width: 160px;
-  list-style: none;
-  padding: 10px 0;
-  margin-top: 8px;
+  min-width: 160px;
+  background-color: $bg-dark;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+  padding: 8px 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+
+  // Show when parent has class .showDropdown = true
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 
   li {
-    padding: 10px 20px;
-    color: $text-light;
+    padding: 15px 16px;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.2s;
+    list-style-type: none;
+    display: flex;
+    align-items: center;  /* Căn giữa icon và text theo chiều dọc */
+    gap: 12px;  /* Khoảng cách giữa icon và text */
+    line-height: 1.5;
+
+    mat-icon {
+      font-size: 25px;  /* Điều chỉnh kích thước icon nếu cần */
+    }
 
     &:hover {
-      background-color: $hover-highlight;
+      background-color: #f5f5f5;
+      color: #000;
     }
-    @media (max-width: $mobile) {
-      padding: 8px 15px;
-      font-size: 14px;
-    }
-  }
-  @media (max-width: $mobile) {
-    width: 140px;
-    margin-top: 5px;
   }
 }
 
@@ -180,6 +198,7 @@ $desktop: 992px;
   position: relative;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .avatar {

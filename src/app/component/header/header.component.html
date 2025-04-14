@@ -2,7 +2,8 @@
   <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle">
     <mat-icon>{{ isSidebarVisible ? 'chevron_left' : 'menu' }}</mat-icon>
   </button>
-  <div class="logo">My Website</div>
+  <!-- <div class="logo">My Website</div> -->
+  <div class="logo" (click)="goHome()">Music App</div>
   <div class="search-container">
       <mat-form-field appearance="outline" class="search-input">
           <input matInput [(ngModel)]="searchKeyword" (input)="onSearchChange($event)" placeholder="Nhập thông tin tìm kiếm">
@@ -27,13 +28,25 @@
           <span class="tooltip">{{ user.userName }}</span>
         </div>
 
-        <!-- Dropdown menu -->
-        <ul class="dropdown-menu" *ngIf="showDropdown" 
-            (mouseenter)="cancelHideDropdown()" 
-            (mouseleave)="hideDropdownWithDelay()">
+        <!-- <ul class="dropdown-menu" [ngClass]="{ 'show': showDropdown }"
+          (mouseenter)="cancelHideDropdown()" 
+          (mouseleave)="hideDropdownWithDelay()">
           <li (click)="goToProfile()">Profile</li>
           <li *ngIf="isAdmin(user)" (click)="goToAdmin()">Admin</li>
           <li (click)="logout()">Logout</li>
+        </ul> -->
+        <ul class="dropdown-menu" [ngClass]="{ 'show': showDropdown }" 
+            (mouseenter)="cancelHideDropdown()" 
+            (mouseleave)="hideDropdownWithDelay()">
+          <li (click)="goToProfile()">
+            <mat-icon>account_circle</mat-icon> Profile
+          </li>
+          <li *ngIf="isAdmin(user)" (click)="goToAdmin()">
+            <mat-icon>admin_panel_settings</mat-icon> Admin
+          </li>
+          <li (click)="logout()">
+            <mat-icon>logout</mat-icon> Logout
+          </li>
         </ul>
       </div>
     </ng-container>

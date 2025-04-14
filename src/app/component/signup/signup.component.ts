@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   selector: 'app-signup',
   imports: [
     CommonModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
@@ -16,6 +16,9 @@ import { Router } from '@angular/router';
 export class SignupComponent {
   signupForm: FormGroup;
   isSubmitted = false;
+
+  successMessage = '';
+  errorMessage = '';
 
   constructor(
     private router: Router,
@@ -35,15 +38,22 @@ export class SignupComponent {
       const userData = this.signupForm.value;
       this.userService.registerUser(userData).subscribe(
         (res:any) => {
-          console.log('Signup Success:', res?.message);
-          alert('Dăng ký thành công!');
-          this.router.navigate(['/']);
+          this.successMessage = 'Đăng ký thành công!';
+          this.errorMessage = '';
+  
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
         },
         (err) => {
-          console.log('Signup Error:', err);
-          alert('Đăng ký thất bại!');
+          this.errorMessage = 'Email đã tồn tại!';
+          this.successMessage = '';
         }
       );
     }
+  }
+
+  goLogin(){
+    this.router.navigate(['/login']);
   }
 }

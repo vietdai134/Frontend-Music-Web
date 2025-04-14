@@ -136,4 +136,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
       this.searchService.setKeyword(this.searchKeyword);
     }
   }
+  goHome() {
+    this.router.navigate(['/']);
+  }
 }

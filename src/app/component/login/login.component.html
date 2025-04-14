@@ -1,24 +1,42 @@
-<div class="login-container">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <h2>Đăng Nhập</h2>
-  
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" placeholder="Nhập email của bạn">
-        <div *ngIf="isSubmitted && loginForm.controls['email'].invalid" class="error">
-          Email không hợp lệ!
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="password">Mật khẩu</label>
-        <input type="password" id="password" formControlName="password" placeholder="Nhập mật khẩu">
-        <div *ngIf="isSubmitted && loginForm.controls['password'].invalid" class="error">
-          Mật khẩu phải ít nhất 6 ký tự!
-        </div>
-      </div>
-  
-      <button type="submit" class="btn-login">Đăng Nhập</button>
-    </form>
+<div class="auth-container">
+  <div class="auth-left">
+    <div class="welcome-message">
+      <h1>Welcome Back!</h1>
+      <p>We're glad to see you again. Log in to continue your journey.</p>
+    </div>
   </div>
-  
+
+  <div class="auth-right">
+    <div class="login-container">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <h2>Đăng Nhập</h2>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" placeholder="Nhập email của bạn">
+          <div *ngIf="isSubmitted && loginForm.controls['email'].invalid" class="error">
+            Email không hợp lệ!
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" id="password" formControlName="password" placeholder="Nhập mật khẩu">
+          <div *ngIf="isSubmitted && loginForm.controls['password'].invalid" class="error">
+            Mật khẩu phải ít nhất 6 ký tự!
+          </div>
+          <a class="forgot-password" (click)="goForgetPassword()">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="btn-login">Đăng Nhập</button>
+        <p class="switch-link">Chưa có tài khoản? <a class="sign-up" (click)="goSignUp()">Đăng ký</a></p>
+      </form>
+    </div>
+    <div class="notification success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+    <div class="notification error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
