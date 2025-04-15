@@ -1,6 +1,7 @@
 <div class="admin-layout">
     <app-sidebar></app-sidebar>
-    <div class="content">
+    <div class="content" 
+    [ngClass]="{'sidebar-collapsed': (isSidebarCollapsed$ | async)}">
       <router-outlet></router-outlet>
     </div>
   </div>

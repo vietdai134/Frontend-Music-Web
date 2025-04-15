@@ -18,6 +18,7 @@ import { UserUploadComponent } from './component/user-upload/user-upload.compone
 import { AlbumComponent } from './component/album/album.component';
 import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
+import { UserInfoComponent } from './component/user-info/user-info.component';
 
 
 export const routes: Routes = [
@@ -43,7 +44,8 @@ export const routes: Routes = [
     { path: 'upload-song', component:UserUploadComponent},
     { path: 'albums', component:AlbumComponent},
     { path: 'forgot-password', component:ForgotPasswordComponent},
-    { path: 'reset-password' , component:ResetPasswordComponent}
+    { path: 'reset-password' , component:ResetPasswordComponent},
+    { path: 'profile' , component: UserInfoComponent}
 
 
 ];

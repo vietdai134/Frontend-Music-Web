@@ -1,14 +1,19 @@
-<nav class="sidebar">
-    <ul>
-      <li *ngFor="let item of menuItems">
-        <a [routerLink]="item.link">
-          <i class="{{ item.icon }}"></i>
-          <span>{{ item.label }}</span>
-        </a>
-      </li>
-      <li (click)="logout()">Logout</li>
-    </ul>
-
-
-  </nav>
-  
+<nav class="sidebar" [ngClass]="{'collapsed': isSidebarCollapsed}">
+  <div class="toggle-button" (click)="toggleSidebar()">
+    <mat-icon>{{ isSidebarCollapsed ? 'menu' : 'close' }}</mat-icon>
+  </div>
+  <ul>
+    <li *ngFor="let item of menuItems">
+      <a [routerLink]="item.link" 
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    </li>
+    <li (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </li>
+  </ul>
+</nav>

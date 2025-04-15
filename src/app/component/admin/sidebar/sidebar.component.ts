@@ -4,32 +4,44 @@ import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { User } from '../../../models/user.module';
 import { LoginService } from '../../../services/LoginServices/login.service';
+import { MatIconModule } from '@angular/material/icon';
+import { SideBarAdminService } from '../../../services/SideBarAdminServices/side-bar-admin.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule, 
+    RouterModule,
+    MatIconModule
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit{
   user$: Observable<User | null>;
+  isSidebarCollapsed = false;
+  
   menuItems = [
-    { label: 'Quay lại trang chủ', icon: 'fas fa-users', link: '/' },
+    { label: 'Quay lại trang chủ', icon: 'home', link: '/' },
     // { label: 'Dashboard', icon: 'fas fa-home', link: '/admin' },
-    { label: 'Song', icon: 'fas fa-users', link: '/admin/song' },
-    { label: 'Genre', icon: 'fas fa-shopping-cart', link: '/admin/genre' },
-    { label: 'Permission', icon: 'fas fa-box', link: '/admin/permission' },
-    { label: 'Role', icon: 'fas fa-cog', link: '/admin/role' },
-    { label: 'Users', icon: 'fas fa-users', link: '/admin/user' },
+    { label: 'Song', icon: 'music_note', link: '/admin/song' },
+    { label: 'Genre', icon: 'category', link: '/admin/genre' },
+    { label: 'Permission', icon: 'lock', link: '/admin/permission' },
+    { label: 'Role', icon: 'admin_panel_settings', link: '/admin/role' },
+    { label: 'Users', icon: 'people', link: '/admin/user' },
     // { label: 'User-Payment', icon: 'fas fa-cog', link: '/admin/user-payment' }
     
   ];
   constructor(
     private loginService: LoginService,
-    private router:Router
+    private router:Router,
+    private sidebarService: SideBarAdminService
   ) {
     this.user$ = this.loginService.user$; // Gán user$ từ LoginService
+    this.sidebarService.isSidebarCollapsed$.subscribe(state => {
+      this.isSidebarCollapsed = state;
+    });
 }
   ngOnInit(): void {
     // Kiểm tra user và thêm mục Moderate nếu cần
@@ -39,7 +51,7 @@ export class SidebarComponent implements OnInit{
           if (!this.menuItems.some(item => item.label === 'Song-Upload')) {
               this.menuItems.push({
                   label: 'Song-Upload',
-                  icon: 'fas fa-check-circle', // Chọn icon phù hợp
+                  icon: 'upload_file', // Chọn icon phù hợp
                   link: '/admin/song-upload'
               });
           }
@@ -49,6 +61,11 @@ export class SidebarComponent implements OnInit{
   // Kiểm tra xem user có permission MODERATE_SONG không
   hasModerateSongPermission(user: User | null): boolean {
     return user?.permissions?.includes('MODERATE_SONG') || false;
+  }
+
+  toggleSidebar(): void {
+    // this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    this.sidebarService.toggleSidebar();
   }
 
   logout() {

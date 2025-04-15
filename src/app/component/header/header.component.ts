@@ -88,7 +88,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
 
   goToAdmin() {
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/admin/song']);
   }
 
   // Kiểm tra xem user có permission SYSTEM_MANAGEMENT không

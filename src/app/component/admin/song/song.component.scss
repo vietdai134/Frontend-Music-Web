@@ -1,0 +1,329 @@
+:host {
+    display: block;
+    width: 100%; /* Kế thừa chiều rộng của .content */
+    box-sizing: border-box;
+    background-color: #ffffff; /* Nền trắng */
+    color: #333333; /* Chữ xám đậm */
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Header Container */
+  .header-container {
+    margin: 0 0 32px 0;
+    padding: 24px;
+    background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%); /* Gradient nhẹ */
+    border-bottom: 1px solid #e0e0e0; /* Viền xám nhạt */
+  
+    .table-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: #000000; /* Chữ đen */
+      margin: 0 0 24px 0;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+  
+    .header-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+  
+      .search-container {
+        flex: 1;
+        max-width: 400px;
+        min-width: 250px;
+  
+        .search-input {
+          width: 100%;
+          background-color: #ffffff; /* Nền input trắng */
+          border-radius: 8px;
+  
+          ::ng-deep .mat-form-field-outline {
+            color: #cccccc; /* Viền xám nhạt */
+          }
+  
+          ::ng-deep .mat-form-field-label {
+            color: #666666; /* Nhãn xám */
+            font-size: 14px;
+          }
+  
+          ::ng-deep .mat-input-element {
+            color: #333333; /* Chữ nhập xám đậm */
+            font-size: 16px;
+            padding: 8px;
+          }
+  
+          ::ng-deep .mat-form-field:hover .mat-form-field-outline,
+          ::ng-deep .mat-form-field.mat-focused .mat-form-field-outline {
+            color: #007bff; /* Viền xanh khi hover/focus */
+          }
+  
+          ::ng-deep .mat-form-field-ripple {
+            background-color: transparent;
+          }
+        }
+      }
+  
+      .button-wrapper {
+        .create-button {
+          background-color: #007bff; /* Nền xanh dương */
+          color: #ffffff; /* Chữ trắng */
+          font-size: 16px;
+          font-weight: 500;
+          padding: 12px 24px;
+          border-radius: 8px;
+          border: 1px solid #0056b3;
+          transition: all 0.3s ease;
+  
+          &:hover {
+            background-color: #0056b3; /* Hover xanh đậm hơn */
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+  
+  /* Table Container */
+  .table-container {
+    width: 100%;
+    padding: 0 24px 24px 24px;
+  
+    table {
+      width: 100%;
+      max-width: 100%; /* Đảm bảo bảng không vượt quá màn hình */
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: #ffffff; /* Nền bảng trắng */
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Bóng nhẹ */
+  
+      th, td {
+        padding: 14px 8px;
+        text-align: left;
+        font-size: 14px;
+        color: #333333; /* Chữ xám đậm */
+        border-bottom: 1px solid #e0e0e0; /* Viền xám nhạt */
+      }
+  
+      /* Điều chỉnh chiều rộng cột và xuống dòng cho cột Thể loại */
+      th[mat-header-cell],
+      td[mat-cell] {
+        &:nth-child(1) { /* ID */
+          width: 5%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(2) { /* Tên bài hát */
+          width: 14%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(3) { /* Nghệ sĩ */
+          width: 11%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(4) { /* File id */
+          width: 12%; /* Giảm từ 14% */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(5) { /* Ảnh bài hát */
+          width: 8%;
+        }
+        &:nth-child(6) { /* Thể loại */
+          width: 16%; /* Tăng từ 14% để chứa nội dung xuống dòng */
+          white-space: normal; /* Cho phép xuống dòng */
+        }
+        &:nth-child(7) { /* Ngày được duyệt */
+          width: 10%; /* Giảm từ 11% */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(8) { /* Người duyệt */
+          width: 10%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:nth-child(9) { /* Hành động */
+          width: 13%;
+          white-space: nowrap;
+        }
+      }
+  
+      th {
+        background-color: #f5f5f5; /* Header xám nhạt */
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 13px;
+        letter-spacing: 0.8px;
+      }
+  
+      td {
+        background-color: #ffffff;
+      }
+  
+      img {
+        max-width: 40px;
+        height: auto;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #e0e0e0; /* Viền xám nhạt */
+        transition: transform 0.3s ease;
+  
+        &:hover {
+          transform: scale(1.1); /* Phóng to nhẹ khi hover */
+        }
+      }
+  
+      button {
+        margin-right: 4px;
+        padding: 6px 8px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+  
+        &.mat-warn {
+          background-color: #ff3333; /* Nút "Thu hồi" đỏ */
+          color: #ffffff;
+  
+          &:hover {
+            background-color: #ff4d4d;
+            box-shadow: 0 4px 12px rgba(255, 51, 51, 0.3);
+          }
+        }
+  
+        &.mat-primary {
+          background-color: #007bff; /* Nút "Sửa" xanh */
+          color: #ffffff;
+          border: 1px solid #0056b3;
+  
+          &:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+          }
+        }
+      }
+  
+      tr {
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #f0f0f0; /* Hover xám nhạt */
+        }
+  
+        &:last-child td {
+          border-bottom: none;
+        }
+      }
+    }
+  
+    mat-paginator {
+      margin-top: 20px;
+      background-color: #ffffff;
+      color: #333333;
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+      ::ng-deep .mat-paginator-container {
+        justify-content: space-between;
+        min-height: 40px;
+      }
+  
+      ::ng-deep .mat-paginator-page-size-label,
+      ::ng-deep .mat-paginator-range-label {
+        color: #333333;
+        font-size: 14px;
+      }
+  
+      ::ng-deep .mat-select-value,
+      ::ng-deep .mat-select-arrow {
+        color: #333333;
+      }
+  
+      ::ng-deep .mat-paginator-icon {
+        fill: #333333;
+        width: 24px;
+        height: 24px;
+      }
+  
+      ::ng-deep .mat-paginator:hover .mat-paginator-icon {
+        fill: #007bff; /* Icon xanh khi hover */
+      }
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-container {
+      padding: 16px;
+  
+      .table-title {
+        font-size: 24px;
+      }
+  
+      .header-bottom {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+  
+        .search-container {
+          max-width: 100%;
+        }
+  
+        .button-wrapper {
+          width: 100%;
+  
+          .create-button {
+            width: 100%;
+            padding: 12px;
+          }
+        }
+      }
+    }
+  
+    .table-container {
+      padding: 0 16px 16px 16px;
+  
+      table {
+        th, td {
+          padding: 12px 6px;
+          font-size: 12px;
+        }
+  
+        img {
+          max-width: 30px;
+        }
+  
+        button {
+          margin-right: 3px;
+          padding: 5px 6px;
+          font-size: 12px;
+        }
+  
+        /* Điều chỉnh chiều rộng cột trên mobile */
+        th[mat-header-cell],
+        td[mat-cell] {
+          &:nth-child(6) { /* Thể loại */
+            width: 18%; /* Tăng nhẹ để chứa nội dung xuống dòng */
+          }
+        }
+      }
+    }
+  
+    mat-paginator {
+      padding: 8px;
+    }
+  }

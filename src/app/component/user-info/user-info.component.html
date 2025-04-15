@@ -1,0 +1,97 @@
+<div class="user-info-container">
+    <!-- Avatar bên trái -->
+    <div class="left-panel">
+        <div class="avatar" [ngClass]="{ 'loading': isLoading }">
+            <img [src]="user.avatar" alt="User Avatar" />
+            <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display: none;" (change)="onAvatarSelected($event)" />
+        <button class="change-avatar-btn" (click)="changeAvatar()" [disabled]="isLoading">
+            <mat-icon>edit</mat-icon>
+            Change Avatar
+        </button>
+    </div>
+  
+    <!-- Mọi thứ còn lại bên phải -->
+    <div class="right-panel">
+      <h2>Thông tin người dùng</h2>
+  
+      <!-- Username + Đổi tên -->
+      <div class="username-group">
+        <input
+          type="text"
+          [(ngModel)]="user.userName"
+          (ngModelChange)="checkUsernameChange()"
+          placeholder="Tên người dùng"
+        />
+        <button [disabled]="!usernameChanged" (click)="updateUsername()">Đổi tên</button>
+        <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+      </div>
+  
+      <!-- Email -->
+      <input type="email" [value]="user.email" disabled placeholder="Email" />
+  
+      <!-- Account Type -->
+      <input type="text" [value]="user.accountType" disabled placeholder="Loại tài khoản" />
+  
+      <!-- Đổi mật khẩu -->
+      <!-- <div class="change-password">
+        <h3>Đổi mật khẩu</h3>
+        <input type="password" placeholder="Mật khẩu hiện tại" [(ngModel)]="passwordForm.currentPassword" />
+        <input type="password" placeholder="Mật khẩu mới" [(ngModel)]="passwordForm.newPassword" />
+        <input type="password" placeholder="Xác nhận mật khẩu" [(ngModel)]="passwordForm.confirmPassword" />
+        <button (click)="changePassword()">Đổi mật khẩu</button>
+        
+      </div> -->
+
+      <div class="change-password">
+        <h3>Đổi mật khẩu</h3>
+        
+        <div class="form-group">
+          <input 
+            id="currentPassword" 
+            type="password" 
+            [(ngModel)]="passwordForm.currentPassword" 
+            placeholder="Nhập mật khẩu hiện tại" 
+            (ngModelChange)="clearNotification()"
+          />
+        </div>
+        
+        <div class="form-group">
+          <input 
+            id="newPassword" 
+            type="password" 
+            [(ngModel)]="passwordForm.newPassword" 
+            (ngModelChange)="checkPasswordMatch()"
+            placeholder="Nhập mật khẩu mới" 
+          />
+        </div>
+        
+        <div class="form-group">
+          <input 
+            id="confirmPassword" 
+            type="password" 
+            [(ngModel)]="passwordForm.confirmPassword" 
+            (ngModelChange)="checkPasswordMatch()"
+            placeholder="Xác nhận mật khẩu mới" 
+          />
+          <div class="error-message" *ngIf="passwordMismatch">
+            Mật khẩu xác nhận không khớp!
+          </div>
+        </div>
+        
+        <button 
+          (click)="changePassword()" 
+          [disabled]="isLoading || passwordMismatch || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword"
+        >
+          Đổi mật khẩu
+        </button>
+        <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+        
+        <div class="notification" [ngClass]="notificationType" *ngIf="notificationMessage">
+          {{ notificationMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+  

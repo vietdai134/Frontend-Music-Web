@@ -79,4 +79,29 @@ export class UserService {
       }
       return this.http.put<User>(`${this.baseUrl}/user/update/${userId}`, formData,{ withCredentials: true });
     }
+
+  userUpdateInfo(
+    userName:string
+  ):Observable<any>{
+    return this.http.put<any>(`${this.baseUrl}/user/info?userName=${userName}`, null,
+                              { withCredentials:true} );
+  }
+
+  userUpdateImage(
+    avatar?:File
+  ):Observable<any>{
+    const formData=new FormData();
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+    return this.http.put<any>(`${this.baseUrl}/user/image`,formData,
+                              { withCredentials: true })
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const url = `${this.baseUrl}/user/changePassword`;
+    const body = { oldPassword, newPassword };
+    console.log('Calling changePassword API:', url, body);
+    return this.http.put<any>(url, body, { withCredentials: true });
+  }
 }
