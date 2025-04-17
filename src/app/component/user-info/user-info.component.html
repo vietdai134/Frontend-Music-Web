@@ -1,12 +1,12 @@
 <div class="user-info-container">
     <!-- Avatar bên trái -->
     <div class="left-panel">
-        <div class="avatar" [ngClass]="{ 'loading': isLoading }">
+        <div class="avatar" [ngClass]="{ 'loading': isLoadingImg }">
             <img [src]="user.avatar" alt="User Avatar" />
-            <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+            <mat-spinner *ngIf="isLoadingImg" diameter="50"></mat-spinner>
         </div>
         <input type="file" id="avatarInput" accept="image/*" style="display: none;" (change)="onAvatarSelected($event)" />
-        <button class="change-avatar-btn" (click)="changeAvatar()" [disabled]="isLoading">
+        <button class="change-avatar-btn" (click)="changeAvatar()" [disabled]="isLoadingImg">
             <mat-icon>edit</mat-icon>
             Change Avatar
         </button>
@@ -25,7 +25,7 @@
           placeholder="Tên người dùng"
         />
         <button [disabled]="!usernameChanged" (click)="updateUsername()">Đổi tên</button>
-        <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+        <mat-spinner *ngIf="isLoadingUserName" diameter="50"></mat-spinner>
       </div>
   
       <!-- Email -->
@@ -35,19 +35,10 @@
       <input type="text" [value]="user.accountType" disabled placeholder="Loại tài khoản" />
   
       <!-- Đổi mật khẩu -->
-      <!-- <div class="change-password">
-        <h3>Đổi mật khẩu</h3>
-        <input type="password" placeholder="Mật khẩu hiện tại" [(ngModel)]="passwordForm.currentPassword" />
-        <input type="password" placeholder="Mật khẩu mới" [(ngModel)]="passwordForm.newPassword" />
-        <input type="password" placeholder="Xác nhận mật khẩu" [(ngModel)]="passwordForm.confirmPassword" />
-        <button (click)="changePassword()">Đổi mật khẩu</button>
-        
-      </div> -->
-
       <div class="change-password">
-        <h3>Đổi mật khẩu</h3>
+        <h3>{{ isLocal ? 'Đổi mật khẩu' : 'Đặt mật khẩu' }}</h3>
         
-        <div class="form-group">
+        <div class="form-group" *ngIf="isLocal">
           <input 
             id="currentPassword" 
             type="password" 
@@ -82,11 +73,11 @@
         
         <button 
           (click)="changePassword()" 
-          [disabled]="isLoading || passwordMismatch || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword"
+          [disabled]="isLoadingPass || passwordMismatch || !passwordForm.newPassword || !passwordForm.confirmPassword"
         >
-          Đổi mật khẩu
+        {{ isLocal ? 'Đổi mật khẩu' : 'Đặt mật khẩu' }}
         </button>
-        <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+        <mat-spinner *ngIf="isLoadingPass" diameter="24"></mat-spinner>
         
         <div class="notification" [ngClass]="notificationType" *ngIf="notificationMessage">
           {{ notificationMessage }}

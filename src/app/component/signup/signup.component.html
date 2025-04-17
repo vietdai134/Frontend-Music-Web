@@ -24,7 +24,7 @@
           <label for="password">Mật khẩu</label>
           <input type="password" id="password" formControlName="password" placeholder="Nhập mật khẩu">
           <div *ngIf="isSubmitted && signupForm.controls['password'].invalid" class="error">
-            Mật khẩu phải ít nhất 3 ký tự!
+            Mật khẩu phải ít nhất 8 ký tự!
           </div>
         </div>
 
@@ -33,7 +33,11 @@
       </form>
     </div>
     <div class="notification success" *ngIf="successMessage">
+
       {{ successMessage }}
+      <span *ngIf="successMessage.includes('Vui lòng kiểm tra Gmail')">
+        <br>Đang chờ xác minh... <i class="fa fa-spinner fa-spin"></i>
+      </span>
     </div>
     <div class="notification error" *ngIf="errorMessage">
       {{ errorMessage }}

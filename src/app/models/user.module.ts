@@ -9,4 +9,6 @@ export interface User{
     avatar?: string;
     permissions:string[] | null;
     roles:Role[];
+
+    authProvider:string;
 }

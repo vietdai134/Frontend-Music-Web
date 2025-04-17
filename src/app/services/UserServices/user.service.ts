@@ -104,4 +104,8 @@ export class UserService {
     console.log('Calling changePassword API:', url, body);
     return this.http.put<any>(url, body, { withCredentials: true });
   }
+
+  checkEmailVerify(email: string): Observable<{ isVerified: boolean }> {
+    return this.http.get<{ isVerified: boolean }>(`${this.baseUrl}/auth/check-verification?email=${encodeURIComponent(email)}`);
+  }
 }

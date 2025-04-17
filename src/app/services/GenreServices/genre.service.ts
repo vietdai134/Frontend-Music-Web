@@ -21,7 +21,7 @@ export class GenreService {
   }
 
   getListAllGenres():Observable<Genre[]>{
-    return this.http.get<Genre[]>(`${this.baseUrl}/genres/list`,{ withCredentials: true });
+    return this.http.get<Genre[]>(`${this.baseUrl}/genres/list`);
   }
 
   getGenreById(genreId:number):Observable<Genre>{

@@ -126,7 +126,6 @@
           <p>Đang tải...</p>
         </div>
   
-        <app-queue *ngIf="showQueue"></app-queue>
       </div>
       <ng-template #noSongsTemplate>
         <div class="no-songs">
@@ -134,4 +133,5 @@
         </div>
       </ng-template>
     </div>
+    <app-queue *ngIf="showQueue"></app-queue>
   </div>

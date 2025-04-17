@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../services/UserServices/user.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-user-info',
@@ -20,8 +21,9 @@ import { CommonModule } from '@angular/common';
 })
 export class UserInfoComponent implements OnInit{
   user!: User;
-  isLoading = false;
-
+  isLoadingImg = false;
+  isLoadingPass= false;
+  isLoadingUserName= false;
   originalUsername = '';
   usernameChanged = false;
 
@@ -34,6 +36,8 @@ export class UserInfoComponent implements OnInit{
   passwordMismatch = false;
   notificationMessage = '';
   notificationType: 'success' | 'error' | '' = '';
+
+  isLocal=false;
 
   constructor(
     private LoginService: LoginService,
@@ -50,7 +54,7 @@ export class UserInfoComponent implements OnInit{
         console.log('load user info successfully:', response);
         this.user=response;
         this.originalUsername = this.user.userName;
-        console.log(this.user)
+        this.checkAuthProvider(this.user.authProvider);
       }
       , error: (err) => {
         console.error('Error loading user info:', err);
@@ -58,6 +62,14 @@ export class UserInfoComponent implements OnInit{
     });
   }
 
+  checkAuthProvider(authProvider: string){
+    if (!authProvider.includes("LOCAL")){
+      this.isLocal=false;
+    }
+    else{
+      this.isLocal=true;
+    }
+  }
   checkUsernameChange() {
     this.usernameChanged = this.user.userName !== this.originalUsername;
   }
@@ -66,13 +78,13 @@ export class UserInfoComponent implements OnInit{
     this.userService.userUpdateInfo(this.user.userName).subscribe({
       next: (response) => {
         console.log('userName updated successfully:', response);
-        this.isLoading = false;
+        this.isLoadingUserName = false;
         // Reload user info to refresh the avatar
         this.loadUserInfo();
       },
       error: (err) => {
         console.error('Error updating userName:', err);
-        this.isLoading = false;
+        this.isLoadingUserName = false;
         alert('Failed to update userName.');
       }
     });
@@ -90,7 +102,7 @@ export class UserInfoComponent implements OnInit{
   changePassword() {
     const { currentPassword, newPassword, confirmPassword } = this.passwordForm;
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       this.notificationMessage = 'Vui lòng điền đầy đủ các trường mật khẩu!';
       this.notificationType = 'error';
       return;
@@ -101,7 +113,7 @@ export class UserInfoComponent implements OnInit{
       this.notificationType = 'error';
       return;
     }
-
+    this.isLoadingPass=false;
     // Call API to change password
     console.log('Changing password:', this.passwordForm);
     this.userService.changePassword(currentPassword, newPassword).subscribe({
@@ -114,7 +126,11 @@ export class UserInfoComponent implements OnInit{
           newPassword: '',
           confirmPassword: ''
         };
+        this.isLoadingPass=false;
         this.passwordMismatch = false;
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       },
       error: (err) => {
         console.error('Error changing password:', {
@@ -122,7 +138,7 @@ export class UserInfoComponent implements OnInit{
           message: err.message,
           error: err.error
         });
-        this.isLoading = false;
+        this.isLoadingPass = false;
         this.notificationMessage = err.error?.message || 'Đổi mật khẩu thất bại!';
         this.notificationType = 'error';
       }
@@ -141,18 +157,18 @@ export class UserInfoComponent implements OnInit{
       const file = input.files[0];
       // Check if the file is an image
       if (file.type.startsWith('image/')) {
-        this.isLoading = true;
+        this.isLoadingImg = true;
         // Call userService to update the avatar
         this.userService.userUpdateImage(file).subscribe({
           next: (response) => {
             console.log('Avatar updated successfully:', response);
-            this.isLoading = false;
+            this.isLoadingImg = false;
             // Reload user info to refresh the avatar
             this.loadUserInfo();
           },
           error: (err) => {
             console.error('Error updating avatar:', err);
-            this.isLoading = false;
+            this.isLoadingImg = false;
             alert('Failed to update avatar.');
           }
         });

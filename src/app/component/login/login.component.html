@@ -23,7 +23,7 @@
           <label for="password">Mật khẩu</label>
           <input type="password" id="password" formControlName="password" placeholder="Nhập mật khẩu">
           <div *ngIf="isSubmitted && loginForm.controls['password'].invalid" class="error">
-            Mật khẩu phải ít nhất 6 ký tự!
+            Mật khẩu không được để trống
           </div>
           <a class="forgot-password" (click)="goForgetPassword()">Quên mật khẩu?</a>
         </div>
@@ -31,6 +31,16 @@
         <button type="submit" class="btn-login">Đăng Nhập</button>
         <p class="switch-link">Chưa có tài khoản? <a class="sign-up" (click)="goSignUp()">Đăng ký</a></p>
       </form>
+      <div class="divider-section">
+        <div class="divider-line"></div>
+        <span class="divider-text">Hoặc</span>
+        <div class="divider-line"></div>
+      </div>
+      
+      <button type="button" class="btn-google" (click)="onGoogleLogin()">
+        <mat-icon>Google</mat-icon>
+        Đăng nhập với Google
+      </button>
     </div>
     <div class="notification success" *ngIf="successMessage">
       {{ successMessage }}

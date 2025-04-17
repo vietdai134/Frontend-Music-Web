@@ -3,12 +3,14 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../../services/LoginServices/login.service';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -27,7 +29,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(3)]]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -61,5 +63,9 @@ export class LoginComponent {
   }
   goForgetPassword(){
     this.router.navigate(['/forgot-password'])
+  }
+
+  onGoogleLogin(): void {
+    this.loginService.googleLogin();
   }
 }

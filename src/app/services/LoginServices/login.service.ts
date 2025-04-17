@@ -15,6 +15,7 @@ export class LoginService {
   private refreshInterval = 15 * 60 * 1000; // 15 minutes
   private refreshSubscription: any;
 
+  private googleAuthUrl = `${environment.baseUrl}/api/auth/login/google`;
   constructor(private http: HttpClient) {
   }
 
@@ -162,6 +163,10 @@ export class LoginService {
 
   resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/auth/reset-password`, { token, newPassword });
+  }
+
+  googleLogin(): void {
+    window.location.href = this.googleAuthUrl;
   }
 }
 
