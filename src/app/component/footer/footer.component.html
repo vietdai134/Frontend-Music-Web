@@ -26,6 +26,9 @@
           <button mat-icon-button color="accent" (click)="toggleQueue()" title="Show Queue">
             <mat-icon>queue_music</mat-icon>
           </button>
+          <button mat-icon-button (click)="toggleLyricsView()" matTooltip="Show Lyrics">
+            <mat-icon>lyrics</mat-icon>
+          </button>
         </div>
         <div class="progress-container">
           <span>{{ formatTime(currentTime) }}</span>

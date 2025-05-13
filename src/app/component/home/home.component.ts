@@ -28,6 +28,7 @@ import { LikedSongService } from '../../services/LikedSongServices/liked-song.se
 import { SongService } from '../../services/SongServices/song.service';
 import { LoginService } from '../../services/LoginServices/login.service';
 import { User } from '../../models/user.module';
+import { LyricsOverlayComponent } from '../lyrics-overlay/lyrics-overlay.component';
 
 @Component({
   selector: 'app-home',
@@ -44,7 +45,8 @@ import { User } from '../../models/user.module';
     MatSelectModule,
     MatFormFieldModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    LyricsOverlayComponent 
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -86,6 +88,9 @@ export class HomeComponent implements OnInit,OnDestroy {
   selectedSongIds: string[] = [];
 
   likedSongIds: string[] = [];
+
+  showLyrics = false;
+  currentSongForLyrics: Song | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -427,5 +432,19 @@ export class HomeComponent implements OnInit,OnDestroy {
         console.error('Error fetching liked songs:', err);
       }
     });
+  }
+
+  toggleLyricsOverlay(song?: Song) {
+    this.showLyrics = !this.showLyrics;
+    if (song) {
+      this.currentSongForLyrics = song;
+    } else if (!this.showLyrics) {
+      this.currentSongForLyrics = null;
+    }
+  }
+
+  showLyricsOverlay(song: Song) {
+    this.currentSongForLyrics = song;
+    this.showLyrics = true;
   }
 }

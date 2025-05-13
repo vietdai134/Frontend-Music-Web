@@ -113,5 +113,10 @@
 
     </div>
   </div>
+  <app-lyrics-overlay 
+      *ngIf="showLyrics && currentSongForLyrics" 
+      [currentSong]="currentSongForLyrics"
+      (close)="toggleLyricsOverlay()">
+    </app-lyrics-overlay>
   <app-queue *ngIf="showQueue"></app-queue>
 </div>

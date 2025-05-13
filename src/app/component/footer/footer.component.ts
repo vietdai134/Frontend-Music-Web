@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Song } from '../../models/song.module';
 import { PlayerService } from '../../services/PlayerServices/player.service';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'; // Thêm MatSnackBar
 import { MatIconModule } from '@angular/material/icon';
 import { ListenHistoryService } from '../../services/ListenHistoryServices/listen-history.service';
+import { LyricsOverlayComponent } from '../lyrics-overlay/lyrics-overlay.component';
 
 @Component({
   selector: 'app-footer',
@@ -13,7 +14,7 @@ import { ListenHistoryService } from '../../services/ListenHistoryServices/liste
     CommonModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatIconModule
+    MatIconModule 
   ],
   standalone: true,
   templateUrl: './footer.component.html',
@@ -33,6 +34,9 @@ export class FooterComponent implements OnInit{
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   
   volume: number = 0.3;
+
+  // @Output() toggleLyrics = new EventEmitter<void>();
+  @Output() lyricsRequest = new EventEmitter<{ currentSong: Song}>();
 
   constructor(
     private playerService: PlayerService,
@@ -233,5 +237,11 @@ export class FooterComponent implements OnInit{
         console.error('Error adding song to history:', err);
       }
     });
+  }
+
+  toggleLyricsView(): void {
+    if (this.currentSong) {
+      this.lyricsRequest.emit({ currentSong: this.currentSong });
+    }
   }
 }

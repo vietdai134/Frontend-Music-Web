@@ -1,0 +1,31 @@
+<!-- <div class="lyrics-overlay">
+  <button mat-icon-button class="close-btn" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="lyrics-content">
+    
+    <h3>{{ currentSong?.title || 'No Song Selected' }}</h3>
+    <p class="artist">Artist: {{ currentSong?.artist || 'Unknown' }}</p>
+    <p class="lyrics">Lyrics: Not available</p>
+    <img *ngIf="currentSong?.songImage" [src]="currentSong?.songImage" alt="{{ currentSong?.title }} cover" class="song-image" />
+  </div>
+</div> -->
+
+<div class="lyrics-overlay" >
+  <button mat-icon-button class="close-btn" (click)="onClose()" aria-label="Close lyrics overlay">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="lyrics-content">
+    <div class="column song-info">
+      <h3>{{ currentSong?.title || 'No Song Selected' }}</h3>
+      <p class="artist">Artist: {{ currentSong?.artist || 'Unknown' }}</p>
+      <img *ngIf="currentSong?.songImage" [src]="currentSong?.songImage" alt="{{ currentSong?.title }} cover" class="song-image" />
+    </div>
+    <div class="column lyrics-column">
+      <p class="lyrics">Lyrics: Not available</p>
+    </div>
+    <div class="column lyrics-column">
+      <p class="lyrics">Lyrics: Not available</p>
+    </div>
+  </div>
+</div>

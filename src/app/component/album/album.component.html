@@ -3,7 +3,7 @@
     
     <div class="content" [style.margin-left]="isSidebarVisible ? '250px' : '0'">
       <div class="no-albums" *ngIf="albums.length === 0">
-        <h3>Không có danh sách playlist</h3>
+        <h3>Không có album nào</h3>
       </div>
       <div class="song-list" *ngIf="albums.length > 0">
         <div class="selected-genres">
