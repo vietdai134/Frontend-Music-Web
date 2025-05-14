@@ -1,16 +1,3 @@
-<!-- <div class="lyrics-overlay">
-  <button mat-icon-button class="close-btn" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
-  <div class="lyrics-content">
-    
-    <h3>{{ currentSong?.title || 'No Song Selected' }}</h3>
-    <p class="artist">Artist: {{ currentSong?.artist || 'Unknown' }}</p>
-    <p class="lyrics">Lyrics: Not available</p>
-    <img *ngIf="currentSong?.songImage" [src]="currentSong?.songImage" alt="{{ currentSong?.title }} cover" class="song-image" />
-  </div>
-</div> -->
-
 <div class="lyrics-overlay" >
   <button mat-icon-button class="close-btn" (click)="onClose()" aria-label="Close lyrics overlay">
     <mat-icon>close</mat-icon>
@@ -22,10 +9,37 @@
       <img *ngIf="currentSong?.songImage" [src]="currentSong?.songImage" alt="{{ currentSong?.title }} cover" class="song-image" />
     </div>
     <div class="column lyrics-column">
-      <p class="lyrics">Lyrics: Not available</p>
+      <p class="lyrics" *ngIf="lyrics; else loadingOrError">
+        Lời bài hát lấy từ genius.com: <br>
+        {{ lyrics }}
+      </p>
+      <ng-template #loadingOrError>
+        <p class="lyrics">Đang tải lời bài hát hoặc không tìm thấy.</p>
+      </ng-template>
     </div>
-    <div class="column lyrics-column">
+    <!-- <div class="column lyrics-column">
       <p class="lyrics">Lyrics: Not available</p>
+    </div> -->
+    <div class="column lyrics-column" *ngIf="lyrics">
+      <!-- <label for="language-select">Dịch lời bài hát</label>
+      <select id="language-select" [(ngModel)]="selectedLanguage" (change)="onLanguageSelected(selectedLanguage!)">
+        <option *ngFor="let lang of availableLanguages" [value]="lang.value">
+          {{ lang.label }}
+        </option>
+      </select> -->
+      <mat-form-field appearance="fill" class="language-select">
+      <mat-label>Dịch lời bài hát</mat-label>
+      <mat-select [(ngModel)]="selectedLanguage" (selectionChange)="onLanguageSelected($event.value)">
+        <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
+          {{ lang.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+      <div class="translated-lyrics" *ngIf="translatedLyrics">
+        <h4>Lời dịch:</h4>
+        <p>{{ translatedLyrics }}</p>
+      </div>
     </div>
   </div>
 </div>

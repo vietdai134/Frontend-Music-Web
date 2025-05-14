@@ -289,3 +289,51 @@
     text-align: center;
   }
 }
+.lyrics {
+  white-space: pre-line;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.translated-lyrics {
+  color: #ffffff; // trắng để hiển thị trên nền đen
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-line; // giữ định dạng xuống dòng
+  background-color: rgba(255, 255, 255, 0.05); // nền nhạt để phân biệt
+  padding: 0.5rem;
+  border-radius: 8px;
+
+  h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #90caf9; // xanh dương nhạt để nổi bật tiêu đề
+  }
+}
+
+
+.language-select {
+  width: 150px; // hoặc nhỏ hơn theo mong muốn
+  font-size: 14px;
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  .mat-form-field-flex {
+    background-color: rgba(255, 255, 255, 0.05); // nhẹ nhàng trên nền đen
+    border-radius: 4px;
+  }
+
+  .mat-select-value {
+    color: #ffffff;
+  }
+
+  .mat-label {
+    color: #cccccc;
+  }
+
+  .mat-select-arrow {
+    color: #ffffff;
+  }
+}
