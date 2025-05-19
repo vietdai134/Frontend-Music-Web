@@ -52,6 +52,13 @@ For end-to-end (e2e) testing, run:
 ng e2e
 ```
 
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
 Demo image:
 Login, Sign up
 ![image](https://github.com/user-attachments/assets/2acc7439-d95b-4cb0-9cb2-ee98225e0280)
@@ -87,9 +94,3 @@ Link Video Demo: https://youtu.be/7VgeuqOVQMQ?si=EWZAyng7l2-3RJaq
 
 Link frontend: https://github.com/vietdai134/Frontend-Music-Web.git
 Link Backend Lyric, AI: https://github.com/vietdai134/Lyrics-Music-Web.git
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
